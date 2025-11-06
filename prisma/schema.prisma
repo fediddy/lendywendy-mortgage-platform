@@ -15,17 +15,250 @@ datasource db {
 
 // User model for authentication and authorization
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
+  id             String    @id @default(cuid())
+  email          String    @unique
   hashedPassword String
-  name          String?
-  role          Role      @default(EDITOR)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  name           String?
+  role           Role      @default(EDITOR)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relations
+  articles       Article[]
+  guides         Guide[]
+  calculators    Calculator[]
+  contentVersions ContentVersion[]
 }
 
 enum Role {
   ADMIN
   EDITOR
   PARTNER
+}
+
+// Content Type: Article
+// For blog posts, news, and informational content
+model Article {
+  id              String           @id @default(cuid())
+  title           String
+  slug            String           @unique
+  excerpt         String?          @db.Text
+  content         String           @db.Text
+  featuredImage   String?
+  status          ContentStatus    @default(DRAFT)
+  publishedAt     DateTime?
+  authorId        String
+  author          User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  categoryId      String
+  category        Category         @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  tags            Tag[]            @relation("ArticleTags")
+  seoMetadata     SeoMetadata?
+  versions        ContentVersion[]
+  readTime        Int?             // Reading time in minutes
+  viewCount       Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([authorId])
+  @@index([categoryId])
+}
+
+// Content Type: Guide
+// For comprehensive how-to guides and tutorials
+model Guide {
+  id              String           @id @default(cuid())
+  title           String
+  slug            String           @unique
+  excerpt         String?          @db.Text
+  content         String           @db.Text
+  featuredImage   String?
+  status          ContentStatus    @default(DRAFT)
+  publishedAt     DateTime?
+  authorId        String
+  author          User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  categoryId      String
+  category        Category         @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  tags            Tag[]            @relation("GuideTags")
+  seoMetadata     SeoMetadata?
+  versions        ContentVersion[]
+  steps           GuideStep[]
+  difficulty      Difficulty       @default(INTERMEDIATE)
+  estimatedTime   Int?             // Estimated completion time in minutes
+  viewCount       Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([authorId])
+  @@index([categoryId])
+}
+
+// Guide steps for structured tutorials
+model GuideStep {
+  id          String   @id @default(cuid())
+  guideId     String
+  guide       Guide    @relation(fields: [guideId], references: [id], onDelete: Cascade)
+  stepNumber  Int
+  title       String
+  content     String   @db.Text
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([guideId, stepNumber])
+  @@index([guideId])
+}
+
+// Content Type: Calculator
+// For interactive financial calculators
+model Calculator {
+  id              String           @id @default(cuid())
+  title           String
+  slug            String           @unique
+  description     String?          @db.Text
+  calculatorType  CalculatorType
+  config          String           @db.Text // JSON configuration for calculator inputs/logic
+  status          ContentStatus    @default(DRAFT)
+  publishedAt     DateTime?
+  authorId        String
+  author          User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  categoryId      String
+  category        Category         @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  tags            Tag[]            @relation("CalculatorTags")
+  seoMetadata     SeoMetadata?
+  versions        ContentVersion[]
+  usageCount      Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([authorId])
+  @@index([categoryId])
+}
+
+enum CalculatorType {
+  MORTGAGE
+  AFFORDABILITY
+  REFINANCE
+  INVESTMENT_ROI
+  AMORTIZATION
+  DEBT_TO_INCOME
+  CLOSING_COSTS
+  RENT_VS_BUY
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+// Category system for content organization
+model Category {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  slug        String       @unique
+  description String?      @db.Text
+  parentId    String?
+  parent      Category?    @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Restrict)
+  children    Category[]   @relation("CategoryHierarchy")
+  segment     Segment      // Residential, Investment, Commercial
+  articles    Article[]
+  guides      Guide[]
+  calculators Calculator[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([slug])
+  @@index([segment])
+}
+
+enum Segment {
+  RESIDENTIAL
+  INVESTMENT
+  COMMERCIAL
+}
+
+// Tag system for flexible categorization
+model Tag {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  slug        String       @unique
+  articles    Article[]    @relation("ArticleTags")
+  guides      Guide[]      @relation("GuideTags")
+  calculators Calculator[] @relation("CalculatorTags")
+  createdAt   DateTime     @default(now())
+
+  @@index([slug])
+}
+
+// SEO Metadata for all content types
+model SeoMetadata {
+  id                String      @id @default(cuid())
+  metaTitle         String
+  metaDescription   String      @db.Text
+  focusKeyword      String?
+  canonicalUrl      String?
+  ogTitle           String?
+  ogDescription     String?     @db.Text
+  ogImage           String?
+  twitterCard       String?
+  noIndex           Boolean     @default(false)
+  noFollow          Boolean     @default(false)
+  schema            String?     @db.Text // JSON-LD structured data
+
+  // Polymorphic relationship
+  articleId         String?     @unique
+  article           Article?    @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  guideId           String?     @unique
+  guide             Guide?      @relation(fields: [guideId], references: [id], onDelete: Cascade)
+  calculatorId      String?     @unique
+  calculator        Calculator? @relation(fields: [calculatorId], references: [id], onDelete: Cascade)
+
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([articleId])
+  @@index([guideId])
+  @@index([calculatorId])
+}
+
+// Content versioning for publishing workflow
+model ContentVersion {
+  id            String        @id @default(cuid())
+  versionNumber Int
+  content       String        @db.Text
+  changeLog     String?       @db.Text
+  createdById   String
+  createdBy     User          @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  // Polymorphic relationship
+  articleId     String?
+  article       Article?      @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  guideId       String?
+  guide         Guide?        @relation(fields: [guideId], references: [id], onDelete: Cascade)
+  calculatorId  String?
+  calculator    Calculator?   @relation(fields: [calculatorId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime      @default(now())
+
+  @@index([articleId])
+  @@index([guideId])
+  @@index([calculatorId])
+  @@index([createdById])
+}
+
+enum ContentStatus {
+  DRAFT
+  IN_REVIEW
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
 }
