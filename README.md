@@ -7,8 +7,9 @@ A custom-built, SEO-first platform targeting residential, investment property, a
 ## Project Status
 
 **Epic 1 Complete:** Platform Foundation & Infrastructure ✅
+**Epic 2 Complete:** Content Management System ✅
 
-All 6 stories in Epic 1 are complete:
+**Epic 1** - All 6 stories complete:
 - ✅ 1.1: Project Initialization
 - ✅ 1.2: Database Setup
 - ✅ 1.3: Authentication System
@@ -16,7 +17,13 @@ All 6 stories in Epic 1 are complete:
 - ✅ 1.5: UI Component Library
 - ✅ 1.6: Error Handling & Logging
 
-**Next:** Epic 2 - Content Management System
+**Epic 2** - All 4 stories complete:
+- ✅ 2.1: Content Type Models (Articles, Guides, Calculators)
+- ✅ 2.2: WYSIWYG Editor with Rich Media
+- ✅ 2.3: SEO Metadata Management
+- ✅ 2.4: Content Versioning & Publishing Workflow
+
+**Next:** Epic 3 - SEO-First Architecture
 
 ## Tech Stack
 
@@ -26,6 +33,8 @@ All 6 stories in Epic 1 are complete:
 - **UI Components:** shadcn/ui with Radix UI primitives
 - **Database:** PostgreSQL with Prisma ORM
 - **Authentication:** NextAuth.js v5 with RBAC
+- **Rich Text Editor:** TipTap with ProseMirror
+- **Date Utilities:** date-fns
 - **Hosting:** Vercel (configured, pending deployment)
 - **Error Tracking:** Centralized logger (Sentry integration ready)
 
@@ -70,19 +79,29 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 ## Project Structure
 
 ```
-/app          - Next.js App Router pages and API routes
-/components   - Reusable React components (pending)
-/lib          - Utility functions and database client
-/prisma       - Database schema and migrations
-/public       - Static assets
-/docs         - Product documentation (PRD, Architecture, Epics)
+/app                    - Next.js App Router pages and API routes
+/components
+  /editor               - Rich text editor components (TipTap)
+  /forms                - Form components (Article, SEO Metadata)
+  /seo                  - SEO and meta tag utilities
+  /ui                   - shadcn/ui components
+  /workflow             - Publishing workflow components
+/lib                    - Utility functions, services, and database client
+  content-service.ts    - Content CRUD and publishing logic
+  content-utils.ts      - Slug generation, SEO validation
+  db.ts                 - Prisma client singleton
+  logger.ts             - Centralized logging
+/prisma                 - Database schema and migrations
+/types                  - TypeScript type definitions
+/public                 - Static assets
+/docs                   - Product documentation (PRD, Architecture, Epics)
 ```
 
 ## Development Workflow
 
 See `/docs/epics.md` for the complete implementation roadmap with 40 stories across 10 epics.
 
-**Current Epic:** Epic 1 - Platform Foundation & Infrastructure
+**Current Epic:** Epic 3 - SEO-First Architecture
 
 ## Documentation
 
