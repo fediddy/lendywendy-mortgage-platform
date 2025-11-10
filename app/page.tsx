@@ -18,10 +18,10 @@ export default function HomePage() {
         </p>
         <div className="flex gap-4 justify-center">
           <Button size="lg" asChild>
-            <Link href="#segments">Explore Mortgage Solutions</Link>
+            <Link href="/get-quote">Get Free Quote</Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
-            <Link href="/contact">Get Started</Link>
+            <Link href="#segments">Explore Solutions</Link>
           </Button>
         </div>
       </section>
@@ -132,7 +132,7 @@ export default function HomePage() {
             Connect with our mortgage experts today and take the first step toward your goals
           </p>
           <Button size="lg" variant="secondary" asChild>
-            <Link href="/contact">Contact Us Today</Link>
+            <Link href="/get-quote">Get Your Free Quote</Link>
           </Button>
         </div>
       </section>
