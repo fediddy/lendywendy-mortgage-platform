@@ -262,3 +262,134 @@ enum ContentStatus {
   PUBLISHED
   ARCHIVED
 }
+
+// Lead Capture System
+// Stores leads from multi-step forms throughout the site
+model Lead {
+  id                String       @id @default(cuid())
+
+  // Segmentation
+  segment           Segment      // Which mortgage segment
+  loanType          LoanType     // Specific loan type
+
+  // Property Details
+  propertyType      PropertyType?
+  propertyValue     Int?         // Estimated property value
+  purchasePrice     Int?         // Purchase price for new purchases
+  propertyLocation  String?      // City, State or ZIP
+
+  // Contact Information
+  name              String
+  email             String
+  phone             String?
+
+  // Qualification Details
+  creditRange       CreditRange?
+  downPayment       Int?         // Down payment amount in dollars
+  downPaymentPercent Int?        // Down payment as percentage
+  timeline          Timeline?    // When they need the loan
+  currentlyOwn      Boolean?     // Do they currently own a home
+  employmentStatus  EmploymentStatus?
+  annualIncome      Int?         // Annual household income
+
+  // Lead Scoring & Management
+  score             Int          @default(0) // 0-100 lead quality score
+  status            LeadStatus   @default(NEW)
+  assignedTo        String?      // User ID of assigned loan officer
+  notes             String?      @db.Text
+
+  // Tracking
+  source            String?      // URL/page where lead was captured
+  utmSource         String?      // Marketing attribution
+  utmMedium         String?
+  utmCampaign       String?
+  ipAddress         String?
+  userAgent         String?
+
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  contactedAt       DateTime?    // When lead was first contacted
+  convertedAt       DateTime?    // When lead converted to customer
+
+  @@index([email])
+  @@index([status])
+  @@index([score])
+  @@index([segment])
+  @@index([createdAt])
+  @@index([assignedTo])
+}
+
+enum LoanType {
+  // Residential
+  PURCHASE
+  REFINANCE
+  CASH_OUT_REFINANCE
+  HOME_EQUITY_LOAN
+  HOME_EQUITY_LINE
+  FHA_LOAN
+  VA_LOAN
+  USDA_LOAN
+  JUMBO_LOAN
+
+  // Investment
+  INVESTMENT_PROPERTY
+  FIX_AND_FLIP
+  RENTAL_PORTFOLIO
+  DSCR_LOAN
+
+  // Commercial
+  COMMERCIAL_PURCHASE
+  COMMERCIAL_REFINANCE
+  SBA_LOAN
+  BRIDGE_LOAN
+  CONSTRUCTION_LOAN
+}
+
+enum PropertyType {
+  SINGLE_FAMILY
+  CONDO
+  TOWNHOUSE
+  MULTI_FAMILY
+  MANUFACTURED
+  LAND
+  COMMERCIAL_OFFICE
+  COMMERCIAL_RETAIL
+  COMMERCIAL_INDUSTRIAL
+  COMMERCIAL_MIXED_USE
+}
+
+enum CreditRange {
+  EXCELLENT_740_PLUS
+  GOOD_670_739
+  FAIR_580_669
+  POOR_BELOW_580
+  NOT_SURE
+}
+
+enum Timeline {
+  ASAP
+  WITHIN_30_DAYS
+  ONE_TO_THREE_MONTHS
+  THREE_TO_SIX_MONTHS
+  SIX_PLUS_MONTHS
+  JUST_RESEARCHING
+}
+
+enum EmploymentStatus {
+  EMPLOYED_W2
+  SELF_EMPLOYED
+  RETIRED
+  NOT_EMPLOYED
+  OTHER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  QUOTE_SENT
+  IN_PROCESS
+  CONVERTED
+  CLOSED_LOST
+  NURTURE
+}
