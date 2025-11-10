@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { calculateEnhancedLeadScore } from "@/lib/lead-scoring";
+import { sendWebhook } from "@/lib/webhooks";
 import { z } from "zod";
 import {
   Segment,
@@ -43,8 +45,20 @@ export async function POST(request: NextRequest) {
     // Validate input
     const validatedData = leadSchema.parse(body);
 
-    // Calculate lead score
-    const score = calculateLeadScore(validatedData);
+    // Calculate enhanced lead score with breakdown
+    const scoringResult = calculateEnhancedLeadScore({
+      segment: validatedData.segment,
+      loanType: validatedData.loanType,
+      creditRange: validatedData.creditRange,
+      downPaymentPercent: validatedData.downPaymentPercent,
+      timeline: validatedData.timeline,
+      employmentStatus: validatedData.employmentStatus,
+      annualIncome: validatedData.annualIncome,
+      propertyValue: validatedData.propertyValue,
+      currentlyOwn: validatedData.currentlyOwn,
+      phone: validatedData.phone,
+      propertyLocation: validatedData.propertyLocation,
+    });
 
     // Get IP address
     const ipAddress = request.headers.get("x-forwarded-for") ||
@@ -55,7 +69,7 @@ export async function POST(request: NextRequest) {
     const lead = await prisma.lead.create({
       data: {
         ...validatedData,
-        score,
+        score: scoringResult.score,
         ipAddress,
         status: "NEW",
       },
@@ -68,16 +82,70 @@ export async function POST(request: NextRequest) {
         email: lead.email,
         segment: lead.segment,
         score: lead.score,
+        tier: scoringResult.tier,
+        qualification: scoringResult.qualification,
       },
     });
 
-    // TODO: Send notification email to sales team for hot leads (score >= 80)
-    if (score >= 80) {
+    // Send webhook for lead.created event (async, don't block response)
+    sendWebhook({
+      event: "lead.created",
+      timestamp: new Date().toISOString(),
+      data: {
+        leadId: lead.id,
+        email: lead.email,
+        name: lead.name,
+        phone: lead.phone || undefined,
+        segment: lead.segment,
+        score: lead.score,
+        status: lead.status,
+        tier: scoringResult.tier,
+        qualification: scoringResult.qualification,
+        loanType: lead.loanType,
+        timeline: lead.timeline || undefined,
+      },
+    }).catch((error) => {
+      // Log webhook errors but don't fail the request
+      logger.error("Webhook send failed", error as Error, {
+        component: "leads-api",
+        metadata: { leadId: lead.id },
+      });
+    });
+
+    // Send hot lead webhook if score >= 80
+    if (scoringResult.tier === "hot") {
       logger.info("Hot lead detected", {
         component: "leads-api",
-        metadata: { leadId: lead.id, score },
+        metadata: {
+          leadId: lead.id,
+          score: lead.score,
+          breakdown: scoringResult.breakdown,
+        },
       });
-      // Integrate with email service here
+
+      // Send hot lead webhook (async)
+      sendWebhook({
+        event: "lead.hot",
+        timestamp: new Date().toISOString(),
+        data: {
+          leadId: lead.id,
+          email: lead.email,
+          name: lead.name,
+          phone: lead.phone || undefined,
+          segment: lead.segment,
+          score: lead.score,
+          status: lead.status,
+          tier: scoringResult.tier,
+          qualification: scoringResult.qualification,
+          recommendations: scoringResult.recommendations,
+          breakdown: scoringResult.breakdown,
+        },
+      }).catch((error) => {
+        logger.error("Hot lead webhook failed", error as Error, {
+          component: "leads-api",
+          metadata: { leadId: lead.id },
+        });
+      });
     }
 
     return NextResponse.json(
@@ -114,88 +182,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Lead scoring algorithm (0-100)
-function calculateLeadScore(data: z.infer<typeof leadSchema>): number {
-  let score = 50; // Base score
-
-  // Credit score impact (0-25 points)
-  if (data.creditRange === CreditRange.EXCELLENT_740_PLUS) {
-    score += 25;
-  } else if (data.creditRange === CreditRange.GOOD_670_739) {
-    score += 15;
-  } else if (data.creditRange === CreditRange.FAIR_580_669) {
-    score += 5;
-  } else if (data.creditRange === CreditRange.POOR_BELOW_580) {
-    score -= 10;
-  }
-
-  // Down payment impact (0-20 points)
-  if (data.downPaymentPercent) {
-    if (data.downPaymentPercent >= 20) {
-      score += 20;
-    } else if (data.downPaymentPercent >= 10) {
-      score += 10;
-    } else if (data.downPaymentPercent >= 5) {
-      score += 5;
-    }
-  } else if (data.downPayment && data.propertyValue) {
-    const percent = (data.downPayment / data.propertyValue) * 100;
-    if (percent >= 20) {
-      score += 20;
-    } else if (percent >= 10) {
-      score += 10;
-    } else if (percent >= 5) {
-      score += 5;
-    }
-  }
-
-  // Timeline urgency (0-15 points)
-  if (data.timeline === Timeline.ASAP) {
-    score += 15;
-  } else if (data.timeline === Timeline.WITHIN_30_DAYS) {
-    score += 12;
-  } else if (data.timeline === Timeline.ONE_TO_THREE_MONTHS) {
-    score += 8;
-  } else if (data.timeline === Timeline.THREE_TO_SIX_MONTHS) {
-    score += 4;
-  } else if (data.timeline === Timeline.JUST_RESEARCHING) {
-    score -= 5;
-  }
-
-  // Employment status (0-10 points)
-  if (data.employmentStatus === EmploymentStatus.EMPLOYED_W2) {
-    score += 10;
-  } else if (data.employmentStatus === EmploymentStatus.SELF_EMPLOYED) {
-    score += 7;
-  } else if (data.employmentStatus === EmploymentStatus.RETIRED) {
-    score += 5;
-  } else if (data.employmentStatus === EmploymentStatus.NOT_EMPLOYED) {
-    score -= 10;
-  }
-
-  // Income impact (0-10 points)
-  if (data.annualIncome) {
-    if (data.annualIncome >= 150000) {
-      score += 10;
-    } else if (data.annualIncome >= 100000) {
-      score += 7;
-    } else if (data.annualIncome >= 75000) {
-      score += 5;
-    } else if (data.annualIncome >= 50000) {
-      score += 3;
-    }
-  }
-
-  // Phone number provided (5 points - shows higher intent)
-  if (data.phone) {
-    score += 5;
-  }
-
-  // Property details provided (5 points)
-  if (data.propertyValue || data.propertyLocation) {
-    score += 5;
-  }
-
-  // Ensure score is between 0-100
-  return Math.max(0, Math.min(100, Math.round(score)));
-}
+// Note: Lead scoring has been moved to lib/lead-scoring.ts for enhanced functionality
+// The enhanced scoring includes detailed breakdown, tier assignment, qualification level,
+// and personalized recommendations for each lead.
