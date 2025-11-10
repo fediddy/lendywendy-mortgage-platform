@@ -3,7 +3,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AffordabilityCalculator } from "@/components/calculators/affordability-calculator";
 import { MonthlyPaymentCalculator } from "@/components/calculators/monthly-payment-calculator";
 import { RefinanceCalculator } from "@/components/calculators/refinance-calculator";
-import { Calculator, Home, TrendingDown } from "lucide-react";
+import { RentVsBuyCalculator } from "@/components/calculators/rent-vs-buy-calculator";
+import { DTICalculator } from "@/components/calculators/dti-calculator";
+import { ClosingCostsCalculator } from "@/components/calculators/closing-costs-calculator";
+import { Calculator, Home, TrendingDown, Scale, Percent, FileText } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Mortgage Calculators | Free Tools | LendyWendy",
@@ -30,18 +33,36 @@ export default function CalculatorsPage() {
 
           {/* Calculator Tabs */}
           <Tabs defaultValue="affordability" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-8">
-              <TabsTrigger value="affordability" className="gap-2">
-                <Home className="w-4 h-4" />
+            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 mb-8">
+              <TabsTrigger value="affordability" className="gap-1 text-xs sm:text-sm">
+                <Home className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Affordability</span>
+                <span className="sm:hidden">Home</span>
               </TabsTrigger>
-              <TabsTrigger value="payment" className="gap-2">
-                <Calculator className="w-4 h-4" />
-                <span className="hidden sm:inline">Monthly Payment</span>
+              <TabsTrigger value="payment" className="gap-1 text-xs sm:text-sm">
+                <Calculator className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Payment</span>
+                <span className="sm:hidden">Pay</span>
               </TabsTrigger>
-              <TabsTrigger value="refinance" className="gap-2">
-                <TrendingDown className="w-4 h-4" />
+              <TabsTrigger value="refinance" className="gap-1 text-xs sm:text-sm">
+                <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Refinance</span>
+                <span className="sm:hidden">Refi</span>
+              </TabsTrigger>
+              <TabsTrigger value="rent-vs-buy" className="gap-1 text-xs sm:text-sm">
+                <Scale className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Rent vs Buy</span>
+                <span className="sm:hidden">R/B</span>
+              </TabsTrigger>
+              <TabsTrigger value="dti" className="gap-1 text-xs sm:text-sm">
+                <Percent className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">DTI</span>
+                <span className="sm:hidden">DTI</span>
+              </TabsTrigger>
+              <TabsTrigger value="closing" className="gap-1 text-xs sm:text-sm">
+                <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Closing</span>
+                <span className="sm:hidden">Cost</span>
               </TabsTrigger>
             </TabsList>
 
@@ -56,10 +77,22 @@ export default function CalculatorsPage() {
             <TabsContent value="refinance">
               <RefinanceCalculator />
             </TabsContent>
+
+            <TabsContent value="rent-vs-buy">
+              <RentVsBuyCalculator />
+            </TabsContent>
+
+            <TabsContent value="dti">
+              <DTICalculator />
+            </TabsContent>
+
+            <TabsContent value="closing">
+              <ClosingCostsCalculator />
+            </TabsContent>
           </Tabs>
 
           {/* Information Section */}
-          <div className="mt-12 grid md:grid-cols-3 gap-6">
+          <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="p-6 bg-white rounded-lg border">
               <Home className="w-8 h-8 text-blue-600 mb-3" />
               <h3 className="font-semibold mb-2">Affordability Calculator</h3>
@@ -81,6 +114,30 @@ export default function CalculatorsPage() {
               <h3 className="font-semibold mb-2">Refinance Calculator</h3>
               <p className="text-sm text-muted-foreground">
                 See if refinancing makes sense and calculate your potential savings and break-even point.
+              </p>
+            </div>
+
+            <div className="p-6 bg-white rounded-lg border">
+              <Scale className="w-8 h-8 text-orange-600 mb-3" />
+              <h3 className="font-semibold mb-2">Rent vs. Buy Calculator</h3>
+              <p className="text-sm text-muted-foreground">
+                Compare the long-term financial impact of renting versus buying a home over time.
+              </p>
+            </div>
+
+            <div className="p-6 bg-white rounded-lg border">
+              <Percent className="w-8 h-8 text-red-600 mb-3" />
+              <h3 className="font-semibold mb-2">DTI Calculator</h3>
+              <p className="text-sm text-muted-foreground">
+                Calculate your debt-to-income ratio to see which loan types you qualify for.
+              </p>
+            </div>
+
+            <div className="p-6 bg-white rounded-lg border">
+              <FileText className="w-8 h-8 text-teal-600 mb-3" />
+              <h3 className="font-semibold mb-2">Closing Costs Calculator</h3>
+              <p className="text-sm text-muted-foreground">
+                Estimate all your closing costs including lender fees, title, taxes, and prepaid items.
               </p>
             </div>
           </div>
