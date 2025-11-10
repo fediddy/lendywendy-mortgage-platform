@@ -9,6 +9,8 @@ A custom-built, SEO-first platform targeting residential, investment property, a
 **Epic 1 Complete:** Platform Foundation & Infrastructure ✅
 **Epic 2 Complete:** Content Management System ✅
 **Epic 3 Complete:** SEO-First Architecture ✅
+**Epic 4 Complete:** Segment-Specific Content Hubs ✅
+**Epic 5 Complete:** Lead Capture & Qualification System ✅
 
 **Epic 1** - All 6 stories complete:
 - ✅ 1.1: Project Initialization
@@ -34,7 +36,13 @@ A custom-built, SEO-first platform targeting residential, investment property, a
 - ✅ 4.2: Content Filtering by Segment (included in 4.1)
 - ✅ 4.3: Cross-Segment Navigation (included in 4.1)
 
-**Progress:** 4 Epics Complete (19 stories total)
+**Epic 5** - All 4 stories complete:
+- ✅ 5.1: Multi-Step Lead Capture Forms
+- ✅ 5.2: Interactive Mortgage Calculators (6 calculators)
+- ✅ 5.3: Enhanced Lead Scoring & CRM Integration
+- ✅ 5.4: Admin Lead Management Dashboard
+
+**Progress:** 5 Epics Complete (23 stories total)
 
 ## Tech Stack
 
@@ -108,11 +116,40 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 /docs                   - Product documentation (PRD, Architecture, Epics)
 ```
 
+## Key Features
+
+### Lead Capture & Qualification
+- **Multi-Step Forms:** Progressive lead capture with segment-specific questions
+- **Lead Scoring:** 8-factor weighted algorithm (credit, down payment, timeline, employment, income, completeness, segment, loan type)
+- **Tier Classification:** Automatic categorization into hot (≥80), warm (60-79), and cold (<60) leads
+- **CRM Integration:** Webhook system with HMAC signatures for Salesforce, HubSpot, and custom CRMs
+- **Admin Dashboard:** Complete lead management interface with filtering, search, and status updates
+
+### Interactive Calculators
+- Affordability Calculator (DTI-based)
+- Monthly Payment Calculator
+- Refinance Calculator
+- Rent vs. Buy Calculator
+- DTI Calculator
+- Closing Costs Calculator
+
+### Content Management
+- Rich text editor with TipTap/ProseMirror
+- SEO metadata management
+- Content versioning and publishing workflow
+- Segment-specific content filtering
+
+### SEO & Architecture
+- Dynamic sitemap and robots.txt
+- Structured data with JSON-LD
+- Breadcrumb navigation
+- Segment hub pages (Residential, Investment, Commercial)
+
 ## Development Workflow
 
 See `/docs/epics.md` for the complete implementation roadmap with 40 stories across 10 epics.
 
-**Current Epic:** Epic 3 - SEO-First Architecture
+**Current Status:** 5 epics complete (23 stories)
 
 ## Documentation
 
