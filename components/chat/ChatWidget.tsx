@@ -261,32 +261,32 @@ export function ChatWidget({ pageContext = 'default' }: ChatWidgetProps) {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          'fixed bottom-24 right-6 z-50 flex items-center gap-4 px-8 py-5 rounded-full shadow-2xl transition-all duration-300 cursor-pointer',
+          'fixed bottom-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-full shadow-2xl transition-all duration-300 cursor-pointer',
           isOpen
-            ? 'bg-gray-700 hover:bg-gray-800'
-            : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 animate-pulse'
+            ? 'bg-slate-700 hover:bg-slate-800'
+            : 'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300'
         )}
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
         {isOpen ? (
           <>
-            <X className="h-9 w-9 text-white" />
-            <span className="text-white font-bold text-xl">Close</span>
+            <X className="h-6 w-6 text-white" />
+            <span className="text-white font-bold text-base">Close</span>
           </>
         ) : (
           <>
-            <MessageCircle className="h-10 w-10 text-white" />
-            <span className="text-white font-bold text-xl">Chat with Wendy</span>
+            <MessageCircle className="h-7 w-7 text-slate-900" />
+            <span className="text-slate-900 font-bold text-base">Chat with Wendy</span>
           </>
         )}
       </button>
 
       {/* Notification Badge */}
       {!isOpen && messages.length === 0 && (
-        <div className="fixed bottom-44 right-6 z-40">
-          <div className="bg-yellow-400 text-gray-900 text-sm font-medium px-4 py-2 rounded-lg shadow-lg">
+        <div className="fixed bottom-24 right-6 z-40">
+          <div className="bg-white text-slate-900 text-sm font-medium px-4 py-2 rounded-lg shadow-lg border border-slate-200">
             👋 Ask me anything about mortgages!
-            <div className="absolute -bottom-1 right-8 w-3 h-3 bg-yellow-400 rotate-45" />
+            <div className="absolute -bottom-1 right-8 w-3 h-3 bg-white border-b border-r border-slate-200 rotate-45" />
           </div>
         </div>
       )}
@@ -294,24 +294,24 @@ export function ChatWidget({ pageContext = 'default' }: ChatWidgetProps) {
       {/* Chat Window */}
       {isOpen && (
         <Card
-          className="fixed bottom-44 right-6 z-50 max-w-[calc(100vw-48px)] flex flex-col shadow-2xl border-0 overflow-hidden transition-all duration-300"
-          style={{ width: `${chatWidth}px`, height: `${chatHeight}px`, maxHeight: 'calc(100vh - 180px)' }}
+          className="fixed bottom-24 right-6 z-50 max-w-[calc(100vw-48px)] flex flex-col shadow-2xl border-0 overflow-hidden transition-all duration-300"
+          style={{ width: `${chatWidth}px`, height: `${chatHeight}px`, maxHeight: 'calc(100vh - 120px)' }}
         >
           {/* Header */}
-          <div className="bg-blue-600 text-white p-4 flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-              <MessageCircle className="h-5 w-5" />
+          <div className="bg-slate-900 text-white p-4 flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center">
+              <MessageCircle className="h-5 w-5 text-slate-900" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold">Wendy - AI Mortgage Advisor</h3>
-              <p className="text-xs text-blue-100">Usually responds instantly</p>
+              <p className="text-xs text-slate-400">Usually responds instantly</p>
             </div>
             {/* Size Controls */}
             <div className="flex items-center gap-1">
               <button
                 onClick={() => resizeChat('down')}
                 disabled={chatWidth <= MIN_WIDTH && chatHeight <= MIN_HEIGHT}
-                className="p-1.5 rounded hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="p-1.5 rounded hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 title="Make smaller"
               >
                 <Minimize2 className="h-4 w-4" />
@@ -319,7 +319,7 @@ export function ChatWidget({ pageContext = 'default' }: ChatWidgetProps) {
               <button
                 onClick={() => resizeChat('up')}
                 disabled={chatWidth >= MAX_WIDTH && chatHeight >= MAX_HEIGHT}
-                className="p-1.5 rounded hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="p-1.5 rounded hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 title="Make larger"
               >
                 <Maximize2 className="h-4 w-4" />
@@ -341,8 +341,8 @@ export function ChatWidget({ pageContext = 'default' }: ChatWidgetProps) {
                   className={cn(
                     'max-w-[80%] rounded-2xl px-4 py-2',
                     message.role === 'user'
-                      ? 'bg-blue-600 text-white rounded-br-md'
-                      : 'bg-white text-gray-800 shadow-sm border rounded-bl-md'
+                      ? 'bg-amber-500 text-slate-900 rounded-br-md'
+                      : 'bg-white text-slate-800 shadow-sm border rounded-bl-md'
                   )}
                   style={{ fontSize: `${fontSize}px` }}
                 >
@@ -375,7 +375,7 @@ export function ChatWidget({ pageContext = 'default' }: ChatWidgetProps) {
                     placeholder="Your Name"
                     value={contactForm.name}
                     onChange={(e) => setContactForm(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                     style={{ fontSize: `${fontSize}px` }}
                     required
                   />
@@ -384,7 +384,7 @@ export function ChatWidget({ pageContext = 'default' }: ChatWidgetProps) {
                     placeholder="Email Address"
                     value={contactForm.email}
                     onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                     style={{ fontSize: `${fontSize}px` }}
                     required
                   />
@@ -393,7 +393,7 @@ export function ChatWidget({ pageContext = 'default' }: ChatWidgetProps) {
                     placeholder="Phone Number"
                     value={contactForm.phone}
                     onChange={(e) => setContactForm(prev => ({ ...prev, phone: e.target.value }))}
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                     style={{ fontSize: `${fontSize}px` }}
                     required
                   />
@@ -401,7 +401,7 @@ export function ChatWidget({ pageContext = 'default' }: ChatWidgetProps) {
                     <button
                       type="submit"
                       disabled={isSubmittingContact}
-                      className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                      className="flex-1 bg-amber-500 text-slate-900 py-2 px-4 rounded-lg font-bold hover:bg-amber-400 disabled:opacity-50 transition-colors"
                       style={{ fontSize: `${fontSize}px` }}
                     >
                       {isSubmittingContact ? 'Submitting...' : 'Connect Me!'}
@@ -429,7 +429,7 @@ export function ChatWidget({ pageContext = 'default' }: ChatWidgetProps) {
                   <button
                     key={index}
                     onClick={() => handleQuickReply(reply)}
-                    className="px-4 py-2 bg-white border-2 border-blue-500 text-blue-600 rounded-full font-medium hover:bg-blue-50 hover:border-blue-600 transition-all shadow-sm cursor-pointer"
+                    className="px-4 py-2 bg-white border-2 border-amber-500 text-amber-600 rounded-full font-medium hover:bg-amber-50 hover:border-amber-600 transition-all shadow-sm cursor-pointer"
                     style={{ fontSize: `${fontSize - 2}px` }}
                   >
                     {reply}
@@ -452,14 +452,14 @@ export function ChatWidget({ pageContext = 'default' }: ChatWidgetProps) {
                 onKeyDown={handleKeyDown}
                 placeholder="Type your message..."
                 disabled={isLoading}
-                className="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                 style={{ fontSize: `${fontSize}px` }}
               />
               <Button
                 onClick={sendMessage}
                 disabled={!input.trim() || isLoading}
                 size="icon"
-                className="rounded-full h-10 w-10 bg-blue-600 hover:bg-blue-700"
+                className="rounded-full h-10 w-10 bg-amber-500 hover:bg-amber-600 text-slate-900"
               >
                 {isLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

@@ -1,829 +1,801 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { StructuredData } from "@/components/seo/StructuredData";
 import {
   Home,
   Building2,
   TrendingUp,
-  MessageCircle,
-  CheckCircle,
   ArrowRight,
   Shield,
   Clock,
   Users,
   Zap,
-  Target,
   Phone,
   ChevronRight,
+  ChevronDown,
   Star,
   MapPin,
   BadgeCheck,
-  X,
-  Send,
-  DollarSign,
+  CheckCircle2,
+  XCircle,
+  Sparkles,
   Calculator,
-  FileText,
+  FileCheck,
   Award,
-  TrendingDown,
+  ArrowUpRight,
+  DollarSign,
   Percent,
-  Calendar,
+  Timer,
+  UserCheck,
+  Lock,
+  HeartHandshake,
+  ThumbsUp,
+  Ban,
+  CircleDollarSign,
+  PiggyBank,
+  Landmark,
+  Target,
+  BookOpen,
 } from "lucide-react";
 
 export default function HomePage() {
   const [activeLoanType, setActiveLoanType] = useState("residential");
-  const [chatMessages, setChatMessages] = useState([
-    { from: "bot", text: "Hi! I'm Wendy. Looking to buy, refinance, or invest?" },
-  ]);
-  const [showChat, setShowChat] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
-  // Enhanced loan type data with comprehensive info for semantic SEO
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const loanTypes = {
     residential: {
-      title: "Home Purchase & Refinance Loans",
-      subtitle: "Primary residence financing for California homebuyers",
-      rateRange: "6.125% - 7.25% APR*",
-      whoItsFor: "First-time buyers, move-up buyers, refinancers",
-      items: [
-        { name: "Conventional Loans", detail: "3% down, 620+ credit, PMI cancellable at 80% LTV" },
-        { name: "FHA Loans", detail: "3.5% down, 580+ credit, government-insured" },
-        { name: "VA Loans", detail: "$0 down for veterans, no PMI, competitive rates" },
-        { name: "USDA Rural Loans", detail: "$0 down for eligible rural areas" },
-        { name: "Jumbo Loans", detail: "Loan amounts up to $5M+, 10% down options" },
-        { name: "Rate & Term Refinance", detail: "Lower your rate or change loan term" },
-        { name: "Cash-Out Refinance", detail: "Access home equity up to 80% LTV" },
-        { name: "Streamline Refinance", detail: "FHA/VA fast-track with minimal docs" },
+      title: "Home Loans",
+      desc: "Buy your dream home or refinance smarter",
+      rate: "6.125%",
+      products: [
+        { name: "Conventional", desc: "3% down, 620+ credit" },
+        { name: "FHA", desc: "3.5% down, 580+ credit" },
+        { name: "VA", desc: "$0 down for veterans" },
+        { name: "Jumbo", desc: "Loans up to $5M+" },
+        { name: "Refinance", desc: "Lower your rate or cash out" },
       ],
-      requirements: ["Minimum 580 credit (FHA) or 620 (Conventional)", "2 years employment history", "DTI under 43-50% depending on loan type", "Property appraisal required"],
-      benefits: ["Lock in today's rates for 30 years", "Build wealth through home equity", "Tax-deductible mortgage interest", "Stable monthly payments"],
-      cta: "Get Home Loan Rates",
       href: "/residential",
-      processingTime: "21-45 days typical close",
+      icon: Home,
+      color: "from-blue-500 to-blue-600",
     },
     investment: {
-      title: "Investment Property Loans",
-      subtitle: "Financing for real estate investors & landlords",
-      rateRange: "7.5% - 9.5% APR*",
-      whoItsFor: "Real estate investors, landlords, house flippers",
-      items: [
-        { name: "DSCR Loans", detail: "Qualify on rental income, no tax returns needed" },
-        { name: "Fix & Flip Loans", detail: "80-90% LTV, 10-day close, interest-only" },
-        { name: "Rental Portfolio Loans", detail: "Finance 5-100+ properties under one loan" },
-        { name: "Bridge Loans", detail: "Short-term financing for quick acquisitions" },
-        { name: "Hard Money Loans", detail: "Asset-based, close in 7-14 days" },
-        { name: "Bank Statement Loans", detail: "12-24 month statements for self-employed" },
-        { name: "Foreign National Loans", detail: "No SSN required, 25-30% down" },
-        { name: "Blanket Loans", detail: "Multiple properties, single mortgage" },
+      title: "Investment Loans",
+      desc: "Scale your portfolio with investor-friendly financing",
+      rate: "7.5%",
+      products: [
+        { name: "DSCR", desc: "Qualify on rental income" },
+        { name: "Fix & Flip", desc: "Close in 7-14 days" },
+        { name: "Bridge", desc: "Short-term acquisition" },
+        { name: "Portfolio", desc: "5-100+ properties" },
+        { name: "Hard Money", desc: "Asset-based, fast close" },
       ],
-      requirements: ["DSCR ratio of 1.0+ (rent covers payment)", "20-25% down payment typical", "6+ months cash reserves", "Property cash flow analysis"],
-      benefits: ["No personal income verification (DSCR)", "Unlimited properties in portfolio", "Interest-only payment options", "Close quickly on competitive deals"],
-      cta: "Get Investor Rates",
       href: "/investment",
-      processingTime: "7-21 days typical close",
+      icon: TrendingUp,
+      color: "from-emerald-500 to-emerald-600",
     },
     commercial: {
-      title: "Commercial & Business Loans",
-      subtitle: "Financing for commercial real estate & businesses",
-      rateRange: "7.0% - 10.5% APR*",
-      whoItsFor: "Business owners, commercial investors, developers",
-      items: [
-        { name: "Office & Retail Loans", detail: "Stabilized commercial properties" },
-        { name: "Multi-Family (5+ units)", detail: "Apartment buildings & complexes" },
-        { name: "Mixed-Use Properties", detail: "Residential + commercial combo" },
-        { name: "SBA 7(a) Loans", detail: "Up to $5M, 10-25 year terms" },
-        { name: "SBA 504 Loans", detail: "Up to $5.5M for real estate & equipment" },
-        { name: "Construction Loans", detail: "Ground-up & major rehab financing" },
-        { name: "Industrial & Warehouse", detail: "Manufacturing & distribution properties" },
-        { name: "Owner-Occupied CRE", detail: "Lower rates when you occupy 51%+" },
+      title: "Commercial Loans",
+      desc: "Finance your business real estate goals",
+      rate: "7.0%",
+      products: [
+        { name: "SBA 7(a)", desc: "Up to $5M, 10-25yr terms" },
+        { name: "SBA 504", desc: "Real estate & equipment" },
+        { name: "Multi-Family", desc: "5+ unit buildings" },
+        { name: "Mixed-Use", desc: "Retail + residential" },
+        { name: "Construction", desc: "Ground-up financing" },
       ],
-      requirements: ["Business financials (2+ years)", "Personal & business credit review", "25-30% down payment typical", "Property appraisal & environmental"],
-      benefits: ["Build business equity vs renting", "Potential rental income from unused space", "Depreciation tax benefits", "Long-term wealth building"],
-      cta: "Get Commercial Rates",
       href: "/commercial",
-      processingTime: "30-60 days typical close",
+      icon: Building2,
+      color: "from-violet-500 to-violet-600",
     },
   };
 
+  const faqs = [
+    {
+      q: "What credit score do I need?",
+      a: "FHA loans: 580+ (3.5% down) or 500-579 (10% down). Conventional: 620+. VA: typically 620+. Jumbo: usually 700+. Our AI matches you with lenders for your credit profile."
+    },
+    {
+      q: "How much down payment do I need?",
+      a: "VA and USDA: $0 down for eligible borrowers. FHA: 3.5% down. Conventional: 3% for first-time buyers. Jumbo: 10-20%. California down payment assistance may be available."
+    },
+    {
+      q: "Is LendyWendy free?",
+      a: "Yes, 100% free for borrowers. We're compensated by lenders when a loan closes. No hidden fees, no obligation to you."
+    },
+    {
+      q: "Will this affect my credit score?",
+      a: "No. Using our AI advisor or Readiness Score does NOT impact your credit. Only a soft inquiry (no effect). Hard inquiry only when you formally apply with a lender."
+    },
+    {
+      q: "How fast can I get pre-approved?",
+      a: "Pre-qualification: 2 minutes with our AI. Full pre-approval: 24-48 hours after docs. Some loans (fix-and-flip) can close in 7-14 days."
+    },
+  ];
+
   return (
     <>
-      {/* Structured Data for SEO - Schema.org JSON-LD */}
       <StructuredData
         type="home"
-        pageTitle="LendyWendy | California's AI-Powered Mortgage Matching | Best Rates Guaranteed"
-        pageDescription="Stop calling lenders. Let California's top mortgage lenders compete for your business. AI-powered matching finds the best rates for home loans, refinancing, investment property, and commercial mortgages. NMLS #1945913."
+        pageTitle="LendyWendy | California Mortgage Rates | AI-Powered Lender Matching"
+        pageDescription="Get matched with California's best mortgage lenders in 60 seconds. Home loans, investment property, commercial financing. No spam, no obligation. NMLS #1945913."
         pageUrl="/"
       />
 
-      <main className="min-h-screen" itemScope itemType="https://schema.org/WebPage">
-        {/* Hidden semantic content for NLP entity extraction */}
-        <div className="sr-only" aria-hidden="true">
-          <h2>California Mortgage Services by LendyWendy</h2>
-          <p>LendyWendy is a licensed mortgage broker (NMLS #1945913) providing AI-powered mortgage matching services to California homebuyers and real estate investors.</p>
-          <p>Our mortgage services include: Conventional loans, FHA loans, VA loans, USDA loans, Jumbo loans, DSCR loans, fix-and-flip loans, commercial mortgages, SBA loans, bridge financing, and Non-QM loans.</p>
-          <p>Service areas: Los Angeles, San Francisco, San Diego, Sacramento, San Jose, Orange County, Fresno, Oakland, Long Beach, Bakersfield, Anaheim, Santa Ana, Riverside, Irvine, and all California cities.</p>
-          <p>Entity relationships: LendyWendy connects California homebuyers with mortgage lenders. Wendy Landeros is the founder of LendyWendy. LendyWendy provides mortgage pre-approval services.</p>
+      <main className="min-h-screen bg-slate-950 text-white overflow-hidden">
+        {/* Ambient background */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-amber-500/8 rounded-full blur-[128px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-violet-500/8 rounded-full blur-[128px]" />
         </div>
 
-        {/* HERO - Compact, Clear Value Prop */}
-        <section
-          className="bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 text-white"
-          aria-labelledby="hero-heading"
-          itemScope
-          itemType="https://schema.org/WPHeader"
-        >
-        <div className="container mx-auto px-4 py-12 lg:py-16">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-            {/* Left - Message */}
-            <div>
-              <div className="inline-flex items-center gap-2 bg-gold-500/20 border border-gold-500/30 text-gold-400 px-3 py-1 rounded-full text-sm font-medium mb-4">
-                <Zap className="h-4 w-4" />
-                California&apos;s fastest mortgage matching
-              </div>
-              <h1
-                id="hero-heading"
-                className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-4"
-                itemProp="headline"
-              >
-                Stop calling lenders.
-                <br />
-                <span className="text-gold-500">Let them compete for you.</span>
-              </h1>
-              <p className="text-lg text-gray-300 mb-6 max-w-lg hero-description" itemProp="description">
-                Tell us what you need in <time dateTime="PT60S">60 seconds</time>. We&apos;ll match you with pre-vetted <span itemProp="areaServed">California</span> lenders who fight for your business.
-              </p>
-
-              {/* Inline Form */}
-              <form className="flex flex-col sm:flex-row gap-2 mb-4">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500"
-                />
-                <Button className="bg-gold-500 hover:bg-gold-600 text-navy-900 font-bold px-6 py-3 h-auto">
-                  Get My Rates <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </form>
-
-              <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-                <span className="flex items-center gap-1">
-                  <CheckCircle className="h-4 w-4 text-green-400" /> No credit pull
-                </span>
-                <span className="flex items-center gap-1">
-                  <CheckCircle className="h-4 w-4 text-green-400" /> 60 seconds
-                </span>
-                <span className="flex items-center gap-1">
-                  <CheckCircle className="h-4 w-4 text-green-400" /> 100% free
-                </span>
-              </div>
-            </div>
-
-            {/* Right - Live Chat Demo */}
-            <div className="relative">
-              <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-md mx-auto">
-                <div className="bg-navy-900 px-4 py-3 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gold-500 flex items-center justify-center text-navy-900 font-bold">W</div>
-                  <div>
-                    <div className="text-white font-semibold text-sm">Wendy - AI Mortgage Advisor</div>
-                    <div className="text-green-400 text-xs flex items-center gap-1">
-                      <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" /> Online now
-                    </div>
-                  </div>
-                </div>
-                <div className="p-4 bg-gray-50 min-h-[200px] space-y-3">
-                  <div className="bg-white rounded-xl rounded-tl-sm px-3 py-2 shadow-sm max-w-[80%] text-sm text-gray-700">
-                    Hi! I&apos;m Wendy. Looking to <strong>buy</strong>, <strong>refinance</strong>, or <strong>invest</strong>?
-                  </div>
-                  <div className="flex gap-2 flex-wrap">
-                    {["🏠 Buy a home", "💰 Refinance", "📈 Invest"].map((opt) => (
-                      <button
-                        key={opt}
-                        className="px-3 py-1.5 bg-navy-900 text-white text-sm rounded-full hover:bg-navy-800 transition-colors"
-                      >
-                        {opt}
-                      </button>
+        {/* ============ HERO ============ */}
+        <section className="relative pt-8 pb-16 lg:pt-12 lg:pb-24">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              {/* Trust bar - top */}
+              <div className={`flex flex-wrap items-center justify-center gap-4 md:gap-8 mb-10 text-sm transition-all duration-700 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+                <div className="flex items-center gap-2">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
                     ))}
                   </div>
+                  <span className="text-slate-300"><span className="text-white font-semibold">4.9/5</span> from 2,500+ reviews</span>
                 </div>
-                <div className="p-3 border-t flex gap-2">
-                  <input
-                    placeholder="Type or click above..."
-                    className="flex-1 px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-900"
-                  />
-                  <Button size="sm" className="bg-gold-500 text-navy-900">
-                    <Send className="h-4 w-4" />
+                <div className="hidden md:block w-px h-4 bg-slate-700" />
+                <div className="flex items-center gap-2 text-slate-300">
+                  <Shield className="h-4 w-4 text-emerald-400" />
+                  NMLS #1945913
+                </div>
+                <div className="hidden md:block w-px h-4 bg-slate-700" />
+                <div className="flex items-center gap-2 text-slate-300">
+                  <BadgeCheck className="h-4 w-4 text-blue-400" />
+                  California Licensed
+                </div>
+              </div>
+
+              {/* Main hero content */}
+              <div className="text-center mb-12">
+                <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 transition-all duration-700 delay-100 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                  Stop calling lenders.
+                  <br />
+                  <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 bg-clip-text text-transparent">
+                    Let them compete for you.
+                  </span>
+                </h1>
+                <p className={`text-xl text-slate-400 max-w-2xl mx-auto mb-8 transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                  Tell us what you need in <span className="text-white font-medium">60 seconds</span>. We match you with California&apos;s top mortgage lenders who fight for your business.
+                </p>
+
+                {/* CTA buttons */}
+                <div className={`flex flex-col sm:flex-row gap-4 justify-center mb-10 transition-all duration-700 delay-300 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-bold text-lg h-14 px-8 rounded-xl shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/30 hover:scale-[1.02] transition-all cursor-pointer"
+                    asChild
+                  >
+                    <Link href="/get-quote">
+                      Get My Free Quote <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-slate-700 bg-slate-900/50 text-white hover:bg-slate-800 hover:border-slate-600 font-medium text-lg h-14 px-8 rounded-xl transition-all cursor-pointer"
+                    asChild
+                  >
+                    <Link href="/readiness-score">
+                      <Target className="mr-2 h-5 w-5 text-violet-400" />
+                      Check Readiness Score
+                    </Link>
                   </Button>
                 </div>
-              </div>
-              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-navy-800 text-white text-xs px-4 py-2 rounded-full border border-navy-700">
-                Try it — Wendy answers in seconds
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* HOW IT WORKS - Immediately After Hero */}
-      <section
-        className="bg-white border-b"
-        aria-labelledby="how-it-works-heading"
-        itemScope
-        itemType="https://schema.org/HowTo"
-      >
-        <div className="container mx-auto px-4 py-10">
-          <header className="text-center mb-8">
-            <h2
-              id="how-it-works-heading"
-              className="text-2xl font-bold text-navy-900 how-it-works"
-              itemProp="name"
-            >
-              How it works — <span itemProp="estimatedCost" itemScope itemType="https://schema.org/MonetaryAmount"><meta itemProp="price" content="0" /><meta itemProp="priceCurrency" content="USD" /></span>3 steps, <time dateTime="PT5M" itemProp="totalTime">5 minutes</time>
-            </h2>
-          </header>
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {[
-              {
-                step: "1",
-                icon: MessageCircle,
-                title: "Tell us your goals",
-                desc: "Chat with Wendy or fill out a quick form. We need 60 seconds to understand what you're looking for.",
-                color: "bg-blue-500",
-              },
-              {
-                step: "2",
-                icon: Users,
-                title: "Get matched instantly",
-                desc: "Our algorithm finds the best local lenders for your exact situation. No cold calls, no spam.",
-                color: "bg-green-500",
-              },
-              {
-                step: "3",
-                icon: BadgeCheck,
-                title: "Compare & choose",
-                desc: "Lenders compete for your business. You pick the best rate and close with confidence.",
-                color: "bg-gold-500",
-              },
-            ].map((item) => (
-              <div key={item.step} className="flex gap-4">
-                <div className={`${item.color} w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0`}>
-                  <span className="text-white font-bold text-lg">{item.step}</span>
-                </div>
-                <div>
-                  <h3 className="font-bold text-navy-900 mb-1">{item.title}</h3>
-                  <p className="text-sm text-gray-600">{item.desc}</p>
+                {/* Quick trust points */}
+                <div className={`flex flex-wrap justify-center gap-6 text-sm text-slate-400 transition-all duration-700 delay-400 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+                  <span className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    No credit pull
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    100% free
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    No spam calls
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    Max 3 lenders contact you
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* THE DIFFERENCE - Why We're Not Like Others */}
-      <section className="bg-gray-50 py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-8">
-              <p className="text-sm font-semibold text-red-500 uppercase tracking-wider mb-2">Why we&apos;re different</p>
-              <h2 className="text-2xl lg:text-3xl font-bold text-navy-900">
-                National sites send you to call centers.<br />
-                <span className="text-gold-600">We connect you with local experts.</span>
-              </h2>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Other Sites */}
-              <div className="bg-white rounded-xl p-6 border-2 border-gray-200">
-                <div className="flex items-center gap-2 mb-4">
-                  <X className="h-6 w-6 text-red-500" />
-                  <span className="font-bold text-gray-500">Other mortgage sites</span>
-                </div>
-                <ul className="space-y-3">
-                  {[
-                    "Sell your info to 10+ lenders",
-                    "Endless spam calls for weeks",
-                    "Out-of-state call centers",
-                    "One-size-fits-all rates",
-                    "No help with complex situations",
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-gray-500 text-sm">
-                      <X className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* LendyWendy */}
-              <div className="bg-navy-900 rounded-xl p-6 border-2 border-gold-500 text-white relative overflow-hidden">
-                <div className="absolute top-0 right-0 bg-gold-500 text-navy-900 text-xs font-bold px-4 py-1">
-                  LENDYWENDY
-                </div>
-                <div className="flex items-center gap-2 mb-4">
-                  <CheckCircle className="h-6 w-6 text-gold-500" />
-                  <span className="font-bold">The LendyWendy difference</span>
-                </div>
-                <ul className="space-y-3">
-                  {[
-                    "You control who contacts you",
-                    "Max 3 lenders, hand-picked for you",
-                    "California-based local experts",
-                    "AI finds your best loan type",
-                    "DSCR, Non-QM, Commercial — we do it all",
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm">
-                      <CheckCircle className="h-4 w-4 text-gold-500 flex-shrink-0 mt-0.5" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+              {/* Stats cards */}
+              <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto transition-all duration-700 delay-500 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                {[
+                  { value: "$2.4B+", label: "Loans Funded", icon: CircleDollarSign },
+                  { value: "10,000+", label: "Happy Customers", icon: Users },
+                  { value: "15 min", label: "Avg. Pre-Approval", icon: Timer },
+                  { value: "$847", label: "Avg. Monthly Savings", icon: PiggyBank },
+                ].map((stat, i) => (
+                  <div key={i} className="bg-slate-900/60 backdrop-blur-sm border border-slate-800 rounded-2xl p-4 text-center hover:border-slate-700 transition-colors cursor-default">
+                    <stat.icon className="h-6 w-6 text-amber-400 mx-auto mb-2" />
+                    <div className="text-2xl font-bold text-white">{stat.value}</div>
+                    <div className="text-xs text-slate-500">{stat.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* LOAN TYPES - Compact Tabs */}
-      <section
-        className="bg-white py-12"
-        aria-labelledby="loan-types-heading"
-        itemScope
-        itemType="https://schema.org/ItemList"
-      >
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <header className="text-center mb-6">
-              <h2
-                id="loan-types-heading"
-                className="text-2xl font-bold text-navy-900 loan-types"
-                itemProp="name"
-              >
-                Every loan type. One place.
-              </h2>
-              <p className="text-gray-500" itemProp="description">
-                California mortgage options: <strong>Conventional</strong>, <strong>FHA</strong>, <strong>VA</strong>, <strong>USDA</strong>, <strong>Jumbo</strong>, <strong>DSCR</strong>, <strong>Fix &amp; Flip</strong>, <strong>Commercial</strong>, and <strong>SBA loans</strong>
-              </p>
-            </header>
+        {/* ============ HOW IT WORKS ============ */}
+        <section className="relative py-16 lg:py-24 border-t border-slate-800/50">
+          <div className="container mx-auto px-4">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-12">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-sm font-medium mb-4">
+                  <Zap className="h-4 w-4" />
+                  Simple 3-step process
+                </span>
+                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+                  How LendyWendy Works
+                </h2>
+                <p className="text-slate-400 max-w-xl mx-auto">
+                  No more cold calling banks. No more comparing rates yourself. We handle everything.
+                </p>
+              </div>
 
-            {/* Tabs */}
-            <div className="flex justify-center gap-2 mb-6">
-              {[
-                { id: "residential", label: "Residential", icon: Home },
-                { id: "investment", label: "Investment", icon: TrendingUp },
-                { id: "commercial", label: "Commercial", icon: Building2 },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveLoanType(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium text-sm transition-all ${
-                    activeLoanType === tab.id
-                      ? "bg-navy-900 text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <tab.icon className="h-4 w-4" />
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+              <div className="grid md:grid-cols-3 gap-6 relative">
+                {/* Connector line */}
+                <div className="hidden md:block absolute top-16 left-[20%] right-[20%] h-0.5 bg-gradient-to-r from-amber-500/50 via-violet-500/50 to-emerald-500/50" />
 
-            {/* Enhanced Content - Rich Information Display */}
-            {(() => {
-              const loan = loanTypes[activeLoanType as keyof typeof loanTypes];
-              return (
-                <article
-                  className="bg-gray-50 rounded-2xl p-6"
-                  itemScope
-                  itemType="https://schema.org/FinancialProduct"
-                >
-                  {/* Header with rate indicator */}
-                  <header className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6 pb-4 border-b border-gray-200">
-                    <div>
-                      <h3 className="font-bold text-xl text-navy-900 mb-1" itemProp="name">
-                        {loan.title}
-                      </h3>
-                      <p className="text-gray-600 text-sm" itemProp="description">{loan.subtitle}</p>
-                      <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                        <Users className="h-3 w-3" />
-                        <span itemProp="audience">Best for: {loan.whoItsFor}</span>
-                      </p>
-                    </div>
-                    <div className="bg-navy-900 text-white px-4 py-2 rounded-lg text-center flex-shrink-0">
-                      <div className="text-xs text-gray-300">Current Rates From</div>
-                      <div className="font-bold text-gold-400" itemProp="offers" itemScope itemType="https://schema.org/Offer">
-                        <span itemProp="price">{loan.rateRange}</span>
+                {[
+                  {
+                    step: "1",
+                    icon: Sparkles,
+                    title: "Tell us your goals",
+                    desc: "Answer a few quick questions about what you're looking for. Takes 60 seconds. No credit pull.",
+                    color: "bg-amber-500",
+                  },
+                  {
+                    step: "2",
+                    icon: Users,
+                    title: "Get matched instantly",
+                    desc: "Our AI finds the 3 best California lenders for your exact situation. No spam, guaranteed.",
+                    color: "bg-violet-500",
+                  },
+                  {
+                    step: "3",
+                    icon: Award,
+                    title: "Compare & choose",
+                    desc: "Lenders compete for your business. You pick the best rate and close with confidence.",
+                    color: "bg-emerald-500",
+                  },
+                ].map((item, i) => (
+                  <div key={i} className="relative">
+                    <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800 rounded-2xl p-6 hover:border-slate-700 transition-all h-full">
+                      <div className={`w-12 h-12 ${item.color} rounded-xl flex items-center justify-center mb-4 relative z-10`}>
+                        <item.icon className="h-6 w-6 text-white" />
                       </div>
-                      <div className="text-[10px] text-gray-400">{loan.processingTime}</div>
+                      <div className="text-xs text-slate-500 font-medium mb-1">STEP {item.step}</div>
+                      <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
+                      <p className="text-slate-400 text-sm">{item.desc}</p>
                     </div>
-                  </header>
+                  </div>
+                ))}
+              </div>
 
-                  {/* Loan Products Grid */}
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-navy-900 mb-3 flex items-center gap-2">
-                      <Shield className="h-4 w-4 text-gold-500" />
-                      Available Loan Programs
-                    </h4>
-                    <div className="grid sm:grid-cols-2 gap-2">
-                      {loan.items.map((item, i) => (
-                        <div
-                          key={i}
-                          className="bg-white rounded-lg p-3 border border-gray-100 hover:border-gold-300 transition-colors"
-                          itemProp="itemOffered"
-                          itemScope
-                          itemType="https://schema.org/LoanOrCredit"
-                        >
-                          <div className="flex items-start gap-2">
-                            <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                            <div>
-                              <span className="font-medium text-navy-900 text-sm" itemProp="name">{item.name}</span>
-                              <p className="text-xs text-gray-500" itemProp="description">{item.detail}</p>
-                            </div>
+              <div className="text-center mt-10">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-bold h-12 px-8 rounded-xl cursor-pointer"
+                  asChild
+                >
+                  <Link href="/get-quote">
+                    Start Now — It&apos;s Free <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ============ WHY LENDYWENDY (COMPARISON) ============ */}
+        <section className="relative py-16 lg:py-24 border-t border-slate-800/50">
+          <div className="container mx-auto px-4">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-12">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium mb-4">
+                  <Ban className="h-4 w-4" />
+                  Why we&apos;re different
+                </span>
+                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+                  National sites sell your info.
+                  <br />
+                  <span className="text-amber-400">We protect it.</span>
+                </h2>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Other sites */}
+                <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <XCircle className="h-6 w-6 text-red-400" />
+                    <span className="font-semibold text-slate-400">Other mortgage sites</span>
+                  </div>
+                  <ul className="space-y-4">
+                    {[
+                      "Sell your info to 10+ lenders",
+                      "Endless spam calls for weeks",
+                      "Out-of-state call centers",
+                      "One-size-fits-all rates",
+                      "No help with complex loans",
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-start gap-3 text-slate-500">
+                        <XCircle className="h-5 w-5 text-red-400/60 flex-shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* LendyWendy */}
+                <div className="bg-gradient-to-br from-amber-500/10 to-violet-500/10 border border-amber-500/30 rounded-2xl p-6 relative">
+                  <div className="absolute top-0 right-0 bg-amber-500 text-slate-950 text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-xl">
+                    LENDYWENDY
+                  </div>
+                  <div className="flex items-center gap-2 mb-6">
+                    <CheckCircle2 className="h-6 w-6 text-amber-400" />
+                    <span className="font-semibold text-white">The LendyWendy way</span>
+                  </div>
+                  <ul className="space-y-4">
+                    {[
+                      "You control who contacts you",
+                      "Max 3 lenders, hand-picked for you",
+                      "California-based local experts",
+                      "AI finds your best loan type",
+                      "DSCR, Non-QM, Commercial — we do it all",
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-start gap-3 text-slate-200">
+                        <CheckCircle2 className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ============ LOAN TYPES ============ */}
+        <section className="relative py-16 lg:py-24 border-t border-slate-800/50">
+          <div className="container mx-auto px-4">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-10">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-4">
+                  <Landmark className="h-4 w-4" />
+                  Comprehensive coverage
+                </span>
+                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+                  Every Loan Type. One Place.
+                </h2>
+                <p className="text-slate-400">
+                  First-time buyer? Seasoned investor? Business owner? We&apos;ve got you covered.
+                </p>
+              </div>
+
+              {/* Loan type tabs */}
+              <div className="flex justify-center mb-8">
+                <div className="inline-flex p-1.5 bg-slate-900/80 backdrop-blur-sm rounded-xl border border-slate-800">
+                  {Object.entries(loanTypes).map(([key, loan]) => (
+                    <button
+                      key={key}
+                      onClick={() => setActiveLoanType(key)}
+                      className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm transition-all cursor-pointer ${
+                        activeLoanType === key
+                          ? "bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 shadow-lg"
+                          : "text-slate-400 hover:text-white hover:bg-slate-800"
+                      }`}
+                    >
+                      <loan.icon className="h-4 w-4" />
+                      {loan.title}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Loan content */}
+              {(() => {
+                const loan = loanTypes[activeLoanType as keyof typeof loanTypes];
+                return (
+                  <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800 rounded-2xl p-6 lg:p-8">
+                    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 mb-6">
+                      <div>
+                        <h3 className="text-2xl font-bold text-white mb-2">{loan.title}</h3>
+                        <p className="text-slate-400">{loan.desc}</p>
+                      </div>
+                      <div className="flex items-baseline gap-2 bg-slate-800/50 px-5 py-3 rounded-xl border border-slate-700">
+                        <span className="text-sm text-slate-400">Rates from</span>
+                        <span className="text-2xl font-bold text-amber-400">{loan.rate}</span>
+                        <span className="text-sm text-slate-500">APR*</span>
+                      </div>
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+                      {loan.products.map((product, i) => (
+                        <div key={i} className="flex items-start gap-3 bg-slate-800/30 rounded-xl p-3 border border-slate-700/50 hover:border-slate-600 transition-colors">
+                          <CheckCircle2 className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <div className="font-medium text-white text-sm">{product.name}</div>
+                            <div className="text-xs text-slate-500">{product.desc}</div>
                           </div>
                         </div>
                       ))}
                     </div>
-                  </div>
 
-                  {/* Requirements & Benefits */}
-                  <div className="grid sm:grid-cols-2 gap-4 mb-6">
-                    <div className="bg-white rounded-lg p-4 border border-gray-100">
-                      <h4 className="font-semibold text-navy-900 mb-2 flex items-center gap-2 text-sm">
-                        <Target className="h-4 w-4 text-blue-500" />
-                        Typical Requirements
-                      </h4>
-                      <ul className="space-y-1.5">
-                        {loan.requirements.map((req, i) => (
-                          <li key={i} className="text-xs text-gray-600 flex items-start gap-1.5">
-                            <ChevronRight className="h-3 w-3 text-gray-400 flex-shrink-0 mt-0.5" />
-                            {req}
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button
+                        className="bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-bold h-11 px-6 rounded-xl cursor-pointer"
+                        asChild
+                      >
+                        <Link href="/get-quote">
+                          Get Matched Now <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="border-slate-700 bg-slate-800/50 text-white hover:bg-slate-700 h-11 px-6 rounded-xl cursor-pointer"
+                        asChild
+                      >
+                        <Link href={loan.href}>
+                          Learn More <ArrowUpRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
                     </div>
-                    <div className="bg-white rounded-lg p-4 border border-gray-100">
-                      <h4 className="font-semibold text-navy-900 mb-2 flex items-center gap-2 text-sm">
-                        <Zap className="h-4 w-4 text-gold-500" />
-                        Key Benefits
-                      </h4>
-                      <ul className="space-y-1.5">
-                        {loan.benefits.map((benefit, i) => (
-                          <li key={i} className="text-xs text-gray-600 flex items-start gap-1.5">
-                            <Star className="h-3 w-3 text-gold-500 flex-shrink-0 mt-0.5" />
-                            {benefit}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+
+                    <p className="text-xs text-slate-600 mt-4">
+                      *Rates for illustration. Your rate depends on credit, loan amount, property type, and market.
+                    </p>
                   </div>
-
-                  {/* CTAs */}
-                  <footer className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
-                    <Button className="bg-gold-500 hover:bg-gold-600 text-navy-900 font-bold flex-1" asChild>
-                      <Link href={loan.href}>
-                        {loan.cta}
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                    <Button variant="outline" className="border-navy-900 text-navy-900 flex-1" asChild>
-                      <Link href="/get-quote">
-                        Get Matched With Lenders
-                      </Link>
-                    </Button>
-                  </footer>
-
-                  {/* Rate Disclaimer */}
-                  <p className="text-[10px] text-gray-400 mt-3 text-center">
-                    *Rates shown are for illustration. Your actual rate depends on credit score, loan amount, property type, and market conditions. Equal Housing Opportunity.
-                  </p>
-                </article>
-              );
-            })()}
-          </div>
-        </div>
-      </section>
-
-      {/* NOT READY? Readiness Score Hook */}
-      <section className="bg-gradient-to-r from-sage-500 to-emerald-600 py-10">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8">
-            <div className="flex-1 text-white">
-              <p className="text-emerald-200 font-medium mb-2">Not ready to talk to a lender yet?</p>
-              <h2 className="text-2xl lg:text-3xl font-bold mb-3">
-                Check your Mortgage Readiness Score
-              </h2>
-              <p className="text-emerald-100 mb-4">
-                2-minute quiz tells you where you stand. Get personalized tips to improve your approval odds — no lender contact required.
-              </p>
-              <Button size="lg" className="bg-white text-sage-500 hover:bg-gray-100 font-bold" asChild>
-                <Link href="/readiness-score">
-                  <Target className="mr-2 h-5 w-5" />
-                  Check My Score Free
-                </Link>
-              </Button>
+                );
+              })()}
             </div>
-            <div className="flex-shrink-0">
-              <div className="w-32 h-32 bg-white/20 rounded-full flex flex-col items-center justify-center border-4 border-white/40">
-                <span className="text-4xl font-extrabold text-white">87</span>
-                <span className="text-xs text-emerald-200">Ready!</span>
+          </div>
+        </section>
+
+        {/* ============ READINESS SCORE CTA ============ */}
+        <section className="relative py-16 lg:py-24 border-t border-slate-800/50 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-transparent to-violet-500/5" />
+          <div className="container mx-auto px-4 relative">
+            <div className="max-w-5xl mx-auto">
+              <div className="grid lg:grid-cols-2 gap-10 items-center">
+                <div>
+                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium mb-4">
+                    <Target className="h-4 w-4" />
+                    Not ready to apply yet?
+                  </span>
+                  <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+                    Check Your Mortgage Readiness Score
+                  </h2>
+                  <p className="text-slate-400 mb-6">
+                    Our free 2-minute assessment tells you exactly where you stand. Get personalized tips to improve your approval odds — <strong className="text-white">no lender contact, no credit pull</strong>.
+                  </p>
+                  <ul className="space-y-3 mb-8">
+                    {[
+                      "See your estimated approval odds",
+                      "Get personalized improvement tips",
+                      "Know what loan types fit your situation",
+                      "Identify issues before applying",
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-center gap-3 text-slate-300">
+                        <CheckCircle2 className="h-5 w-5 text-emerald-400 flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-slate-950 font-bold h-14 px-8 rounded-xl cursor-pointer"
+                    asChild
+                  >
+                    <Link href="/readiness-score">
+                      Check My Score — Free <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                  </Button>
+                </div>
+
+                {/* Score visualization */}
+                <div className="flex justify-center">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-violet-500/20 rounded-full blur-3xl" />
+                    <div className="relative w-56 h-56 rounded-full bg-slate-900/80 backdrop-blur-xl border border-slate-700 flex flex-col items-center justify-center">
+                      <div className="text-6xl font-bold text-white mb-1">87</div>
+                      <div className="text-emerald-400 font-semibold">Great</div>
+                      <div className="text-xs text-slate-500 mt-1">Readiness Score</div>
+                    </div>
+                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-slate-900 border border-slate-700 rounded-full text-sm text-slate-400">
+                      Takes 2 minutes
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* SOCIAL PROOF - Quick Trust */}
-      <section className="bg-white py-10 border-b">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                {
-                  quote: "Pre-approved in 5 minutes. Rate was 0.375% lower than my bank.",
-                  name: "Maria S.",
-                  detail: "First-time buyer, San Diego",
-                },
-                {
-                  quote: "Finally found a lender who does bank statement loans. Closed in 3 weeks.",
-                  name: "James T.",
-                  detail: "Self-employed investor, LA",
-                },
-                {
-                  quote: "Readiness Score showed me exactly what to fix. Bought my home 3 months later.",
-                  name: "Sarah K.",
-                  detail: "Homeowner, Sacramento",
-                },
-              ].map((t, i) => (
-                <div key={i} className="bg-gray-50 rounded-xl p-5">
-                  <div className="flex gap-1 mb-3">
+        {/* ============ TESTIMONIALS ============ */}
+        <section className="relative py-16 lg:py-24 border-t border-slate-800/50">
+          <div className="container mx-auto px-4">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-12">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-medium mb-4">
+                  <ThumbsUp className="h-4 w-4" />
+                  Real results
+                </span>
+                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+                  Trusted by 10,000+ Californians
+                </h2>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="flex">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-gold-500 text-gold-500" />
+                      <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
                     ))}
                   </div>
-                  <p className="text-sm text-gray-700 mb-3">&quot;{t.quote}&quot;</p>
-                  <p className="text-sm font-semibold text-navy-900">{t.name}</p>
-                  <p className="text-xs text-gray-500">{t.detail}</p>
+                  <span className="text-slate-400">4.9/5 from 2,500+ reviews</span>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+              </div>
 
-      {/* LOCAL CALIFORNIA - Trust + SEO with comprehensive city coverage */}
-      <section
-        className="bg-gray-50 py-10"
-        aria-labelledby="california-heading"
-        itemScope
-        itemType="https://schema.org/Service"
-      >
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            <header className="text-center mb-6">
-              <h2 id="california-heading" className="text-xl font-bold text-navy-900 mb-2" itemProp="name">
-                Local California mortgage lenders who know your market
-              </h2>
-              <p className="text-gray-500 mb-2 text-sm" itemProp="description">
-                We partner with licensed, vetted loan officers in every major California metro area
-              </p>
-              <p className="text-xs text-gray-400">
-                <span itemProp="serviceType">Mortgage matching service</span> • <span itemProp="areaServed">California statewide</span>
-              </p>
-            </header>
-
-            {/* Major metros - Primary cities */}
-            <nav aria-label="Major California mortgage markets" className="mb-4">
-              <h3 className="text-sm font-semibold text-navy-900 text-center mb-3">Major Markets</h3>
-              <div className="flex flex-wrap justify-center gap-2">
+              <div className="grid md:grid-cols-3 gap-5">
                 {[
-                  { city: "Los Angeles", pop: "3.9M" },
-                  { city: "San Francisco", pop: "870K" },
-                  { city: "San Diego", pop: "1.4M" },
-                  { city: "San Jose", pop: "1.0M" },
-                  { city: "Sacramento", pop: "530K" },
-                  { city: "Orange County", pop: "3.2M" },
-                ].map((item) => (
-                  <Link
-                    key={item.city}
-                    href={`/california/${item.city.toLowerCase().replace(" ", "-")}`}
-                    className="flex items-center gap-1.5 bg-navy-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-navy-800 transition-all"
-                    itemProp="areaServed"
-                    itemScope
-                    itemType="https://schema.org/City"
-                  >
-                    <MapPin className="h-4 w-4 text-gold-400" />
-                    <span itemProp="name">{item.city}</span>
-                  </Link>
+                  {
+                    quote: "Pre-approved in 5 minutes. Rate was 0.375% lower than my bank. Saved over $200/month!",
+                    name: "Maria S.",
+                    detail: "First-time buyer, San Diego",
+                    type: "FHA Loan",
+                    saved: "$72K lifetime",
+                  },
+                  {
+                    quote: "Finally found a lender who does DSCR loans for my rental portfolio. Closed 5 properties in 3 months.",
+                    name: "James T.",
+                    detail: "Real estate investor, LA",
+                    type: "DSCR Loan",
+                    saved: "$156K lifetime",
+                  },
+                  {
+                    quote: "The Readiness Score showed me exactly what to fix. Bought my first home 3 months later.",
+                    name: "Sarah K.",
+                    detail: "Homeowner, Sacramento",
+                    type: "Conventional",
+                    saved: "$48K lifetime",
+                  },
+                ].map((t, i) => (
+                  <div key={i} className="bg-slate-900/60 backdrop-blur-sm border border-slate-800 rounded-2xl p-5 hover:border-slate-700 transition-all">
+                    <div className="flex gap-1 mb-3">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+                    <p className="text-slate-300 text-sm mb-4">&quot;{t.quote}&quot;</p>
+                    <div className="flex items-center justify-between pt-3 border-t border-slate-800">
+                      <div>
+                        <p className="font-semibold text-white text-sm">{t.name}</p>
+                        <p className="text-xs text-slate-500">{t.detail}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-slate-500">{t.type}</p>
+                        <p className="font-semibold text-emerald-400 text-sm">{t.saved}</p>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
-            </nav>
+            </div>
+          </div>
+        </section>
 
-            {/* Secondary markets */}
-            <nav aria-label="Additional California mortgage markets">
-              <h3 className="text-sm font-semibold text-gray-600 text-center mb-3">Also Serving</h3>
-              <div className="flex flex-wrap justify-center gap-2">
+        {/* ============ CALIFORNIA COVERAGE ============ */}
+        <section className="relative py-16 lg:py-24 border-t border-slate-800/50">
+          <div className="container mx-auto px-4">
+            <div className="max-w-5xl mx-auto text-center">
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-4">
+                <MapPin className="h-4 w-4" />
+                Statewide coverage
+              </span>
+              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+                Local Experts Across California
+              </h2>
+              <p className="text-slate-400 mb-10 max-w-2xl mx-auto">
+                We partner with vetted, licensed loan officers who know your local market.
+              </p>
+
+              {/* Major markets */}
+              <div className="flex flex-wrap justify-center gap-3 mb-6">
                 {[
-                  "Fresno",
-                  "Oakland",
-                  "Long Beach",
-                  "Bakersfield",
-                  "Anaheim",
-                  "Santa Ana",
-                  "Riverside",
-                  "Irvine",
-                  "Stockton",
-                  "Fremont",
-                  "Modesto",
-                  "Santa Clarita",
-                  "Glendale",
-                  "Huntington Beach",
-                  "Pasadena",
-                  "Torrance",
+                  "Los Angeles", "San Francisco", "San Diego", "San Jose", "Sacramento", "Orange County",
                 ].map((city) => (
                   <Link
                     key={city}
                     href={`/california/${city.toLowerCase().replace(" ", "-")}`}
-                    className="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full text-xs text-gray-600 hover:text-navy-900 hover:shadow-md transition-all border"
-                    itemProp="areaServed"
-                    itemScope
-                    itemType="https://schema.org/City"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-slate-900/80 border border-slate-700 rounded-full text-white font-medium hover:bg-slate-800 hover:border-slate-600 transition-all cursor-pointer"
                   >
-                    <MapPin className="h-3 w-3 text-gold-500" />
-                    <span itemProp="name">{city}</span>
+                    <MapPin className="h-4 w-4 text-amber-400" />
+                    {city}
                   </Link>
                 ))}
               </div>
-            </nav>
 
-            {/* Trust signals */}
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <div className="flex flex-wrap justify-center gap-6 text-xs text-gray-500">
-                <span className="flex items-center gap-1">
-                  <Award className="h-4 w-4 text-gold-500" />
+              {/* Secondary markets */}
+              <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 mb-10 text-sm">
+                {[
+                  "Palo Alto", "Mountain View", "Fremont", "Berkeley", "Walnut Creek",
+                  "San Mateo", "Redwood City", "Pleasanton", "Irvine", "Long Beach",
+                  "Pasadena", "Santa Monica", "Anaheim", "Riverside",
+                ].map((city) => (
+                  <Link
+                    key={city}
+                    href={`/california/${city.toLowerCase().replace(" ", "-")}`}
+                    className="text-slate-500 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {city}
+                  </Link>
+                ))}
+                <Link href="/california" className="text-amber-400 hover:text-amber-300 transition-colors cursor-pointer">
+                  View all 29 cities →
+                </Link>
+              </div>
+
+              {/* Trust badges */}
+              <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-500">
+                <span className="flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-amber-400" />
                   NMLS #1945913
                 </span>
-                <span className="flex items-center gap-1">
-                  <Shield className="h-4 w-4 text-green-500" />
+                <span className="flex items-center gap-2">
+                  <BadgeCheck className="h-5 w-5 text-emerald-400" />
                   California DRE Licensed
                 </span>
-                <span className="flex items-center gap-1">
-                  <BadgeCheck className="h-4 w-4 text-blue-500" />
+                <span className="flex items-center gap-2">
+                  <Home className="h-5 w-5 text-blue-400" />
                   Equal Housing Opportunity
                 </span>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* FAQ SECTION - Visible for users, structured for SEO */}
-      <section
-        className="bg-white py-12"
-        aria-labelledby="faq-heading"
-        itemScope
-        itemType="https://schema.org/FAQPage"
-      >
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <header className="text-center mb-8">
-              <h2 id="faq-heading" className="text-2xl font-bold text-navy-900 mb-2">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-gray-500 text-sm">
-                Common questions about California mortgages and our matching service
-              </p>
-            </header>
+        {/* ============ FAQ ============ */}
+        <section className="relative py-16 lg:py-24 border-t border-slate-800/50">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto">
+              <div className="text-center mb-10">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-sm font-medium mb-4">
+                  <BookOpen className="h-4 w-4" />
+                  Common questions
+                </span>
+                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+                  Frequently Asked Questions
+                </h2>
+              </div>
 
-            <div className="space-y-4">
-              {[
-                {
-                  q: "What credit score do I need for a California mortgage?",
-                  a: "Credit score requirements vary by loan type: FHA loans accept 580+ (3.5% down) or 500-579 (10% down), Conventional loans require 620+, VA loans typically need 620+, and Jumbo loans usually require 700+. Our AI matches you with lenders who specialize in your credit profile."
-                },
-                {
-                  q: "How much down payment do I need to buy a house in California?",
-                  a: "Down payment requirements depend on loan type: VA and USDA loans offer $0 down for eligible borrowers, FHA loans require 3.5% down, Conventional loans start at 3% down for first-time buyers, and Jumbo loans typically require 10-20% down. California down payment assistance programs may also be available."
-                },
-                {
-                  q: "What is a DSCR loan and who qualifies?",
-                  a: "A DSCR (Debt Service Coverage Ratio) loan is an investment property loan that qualifies borrowers based on the property's rental income rather than personal income. Real estate investors qualify when the property's rental income covers at least 100% of the mortgage payment. No tax returns or employment verification required."
-                },
-                {
-                  q: "Is LendyWendy free to use?",
-                  a: "Yes, LendyWendy is 100% free for borrowers. We're compensated by lenders when a loan closes, so there's never any cost to you for using our matching service or AI advisor. No hidden fees, no obligation."
-                },
-                {
-                  q: "Will checking my mortgage options affect my credit score?",
-                  a: "No. Using LendyWendy's AI advisor or Mortgage Readiness Score does not impact your credit score. We only perform a soft inquiry which has no effect on your credit. A hard inquiry only happens when you formally apply with a lender."
-                },
-                {
-                  q: "How fast can I get pre-approved?",
-                  a: "Most borrowers receive pre-qualification within 2 minutes using our AI advisor. Full pre-approval with a matched lender typically takes 24-48 hours after document submission. Some loan types like fix-and-flip can close in as fast as 7-14 days."
-                },
-              ].map((item, index) => (
-                <details
-                  key={index}
-                  className="group bg-gray-50 rounded-xl border border-gray-200 overflow-hidden"
-                  itemScope
-                  itemProp="mainEntity"
-                  itemType="https://schema.org/Question"
-                >
-                  <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-100 transition-colors">
-                    <h3 className="font-semibold text-navy-900 text-sm pr-4" itemProp="name">
-                      {item.q}
-                    </h3>
-                    <ChevronRight className="h-5 w-5 text-gray-400 group-open:rotate-90 transition-transform flex-shrink-0" />
-                  </summary>
+              <div className="space-y-3">
+                {faqs.map((faq, i) => (
                   <div
-                    className="px-4 pb-4 text-sm text-gray-600"
-                    itemScope
-                    itemProp="acceptedAnswer"
-                    itemType="https://schema.org/Answer"
+                    key={i}
+                    className="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-700 transition-colors"
                   >
-                    <p itemProp="text">{item.a}</p>
+                    <button
+                      onClick={() => setExpandedFaq(expandedFaq === i ? null : i)}
+                      className="w-full flex items-center justify-between p-4 text-left cursor-pointer"
+                    >
+                      <span className="font-medium text-white pr-4">{faq.q}</span>
+                      <ChevronDown className={`h-5 w-5 text-slate-500 flex-shrink-0 transition-transform ${expandedFaq === i ? 'rotate-180' : ''}`} />
+                    </button>
+                    {expandedFaq === i && (
+                      <div className="px-4 pb-4 text-slate-400 text-sm">
+                        {faq.a}
+                      </div>
+                    )}
                   </div>
-                </details>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <div className="mt-8 text-center">
-              <p className="text-sm text-gray-500 mb-3">Have more questions?</p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Button variant="outline" className="border-navy-900 text-navy-900" asChild>
-                  <Link href="/readiness-score">
-                    <Target className="mr-2 h-4 w-4" />
-                    Check Your Readiness Score
+              <div className="text-center mt-8">
+                <p className="text-slate-500 text-sm mb-4">Have more questions?</p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Button variant="outline" className="border-slate-700 bg-slate-800/50 text-white hover:bg-slate-700 cursor-pointer" asChild>
+                    <Link href="/readiness-score">
+                      <Target className="mr-2 h-4 w-4" />
+                      Check Readiness Score
+                    </Link>
+                  </Button>
+                  <Button className="bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-bold cursor-pointer" asChild>
+                    <Link href="/get-quote">
+                      Get My Free Quote
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ============ FINAL CTA ============ */}
+        <section className="relative py-20 lg:py-28 border-t border-slate-800/50">
+          <div className="absolute inset-0 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent" />
+          <div className="container mx-auto px-4 relative">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl lg:text-5xl font-bold text-white mb-6">
+                Ready to find your best rate?
+              </h2>
+              <p className="text-xl text-slate-400 mb-10">
+                Join 10,000+ California homeowners who found better rates. It takes 60 seconds.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-bold text-lg h-16 px-10 rounded-xl shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/30 transition-all cursor-pointer"
+                  asChild
+                >
+                  <Link href="/get-quote">
+                    Get My Free Quote <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button className="bg-gold-500 hover:bg-gold-600 text-navy-900" asChild>
-                  <Link href="/get-quote">
-                    <MessageCircle className="mr-2 h-4 w-4" />
-                    Chat with Wendy
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-slate-700 bg-slate-900/50 text-white hover:bg-slate-800 font-medium text-lg h-16 px-10 rounded-xl cursor-pointer"
+                  asChild
+                >
+                  <Link href="tel:+18005551234">
+                    <Phone className="mr-2 h-5 w-5" /> (800) 555-1234
                   </Link>
                 </Button>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* FINAL CTA */}
-      <section
-        className="bg-navy-900 py-12"
-        aria-labelledby="cta-heading"
-        itemScope
-        itemType="https://schema.org/WebPageElement"
-      >
-        <div className="container mx-auto px-4 text-center">
-          <h2 id="cta-heading" className="text-2xl lg:text-3xl font-bold text-white mb-4">
-            Ready to find your best mortgage rate?
-          </h2>
-          <p className="text-gray-400 mb-6 max-w-lg mx-auto">
-            Join thousands of <span itemProp="areaServed">California</span> homebuyers who found better mortgage rates through LendyWendy. It takes <time dateTime="PT60S">60 seconds</time>.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button size="lg" className="bg-gold-500 hover:bg-gold-600 text-navy-900 font-bold" asChild>
-              <Link href="/get-quote" itemProp="potentialAction" itemScope itemType="https://schema.org/Action">
-                <span itemProp="name">Get My Rates Now</span> <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10" asChild>
-              <Link
-                href="tel:+18005551234"
-                itemProp="telephone"
-              >
-                <Phone className="mr-2 h-5 w-5" /> Call (800) 555-1234
-              </Link>
-            </Button>
+        {/* ============ FOOTER ============ */}
+        <footer className="border-t border-slate-800/50 py-10">
+          <div className="container mx-auto px-4">
+            <div className="max-w-5xl mx-auto">
+              <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center">
+                    <span className="text-slate-950 font-bold">W</span>
+                  </div>
+                  <span className="text-white font-semibold">LendyWendy</span>
+                </div>
+                <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-500">
+                  <Link href="/about" className="hover:text-white transition-colors cursor-pointer">About</Link>
+                  <Link href="/california" className="hover:text-white transition-colors cursor-pointer">Locations</Link>
+                  <Link href="/calculators" className="hover:text-white transition-colors cursor-pointer">Calculators</Link>
+                  <Link href="/articles" className="hover:text-white transition-colors cursor-pointer">Resources</Link>
+                  <Link href="/contact" className="hover:text-white transition-colors cursor-pointer">Contact</Link>
+                </div>
+              </div>
+              <div className="mt-8 pt-8 border-t border-slate-800/50 text-center text-xs text-slate-600">
+                <p>© 2026 LendyWendy. NMLS #1945913. Equal Housing Opportunity.</p>
+                <p className="mt-2">
+                  LendyWendy is a mortgage broker licensed in California. We are not a direct lender.
+                </p>
+              </div>
+            </div>
           </div>
-          <footer className="text-gray-500 text-sm mt-4">
-            <p>
-              <span itemProp="identifier">NMLS #1945913</span> |{" "}
-              <span itemProp="additionalType">Equal Housing Opportunity</span>
-            </p>
-          </footer>
-        </div>
-      </section>
-
-      {/* Hidden FAQ Section for SEO - Semantic content for NLP */}
-      <section className="sr-only" aria-label="Frequently Asked Questions About California Mortgages">
-        <h2>Common Mortgage Questions in California</h2>
-        <dl>
-          <dt>What credit score do I need for a California mortgage?</dt>
-          <dd>FHA loans accept 580+ credit scores with 3.5% down. Conventional loans typically require 620+. VA loans accept most credit profiles for eligible veterans.</dd>
-
-          <dt>How much down payment do I need to buy a house in California?</dt>
-          <dd>Down payment requirements vary: VA and USDA loans offer $0 down, FHA requires 3.5%, Conventional starts at 3% for first-time buyers, and Jumbo typically needs 10-20%.</dd>
-
-          <dt>What is a DSCR loan?</dt>
-          <dd>A DSCR (Debt Service Coverage Ratio) loan is an investment property loan that qualifies borrowers based on the property&apos;s rental income rather than personal income. No tax returns or W-2s required.</dd>
-
-          <dt>How long does it take to close on a mortgage in California?</dt>
-          <dd>Typical closing times: Residential loans 21-45 days, Investment/DSCR loans 7-21 days, Commercial loans 30-60 days, Fix &amp; flip loans 7-14 days.</dd>
-
-          <dt>What are current mortgage rates in California?</dt>
-          <dd>Mortgage rates change daily. Current indicative ranges: Residential 6.125-7.25% APR, Investment 7.5-9.5% APR, Commercial 7.0-10.5% APR. Get personalized rates through LendyWendy.</dd>
-        </dl>
-      </section>
+        </footer>
       </main>
     </>
   );
