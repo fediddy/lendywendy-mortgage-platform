@@ -3,6 +3,8 @@ import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { calculateEnhancedLeadScore } from "@/lib/lead-scoring";
 import { sendWebhook } from "@/lib/webhooks";
+import { sendToMaxBounty } from "@/lib/integrations/maxbounty";
+import { notifyAdminOfNewLead, sendLeadConfirmation, matchAndNotifyAgent } from "@/lib/integrations/email";
 import { z } from "zod";
 import {
   Segment,
@@ -148,6 +150,26 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Send to MaxBounty for affiliate tracking (async, non-blocking)
+    sendToMaxBounty(lead).catch((error) => {
+      logger.error("MaxBounty submission failed", error as Error, {
+        component: "leads-api",
+        metadata: { leadId: lead.id },
+      });
+    });
+
+    // Send email notifications (async, non-blocking)
+    Promise.all([
+      notifyAdminOfNewLead(lead),
+      sendLeadConfirmation(lead),
+      matchAndNotifyAgent(lead),
+    ]).catch((error) => {
+      logger.error("Email notifications failed", error as Error, {
+        component: "leads-api",
+        metadata: { leadId: lead.id },
+      });
+    });
+
     return NextResponse.json(
       {
         success: true,
@@ -162,7 +184,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error: "Invalid data submitted",
-          details: error.errors,
+          details: error.issues,
         },
         { status: 400 }
       );

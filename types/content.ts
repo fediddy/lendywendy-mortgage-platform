@@ -141,7 +141,7 @@ export type CreateSeoMetadataInput = {
   twitterCard?: string;
   noIndex?: boolean;
   noFollow?: boolean;
-  schema?: Record<string, unknown>;
+  schema?: string | null;
 };
 
 // ============================================================================

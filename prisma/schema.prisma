@@ -268,6 +268,9 @@ enum ContentStatus {
 model Lead {
   id                String       @id @default(cuid())
 
+  // Lead Source - how they were captured
+  leadSource        LeadSource   @default(FORM)
+
   // Segmentation
   segment           Segment      // Which mortgage segment
   loanType          LoanType     // Specific loan type
@@ -294,17 +297,35 @@ model Lead {
 
   // Lead Scoring & Management
   score             Int          @default(0) // 0-100 lead quality score
+  scoreCategory     String?      // hot, warm, cold
   status            LeadStatus   @default(NEW)
-  assignedTo        String?      // User ID of assigned loan officer
   notes             String?      @db.Text
 
+  // Agent Assignment
+  assignedAgentId   String?
+  assignedAgent     Agent?       @relation("AgentLeads", fields: [assignedAgentId], references: [id], onDelete: SetNull)
+  assignedAt        DateTime?    // When assigned to agent
+
+  // Relations to AI features
+  conversation      Conversation?
+  readinessAssessment ReadinessAssessment?
+
+  // TCPA Compliance
+  tcpaConsent       Boolean      @default(false)
+  consentTimestamp  DateTime?
+  consentIp         String?
+
   // Tracking
-  source            String?      // URL/page where lead was captured
+  sourceUrl         String?      // URL/page where lead was captured
   utmSource         String?      // Marketing attribution
   utmMedium         String?
   utmCampaign       String?
   ipAddress         String?
   userAgent         String?
+
+  // Webhook status
+  maxBountySubmitted Boolean     @default(false)
+  maxBountyResponse  String?     @db.Text
 
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
@@ -315,8 +336,9 @@ model Lead {
   @@index([status])
   @@index([score])
   @@index([segment])
+  @@index([leadSource])
   @@index([createdAt])
-  @@index([assignedTo])
+  @@index([assignedAgentId])
 }
 
 enum LoanType {
@@ -392,4 +414,160 @@ enum LeadStatus {
   CONVERTED
   CLOSED_LOST
   NURTURE
+}
+
+// Lead Source - how the lead was captured
+enum LeadSource {
+  AI_ADVISOR       // From AI chatbot conversation
+  READINESS_SCORE  // From Mortgage Readiness Score assessment
+  FORM             // Traditional multi-step form
+  CALCULATOR       // From calculator CTA
+}
+
+// Agent model for local agent/lender routing
+model Agent {
+  id              String       @id @default(cuid())
+  name            String
+  email           String       @unique
+  phone           String?
+  company         String?
+
+  // Service area & specialization
+  locations       String[]     // Cities/metros they serve (e.g., ["Los Angeles", "San Diego"])
+  states          String[]     // States licensed in (e.g., ["CA", "AZ"])
+  loanTypes       LoanType[]   // Loan types they handle
+  segments        Segment[]    // Segments they specialize in
+
+  // Capacity management
+  weeklyCapacity  Int          @default(20)  // Max leads per week
+  currentWeekLeads Int         @default(0)   // Leads assigned this week
+
+  // Status & performance
+  status          AgentStatus  @default(ACTIVE)
+  responseRate    Float?       // Average response time in hours
+  conversionRate  Float?       // Lead to close rate
+  rating          Float?       // Average rating 1-5
+
+  // Relations
+  assignedLeads   Lead[]       @relation("AgentLeads")
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([status])
+  @@index([states])
+}
+
+enum AgentStatus {
+  ACTIVE
+  PAUSED
+  INACTIVE
+}
+
+// Conversation model for AI Advisor chat transcripts
+model Conversation {
+  id              String       @id @default(cuid())
+
+  // Link to lead (created when contact info captured)
+  leadId          String?      @unique
+  lead            Lead?        @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
+  // Session tracking
+  sessionId       String       @unique  // Browser session ID
+
+  // Conversation data
+  messages        Message[]
+
+  // Extracted qualification data
+  loanType        LoanType?
+  propertyType    PropertyType?
+  location        String?
+  timeline        Timeline?
+  creditRange     CreditRange?
+
+  // Status
+  status          ConversationStatus @default(ACTIVE)
+  leadCaptured    Boolean      @default(false)
+
+  // Tracking
+  pageUrl         String?      // Page where conversation started
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([sessionId])
+  @@index([status])
+}
+
+enum ConversationStatus {
+  ACTIVE
+  COMPLETED
+  ABANDONED
+}
+
+// Individual chat messages
+model Message {
+  id              String       @id @default(cuid())
+  conversationId  String
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  role            MessageRole
+  content         String       @db.Text
+
+  createdAt       DateTime     @default(now())
+
+  @@index([conversationId])
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+// Mortgage Readiness Score Assessment
+model ReadinessAssessment {
+  id              String       @id @default(cuid())
+
+  // Link to lead (created when email captured)
+  leadId          String?      @unique
+  lead            Lead?        @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
+  // Session tracking
+  sessionId       String       @unique
+
+  // Assessment responses (stored as JSON for flexibility)
+  responses       String       @db.Text  // JSON object of question -> answer
+
+  // Calculated scores
+  totalScore      Int          // 0-100
+  creditScore     Int          // 0-25
+  employmentScore Int          // 0-15
+  incomeScore     Int          // 0-15
+  debtScore       Int          // 0-15
+  downPaymentScore Int         // 0-15
+  preApprovalScore Int         // 0-10
+  noNegativeEventsScore Int    // 0-5
+
+  // Score category
+  category        ScoreCategory
+
+  // Completion status
+  completed       Boolean      @default(false)
+  emailCaptured   Boolean      @default(false)
+  shared          Boolean      @default(false)  // Did they share on social?
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([sessionId])
+  @@index([totalScore])
+  @@index([category])
+}
+
+enum ScoreCategory {
+  MORTGAGE_READY    // 80-100
+  ALMOST_THERE      // 60-79
+  GETTING_PREPARED  // 40-59
+  BUILDING_FOUNDATION // 0-39
 }

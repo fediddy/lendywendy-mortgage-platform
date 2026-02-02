@@ -12,6 +12,10 @@ export interface LogContext {
   component?: string;
   action?: string;
   metadata?: Record<string, unknown>;
+  endpoint?: string;
+  statusCode?: number;
+  operation?: string;
+  [key: string]: unknown;
 }
 
 class Logger {

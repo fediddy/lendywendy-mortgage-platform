@@ -169,7 +169,7 @@ export default function AdminLeadsPage() {
       QUOTE_SENT: "bg-purple-500",
       IN_PROCESS: "bg-indigo-500",
       CONVERTED: "bg-emerald-500",
-      LOST: "bg-gray-500",
+      CLOSED_LOST: "bg-gray-500",
       NURTURE: "bg-orange-400",
     };
 

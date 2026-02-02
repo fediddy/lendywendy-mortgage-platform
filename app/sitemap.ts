@@ -1,6 +1,9 @@
 import { MetadataRoute } from "next";
 import { prisma } from "@/lib/db";
 import { ContentStatus } from "@prisma/client";
+import { getAllCitySlugs } from "@/lib/california-cities";
+
+export const dynamic = 'force-dynamic';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://lendywendy.com";
 
@@ -160,10 +163,47 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  // California location pages
+  const citySlugs = getAllCitySlugs();
+  const locationRoutes: MetadataRoute.Sitemap = [
+    // California landing page
+    {
+      url: `${BASE_URL}/california`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    // Individual city pages
+    ...citySlugs.map((slug) => ({
+      url: `${BASE_URL}/california/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    })),
+  ];
+
+  // Tool/feature pages
+  const toolRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${BASE_URL}/get-quote`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.95,
+    },
+    {
+      url: `${BASE_URL}/readiness-score`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+  ];
+
   // Combine all routes
   return [
     ...staticRoutes,
     ...segmentRoutes,
+    ...locationRoutes,
+    ...toolRoutes,
     ...articleRoutes,
     ...guideRoutes,
     ...calculatorRoutes,
