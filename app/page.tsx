@@ -323,11 +323,102 @@ export default function HomePage() {
                 ))}
               </div>
 
-              {/* Also offer residential */}
-              <div className="mt-8 text-center">
-                <p className="text-slate-500 text-sm">
-                  Also offering <Link href="/residential" className="text-amber-400 hover:text-amber-300 cursor-pointer">conventional, FHA, VA, and jumbo loans</Link> for primary residences.
+            </div>
+          </div>
+        </section>
+
+        {/* ============ PRIMARY RESIDENCE LOANS ============ */}
+        <section className="relative py-16 lg:py-20 border-t border-slate-800/50 bg-slate-900/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-4">
+                  <Home className="h-4 w-4" />
+                  Primary Residence Loans
+                </div>
+                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+                  Buying Your Home? We Do That Too.
+                </h2>
+                <p className="text-slate-400 max-w-2xl mx-auto">
+                  Conventional, FHA, VA, and Jumbo loans for California homebuyers. First-time buyers welcome.
                 </p>
+              </div>
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {[
+                  {
+                    name: "Conventional",
+                    tagline: "Most popular choice",
+                    rate: "6.5%",
+                    highlight: "3% down",
+                    features: ["620+ credit score", "PMI cancellable at 80%", "Up to $766,550"],
+                    href: "/residential/conventional",
+                  },
+                  {
+                    name: "FHA Loans",
+                    tagline: "First-time buyer friendly",
+                    rate: "6.25%",
+                    highlight: "3.5% down",
+                    features: ["580+ credit score", "Gift funds allowed", "Seller concessions up to 6%"],
+                    href: "/residential/fha",
+                  },
+                  {
+                    name: "VA Loans",
+                    tagline: "For veterans & military",
+                    rate: "6.0%",
+                    highlight: "$0 down",
+                    features: ["No PMI ever", "No down payment", "Competitive rates"],
+                    href: "/residential/va",
+                  },
+                  {
+                    name: "Jumbo Loans",
+                    tagline: "Luxury & high-value homes",
+                    rate: "6.75%",
+                    highlight: "Above $766K",
+                    features: ["Up to $5M+", "10% down options", "Interest-only available"],
+                    href: "/residential/jumbo",
+                  },
+                ].map((loan, i) => (
+                  <Link
+                    key={i}
+                    href={loan.href}
+                    className="group bg-slate-900/60 backdrop-blur-sm border border-slate-800 rounded-2xl p-5 hover:border-blue-500/40 transition-all cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-bold text-white">{loan.name}</h3>
+                      <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full">
+                        {loan.highlight}
+                      </span>
+                    </div>
+                    <p className="text-sm text-slate-500 mb-3">{loan.tagline}</p>
+                    <div className="text-2xl font-bold text-blue-400 mb-3">
+                      From {loan.rate}
+                    </div>
+                    <div className="space-y-1.5 mb-4">
+                      {loan.features.map((f, j) => (
+                        <div key={j} className="flex items-center gap-2 text-xs text-slate-400">
+                          <CheckCircle2 className="h-3 w-3 text-emerald-400 flex-shrink-0" />
+                          {f}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex items-center text-sm font-medium text-blue-400 group-hover:text-blue-300 transition-colors">
+                      Learn more <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              <div className="mt-8 text-center">
+                <Button
+                  variant="outline"
+                  className="border-slate-700 bg-slate-900/50 text-white hover:bg-slate-800 font-medium rounded-xl cursor-pointer"
+                  asChild
+                >
+                  <Link href="/residential">
+                    View All Residential Programs <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>

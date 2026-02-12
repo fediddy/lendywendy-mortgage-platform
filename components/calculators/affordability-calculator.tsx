@@ -77,7 +77,7 @@ export function AffordabilityCalculator() {
     <Card className="w-full">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Home className="w-6 h-6 text-blue-600" />
+          <Home className="w-6 h-6 text-amber-500" />
           <CardTitle>Home Affordability Calculator</CardTitle>
         </div>
         <CardDescription>
@@ -173,9 +173,9 @@ export function AffordabilityCalculator() {
               <h3 className="text-lg font-semibold mb-4">Your Results</h3>
 
               <div className="grid md:grid-cols-2 gap-4">
-                <Card className="bg-blue-50 border-blue-200">
+                <Card className="bg-blue-500/10 border-blue-500/30">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-xl text-blue-900">Max Home Price</CardTitle>
+                    <CardTitle className="text-xl text-blue-300">Max Home Price</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-3xl font-bold text-blue-600">
@@ -184,9 +184,9 @@ export function AffordabilityCalculator() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-green-50 border-green-200">
+                <Card className="bg-emerald-500/10 border-emerald-500/30">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-xl text-green-900">Down Payment Needed</CardTitle>
+                    <CardTitle className="text-xl text-emerald-300">Down Payment Needed</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-3xl font-bold text-green-600">
@@ -237,8 +237,8 @@ export function AffordabilityCalculator() {
                   </div>
                 </div>
 
-                <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <p className="text-sm text-yellow-900">
+                <div className="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+                  <p className="text-sm text-amber-300">
                     <strong>Note:</strong> This is an estimate based on a 43% debt-to-income ratio.
                     Actual affordability may vary based on credit score, location, and lender requirements.
                   </p>

@@ -27,9 +27,9 @@ const typeLabels = {
 };
 
 const typeColors = {
-  article: "bg-blue-100 text-blue-800 border-blue-200",
-  guide: "bg-green-100 text-green-800 border-green-200",
-  calculator: "bg-purple-100 text-purple-800 border-purple-200",
+  article: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  guide: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+  calculator: "bg-purple-500/20 text-purple-400 border-purple-500/30",
 };
 
 export function ContentCard({

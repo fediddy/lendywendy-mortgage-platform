@@ -126,44 +126,52 @@ const faqItems = [
 export default async function InvestmentPage() {
   const segment = Segment.INVESTMENT;
 
-  const articles = await prisma.article.findMany({
-    where: {
-      status: ContentStatus.PUBLISHED,
-      publishedAt: { lte: new Date() },
-      category: { segment },
-    },
-    include: {
-      category: { select: { name: true, slug: true } },
-    },
-    orderBy: { publishedAt: "desc" },
-    take: 3,
-  });
+  let articles: Awaited<ReturnType<typeof prisma.article.findMany>> = [];
+  let guides: Awaited<ReturnType<typeof prisma.guide.findMany>> = [];
+  let calculators: Awaited<ReturnType<typeof prisma.calculator.findMany>> = [];
 
-  const guides = await prisma.guide.findMany({
-    where: {
-      status: ContentStatus.PUBLISHED,
-      publishedAt: { lte: new Date() },
-      category: { segment },
-    },
-    include: {
-      category: { select: { name: true, slug: true } },
-    },
-    orderBy: { publishedAt: "desc" },
-    take: 2,
-  });
-
-  const calculators = await prisma.calculator.findMany({
-    where: {
-      status: ContentStatus.PUBLISHED,
-      publishedAt: { lte: new Date() },
-      category: { segment },
-    },
-    include: {
-      category: { select: { name: true, slug: true } },
-    },
-    orderBy: { usageCount: "desc" },
-    take: 4,
-  });
+  try {
+    [articles, guides, calculators] = await Promise.all([
+      prisma.article.findMany({
+        where: {
+          status: ContentStatus.PUBLISHED,
+          publishedAt: { lte: new Date() },
+          category: { segment },
+        },
+        include: {
+          category: { select: { name: true, slug: true } },
+        },
+        orderBy: { publishedAt: "desc" },
+        take: 3,
+      }),
+      prisma.guide.findMany({
+        where: {
+          status: ContentStatus.PUBLISHED,
+          publishedAt: { lte: new Date() },
+          category: { segment },
+        },
+        include: {
+          category: { select: { name: true, slug: true } },
+        },
+        orderBy: { publishedAt: "desc" },
+        take: 2,
+      }),
+      prisma.calculator.findMany({
+        where: {
+          status: ContentStatus.PUBLISHED,
+          publishedAt: { lte: new Date() },
+          category: { segment },
+        },
+        include: {
+          category: { select: { name: true, slug: true } },
+        },
+        orderBy: { usageCount: "desc" },
+        take: 4,
+      }),
+    ]);
+  } catch {
+    // DB unavailable — render page without dynamic content
+  }
 
   return (
     <>

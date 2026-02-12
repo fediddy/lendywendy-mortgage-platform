@@ -153,7 +153,7 @@ export function RentVsBuyCalculator() {
     <Card className="w-full">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Home className="w-6 h-6 text-purple-600" />
+          <Home className="w-6 h-6 text-purple-500" />
           <CardTitle>Rent vs. Buy Calculator</CardTitle>
         </div>
         <CardDescription>
@@ -343,30 +343,30 @@ export function RentVsBuyCalculator() {
             <div className="border-t pt-4">
               {/* Recommendation Alert */}
               {result.recommendation === "buy" && (
-                <Alert className="mb-4 bg-green-50 border-green-200">
+                <Alert className="mb-4 bg-emerald-500/10 border-emerald-500/30">
                   <TrendingUp className="h-4 w-4 text-green-600" />
-                  <AlertTitle className="text-green-900">Buying Looks Better!</AlertTitle>
-                  <AlertDescription className="text-green-800">
+                  <AlertTitle className="text-emerald-300">Buying Looks Better!</AlertTitle>
+                  <AlertDescription className="text-emerald-200">
                     Based on your inputs, buying would save you ${Math.abs(result.netDifference).toLocaleString('en-US', { maximumFractionDigits: 0 })} over {yearsToAnalyze} years compared to renting.
                   </AlertDescription>
                 </Alert>
               )}
 
               {result.recommendation === "rent" && (
-                <Alert className="mb-4 bg-blue-50 border-blue-200">
+                <Alert className="mb-4 bg-blue-500/10 border-blue-500/30">
                   <Home className="h-4 w-4 text-blue-600" />
-                  <AlertTitle className="text-blue-900">Renting May Be Better</AlertTitle>
-                  <AlertDescription className="text-blue-800">
+                  <AlertTitle className="text-blue-300">Renting May Be Better</AlertTitle>
+                  <AlertDescription className="text-blue-200">
                     Renting could save you ${Math.abs(result.netDifference).toLocaleString('en-US', { maximumFractionDigits: 0 })} over {yearsToAnalyze} years. Consider your plans and other factors.
                   </AlertDescription>
                 </Alert>
               )}
 
               {result.recommendation === "close" && (
-                <Alert className="mb-4 bg-yellow-50 border-yellow-200">
+                <Alert className="mb-4 bg-amber-500/10 border-amber-500/30">
                   <DollarSign className="h-4 w-4 text-yellow-600" />
-                  <AlertTitle className="text-yellow-900">It's Close!</AlertTitle>
-                  <AlertDescription className="text-yellow-800">
+                  <AlertTitle className="text-amber-300">It's Close!</AlertTitle>
+                  <AlertDescription className="text-amber-200">
                     The costs are similar. Consider lifestyle factors, job stability, and how long you plan to stay.
                   </AlertDescription>
                 </Alert>
@@ -376,11 +376,11 @@ export function RentVsBuyCalculator() {
 
               {/* Cost Comparison */}
               <div className="grid md:grid-cols-2 gap-4 mb-6">
-                <Card className="bg-blue-50 border-blue-200">
+                <Card className="bg-blue-500/10 border-blue-500/30">
                   <CardContent className="pt-6">
                     <div className="flex items-center gap-2 mb-2">
                       <Home className="w-5 h-5 text-blue-600" />
-                      <p className="text-sm font-medium text-blue-900">Total Cost of Renting</p>
+                      <p className="text-sm font-medium text-blue-300">Total Cost of Renting</p>
                     </div>
                     <p className="text-3xl font-bold text-blue-600">
                       ${result.totalCostRenting.toLocaleString('en-US', { maximumFractionDigits: 0 })}
@@ -391,11 +391,11 @@ export function RentVsBuyCalculator() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-green-50 border-green-200">
+                <Card className="bg-emerald-500/10 border-emerald-500/30">
                   <CardContent className="pt-6">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingUp className="w-5 h-5 text-green-600" />
-                      <p className="text-sm font-medium text-green-900">Net Cost of Buying</p>
+                      <p className="text-sm font-medium text-emerald-300">Net Cost of Buying</p>
                     </div>
                     <p className="text-3xl font-bold text-green-600">
                       ${result.totalCostBuying.toLocaleString('en-US', { maximumFractionDigits: 0 })}
@@ -409,7 +409,7 @@ export function RentVsBuyCalculator() {
 
               {/* Key Metrics */}
               <div className="space-y-3">
-                <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="p-4 bg-slate-800 rounded-lg">
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Monthly Cost Comparison</span>
                   </div>
@@ -425,7 +425,7 @@ export function RentVsBuyCalculator() {
                   </div>
                 </div>
 
-                <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="p-4 bg-slate-800 rounded-lg">
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Home Equity Built</span>
                     <span className="text-lg font-bold text-green-600">
@@ -437,7 +437,7 @@ export function RentVsBuyCalculator() {
                   </p>
                 </div>
 
-                <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="p-4 bg-slate-800 rounded-lg">
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Break-Even Point</span>
                     <span className="text-lg font-bold">
@@ -449,7 +449,7 @@ export function RentVsBuyCalculator() {
                   </p>
                 </div>
 
-                <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                <div className="p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg">
                   <div className="flex justify-between items-center">
                     <span className="font-semibold">Net Difference</span>
                     <span className={`text-xl font-bold ${result.netDifference > 0 ? "text-green-600" : "text-red-600"}`}>
@@ -462,8 +462,8 @@ export function RentVsBuyCalculator() {
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm text-blue-900">
+              <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                <p className="text-sm text-blue-300">
                   <strong>Important:</strong> This analysis considers financial factors only.
                   Also consider lifestyle, job stability, mobility needs, and local market conditions.
                 </p>

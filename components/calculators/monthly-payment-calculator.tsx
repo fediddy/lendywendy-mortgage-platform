@@ -81,7 +81,7 @@ export function MonthlyPaymentCalculator() {
     <Card className="w-full">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Calculator className="w-6 h-6 text-blue-600" />
+          <Calculator className="w-6 h-6 text-amber-500" />
           <CardTitle>Monthly Payment Calculator</CardTitle>
         </div>
         <CardDescription>
@@ -207,11 +207,11 @@ export function MonthlyPaymentCalculator() {
                 Your Monthly Payment
               </h3>
 
-              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 mb-4">
+              <Card className="bg-blue-500/10 border-blue-500/30 mb-4">
                 <CardContent className="pt-6">
                   <div className="text-center">
                     <p className="text-sm text-muted-foreground mb-2">Estimated Monthly Payment</p>
-                    <p className="text-5xl font-bold text-blue-600">
+                    <p className="text-5xl font-bold text-blue-300">
                       ${result.totalMonthly.toLocaleString('en-US', { maximumFractionDigits: 0 })}
                     </p>
                     <p className="text-sm text-muted-foreground mt-2">per month</p>
@@ -276,23 +276,23 @@ export function MonthlyPaymentCalculator() {
                 <div className="mt-4 pt-4 border-t-2">
                   <h4 className="font-semibold text-sm mb-3">Loan Summary</h4>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="p-3 bg-gray-50 rounded-lg">
+                    <div className="p-3 bg-slate-800 rounded-lg">
                       <p className="text-xs text-muted-foreground mb-1">Total Interest Paid</p>
                       <p className="text-lg font-semibold text-red-600">
                         ${result.totalInterest.toLocaleString('en-US', { maximumFractionDigits: 0 })}
                       </p>
                     </div>
-                    <div className="p-3 bg-gray-50 rounded-lg">
+                    <div className="p-3 bg-slate-800 rounded-lg">
                       <p className="text-xs text-muted-foreground mb-1">Total Amount Paid</p>
-                      <p className="text-lg font-semibold text-gray-700">
+                      <p className="text-lg font-semibold text-gray-300">
                         ${result.totalCost.toLocaleString('en-US', { maximumFractionDigits: 0 })}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-900">
+                <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                  <p className="text-sm text-blue-300">
                     <strong>Ready to move forward?</strong> Get pre-approved to see actual rates and terms
                     from top lenders.
                   </p>

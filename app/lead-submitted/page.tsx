@@ -15,10 +15,10 @@ export const metadata: Metadata = {
 
 export default function LeadSubmittedPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
       <Card className="max-w-2xl w-full">
         <CardHeader className="text-center">
-          <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+          <div className="mx-auto w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mb-4">
             <CheckCircle className="w-10 h-10 text-green-600" />
           </div>
           <CardTitle className="text-3xl">Thank You!</CardTitle>
@@ -28,7 +28,7 @@ export default function LeadSubmittedPage() {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6">
             <h3 className="font-semibold text-lg mb-3">What Happens Next?</h3>
             <ul className="space-y-3">
               <li className="flex items-start">
@@ -78,7 +78,7 @@ export default function LeadSubmittedPage() {
             <div className="grid gap-3">
               <Link
                 href="/residential"
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-800 transition-colors"
               >
                 <span className="font-medium">Browse Mortgage Guides</span>
                 <ArrowRight className="w-4 h-4" />
@@ -86,7 +86,7 @@ export default function LeadSubmittedPage() {
 
               <Link
                 href="/calculators"
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-800 transition-colors"
               >
                 <span className="font-medium">Try Our Mortgage Calculators</span>
                 <ArrowRight className="w-4 h-4" />
@@ -94,7 +94,7 @@ export default function LeadSubmittedPage() {
 
               <Link
                 href="/articles"
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-800 transition-colors"
               >
                 <span className="font-medium">Read Latest Articles</span>
                 <ArrowRight className="w-4 h-4" />

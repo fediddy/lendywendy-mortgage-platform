@@ -52,7 +52,7 @@ export function TrustSignals({
   className = "",
 }: TrustSignalsProps) {
   const bgClass = {
-    light: "bg-gray-50",
+    light: "bg-slate-800",
     dark: "bg-navy-900 text-white",
     card: "bg-white border rounded-xl shadow-sm",
   }[variant];
@@ -172,7 +172,7 @@ export function TestimonialCards({
       {testimonials.slice(0, limit).map((t, i) => (
         <div
           key={i}
-          className="bg-gray-50 rounded-xl p-5"
+          className="bg-slate-800 rounded-xl p-5"
           itemScope
           itemType="https://schema.org/Review"
         >

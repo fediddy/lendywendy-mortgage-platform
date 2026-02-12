@@ -134,7 +134,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
               <div>
                 <label className="block text-sm font-medium mb-2">What type of mortgage do you need?</label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.RESIDENTIAL ? 'border-blue-600 bg-blue-50' : 'hover:border-gray-400'}`}>
+                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.RESIDENTIAL ? 'border-blue-500 bg-blue-500/10' : 'hover:border-slate-500'}`}>
                     <input
                       type="radio"
                       value={Segment.RESIDENTIAL}
@@ -147,7 +147,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                     </span>
                   </label>
 
-                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.INVESTMENT ? 'border-blue-600 bg-blue-50' : 'hover:border-gray-400'}`}>
+                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.INVESTMENT ? 'border-blue-500 bg-blue-500/10' : 'hover:border-slate-500'}`}>
                     <input
                       type="radio"
                       value={Segment.INVESTMENT}
@@ -160,7 +160,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                     </span>
                   </label>
 
-                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.COMMERCIAL ? 'border-blue-600 bg-blue-50' : 'hover:border-gray-400'}`}>
+                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.COMMERCIAL ? 'border-blue-500 bg-blue-500/10' : 'hover:border-slate-500'}`}>
                     <input
                       type="radio"
                       value={Segment.COMMERCIAL}
@@ -354,8 +354,8 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
           )}
 
           {submitError && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{submitError}</p>
+            <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+              <p className="text-sm text-red-400">{submitError}</p>
             </div>
           )}
 

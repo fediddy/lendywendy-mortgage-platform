@@ -99,7 +99,7 @@ export function RefinanceCalculator() {
     <Card className="w-full">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <TrendingDown className="w-6 h-6 text-green-600" />
+          <TrendingDown className="w-6 h-6 text-emerald-500" />
           <CardTitle>Refinance Calculator</CardTitle>
         </div>
         <CardDescription>
@@ -233,30 +233,30 @@ export function RefinanceCalculator() {
             <div className="border-t pt-4">
               {/* Recommendation Alert */}
               {result.recommendation === "refinance" && (
-                <Alert className="mb-4 bg-green-50 border-green-200">
+                <Alert className="mb-4 bg-emerald-500/10 border-emerald-500/30">
                   <TrendingUp className="h-4 w-4 text-green-600" />
-                  <AlertTitle className="text-green-900">Refinancing Looks Good!</AlertTitle>
-                  <AlertDescription className="text-green-800">
+                  <AlertTitle className="text-emerald-300">Refinancing Looks Good!</AlertTitle>
+                  <AlertDescription className="text-emerald-200">
                     Based on your numbers, refinancing could save you money. Consider getting quotes from lenders.
                   </AlertDescription>
                 </Alert>
               )}
 
               {result.recommendation === "wait" && (
-                <Alert className="mb-4 bg-red-50 border-red-200">
+                <Alert className="mb-4 bg-red-500/10 border-red-500/30">
                   <AlertCircle className="h-4 w-4 text-red-600" />
-                  <AlertTitle className="text-red-900">Consider Waiting</AlertTitle>
-                  <AlertDescription className="text-red-800">
+                  <AlertTitle className="text-red-300">Consider Waiting</AlertTitle>
+                  <AlertDescription className="text-red-200">
                     The savings may not justify the costs right now. Monitor rates or consider other options.
                   </AlertDescription>
                 </Alert>
               )}
 
               {result.recommendation === "review" && (
-                <Alert className="mb-4 bg-yellow-50 border-yellow-200">
+                <Alert className="mb-4 bg-amber-500/10 border-amber-500/30">
                   <AlertCircle className="h-4 w-4 text-yellow-600" />
-                  <AlertTitle className="text-yellow-900">Review Carefully</AlertTitle>
-                  <AlertDescription className="text-yellow-800">
+                  <AlertTitle className="text-amber-300">Review Carefully</AlertTitle>
+                  <AlertDescription className="text-amber-200">
                     There are potential savings, but review all factors including how long you plan to stay.
                   </AlertDescription>
                 </Alert>
@@ -266,7 +266,7 @@ export function RefinanceCalculator() {
 
               {/* Key Metrics */}
               <div className="grid md:grid-cols-3 gap-4 mb-6">
-                <Card className={result.monthlySavings > 0 ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}>
+                <Card className={result.monthlySavings > 0 ? "bg-emerald-500/10 border-emerald-500/30" : "bg-red-500/10 border-red-500/30"}>
                   <CardContent className="pt-6">
                     <p className="text-sm text-muted-foreground mb-2">Monthly Savings</p>
                     <p className={`text-3xl font-bold ${result.monthlySavings > 0 ? "text-green-600" : "text-red-600"}`}>
@@ -275,16 +275,16 @@ export function RefinanceCalculator() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-blue-50 border-blue-200">
+                <Card className="bg-blue-500/10 border-blue-500/30">
                   <CardContent className="pt-6">
                     <p className="text-sm text-muted-foreground mb-2">Break-Even Point</p>
-                    <p className="text-3xl font-bold text-blue-600">
+                    <p className="text-3xl font-bold text-blue-300">
                       {result.breakEvenMonths === Infinity ? "N/A" : `${Math.round(result.breakEvenMonths)} mo`}
                     </p>
                   </CardContent>
                 </Card>
 
-                <Card className={result.lifetimeSavings > 0 ? "bg-purple-50 border-purple-200" : "bg-gray-50 border-gray-200"}>
+                <Card className={result.lifetimeSavings > 0 ? "bg-purple-500/10 border-purple-500/30" : "bg-slate-800 border-slate-700"}>
                   <CardContent className="pt-6">
                     <p className="text-sm text-muted-foreground mb-2">Lifetime Savings</p>
                     <p className={`text-3xl font-bold ${result.lifetimeSavings > 0 ? "text-purple-600" : "text-gray-600"}`}>
@@ -363,8 +363,8 @@ export function RefinanceCalculator() {
                   </div>
                 </div>
 
-                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-900">
+                <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                  <p className="text-sm text-blue-300">
                     <strong>Next Steps:</strong> Ready to explore refinancing options?
                     Get personalized quotes from multiple lenders to find the best rate.
                   </p>

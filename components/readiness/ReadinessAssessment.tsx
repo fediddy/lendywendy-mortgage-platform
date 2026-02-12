@@ -295,7 +295,7 @@ export function ReadinessAssessment({ onComplete }: ReadinessAssessmentProps) {
             </CardContent>
           </Card>
         ) : (
-          <Card className="bg-green-50 border-green-200">
+          <Card className="bg-emerald-500/10 border-emerald-500/30">
             <CardContent className="p-6 text-center">
               <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-3" />
               <h4 className="font-semibold text-gray-900">Report Sent!</h4>
@@ -363,9 +363,9 @@ export function ReadinessAssessment({ onComplete }: ReadinessAssessmentProps) {
                   key={option.value}
                   onClick={() => handleSelect(option.value)}
                   className={cn(
-                    'w-full p-4 rounded-lg border-2 text-left transition-all hover:border-blue-500 hover:bg-blue-50',
+                    'w-full p-4 rounded-lg border-2 text-left transition-all hover:border-blue-500 hover:bg-blue-500/10',
                     responses[currentQuestion.id] === option.value
-                      ? 'border-blue-500 bg-blue-50'
+                      ? 'border-blue-500 bg-blue-500/10'
                       : 'border-gray-200'
                   )}
                 >

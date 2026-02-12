@@ -100,7 +100,7 @@ export function DTICalculator() {
     <Card className="w-full">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Calculator className="w-6 h-6 text-blue-600" />
+          <Calculator className="w-6 h-6 text-amber-500" />
           <CardTitle>Debt-to-Income (DTI) Calculator</CardTitle>
         </div>
         <CardDescription>
@@ -305,30 +305,30 @@ export function DTICalculator() {
             <div className="border-t pt-4">
               {/* Recommendation Alert */}
               {result.qualifiesConventional && (
-                <Alert className="mb-4 bg-green-50 border-green-200">
+                <Alert className="mb-4 bg-emerald-500/10 border-emerald-500/30">
                   <CheckCircle className="h-4 w-4 text-green-600" />
-                  <AlertTitle className="text-green-900">Excellent DTI Ratios!</AlertTitle>
-                  <AlertDescription className="text-green-800">
+                  <AlertTitle className="text-emerald-300">Excellent DTI Ratios!</AlertTitle>
+                  <AlertDescription className="text-emerald-200">
                     {result.recommendation}
                   </AlertDescription>
                 </Alert>
               )}
 
               {!result.qualifiesConventional && (result.qualifiesFHA || result.qualifiesVA) && (
-                <Alert className="mb-4 bg-yellow-50 border-yellow-200">
+                <Alert className="mb-4 bg-amber-500/10 border-amber-500/30">
                   <AlertCircle className="h-4 w-4 text-yellow-600" />
-                  <AlertTitle className="text-yellow-900">You May Qualify</AlertTitle>
-                  <AlertDescription className="text-yellow-800">
+                  <AlertTitle className="text-amber-300">You May Qualify</AlertTitle>
+                  <AlertDescription className="text-amber-200">
                     {result.recommendation}
                   </AlertDescription>
                 </Alert>
               )}
 
               {!result.qualifiesConventional && !result.qualifiesFHA && !result.qualifiesVA && (
-                <Alert className="mb-4 bg-red-50 border-red-200">
+                <Alert className="mb-4 bg-red-500/10 border-red-500/30">
                   <XCircle className="h-4 w-4 text-red-600" />
-                  <AlertTitle className="text-red-900">DTI Too High</AlertTitle>
-                  <AlertDescription className="text-red-800">
+                  <AlertTitle className="text-red-300">DTI Too High</AlertTitle>
+                  <AlertDescription className="text-red-200">
                     {result.recommendation}
                   </AlertDescription>
                 </Alert>
@@ -369,7 +369,7 @@ export function DTICalculator() {
               <div className="space-y-3 mb-6">
                 <h4 className="font-semibold text-sm">Loan Qualification</h4>
 
-                <div className={`p-4 border rounded-lg ${result.qualifiesConventional ? "bg-green-50 border-green-200" : "bg-gray-50"}`}>
+                <div className={`p-4 border rounded-lg ${result.qualifiesConventional ? "bg-emerald-500/10 border-emerald-500/30" : "bg-slate-800"}`}>
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="font-medium">Conventional Loan</span>
@@ -383,7 +383,7 @@ export function DTICalculator() {
                   </div>
                 </div>
 
-                <div className={`p-4 border rounded-lg ${result.qualifiesFHA ? "bg-green-50 border-green-200" : "bg-gray-50"}`}>
+                <div className={`p-4 border rounded-lg ${result.qualifiesFHA ? "bg-emerald-500/10 border-emerald-500/30" : "bg-slate-800"}`}>
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="font-medium">FHA Loan</span>
@@ -397,7 +397,7 @@ export function DTICalculator() {
                   </div>
                 </div>
 
-                <div className={`p-4 border rounded-lg ${result.qualifiesVA ? "bg-green-50 border-green-200" : "bg-gray-50"}`}>
+                <div className={`p-4 border rounded-lg ${result.qualifiesVA ? "bg-emerald-500/10 border-emerald-500/30" : "bg-slate-800"}`}>
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="font-medium">VA Loan</span>
@@ -413,7 +413,7 @@ export function DTICalculator() {
               </div>
 
               {/* Breakdown */}
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
                 <h4 className="font-semibold mb-3 text-sm">Maximum Housing Payment</h4>
                 <p className="text-2xl font-bold text-blue-600 mb-2">
                   ${result.maxHousingPayment.toLocaleString('en-US', { maximumFractionDigits: 0 })}/month
@@ -423,7 +423,7 @@ export function DTICalculator() {
                 </p>
               </div>
 
-              <div className="mt-4 p-4 bg-gray-50 border rounded-lg">
+              <div className="mt-4 p-4 bg-slate-800 border rounded-lg">
                 <h4 className="font-semibold text-sm mb-2">Tips to Improve Your DTI</h4>
                 <ul className="text-sm space-y-1 text-muted-foreground">
                   <li>• Pay down credit card balances and other revolving debt</li>
