@@ -1,119 +1,126 @@
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { Star, Shield, BadgeCheck, Home } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-navy-900 text-gray-400 py-16">
+    <footer className="bg-slate-900 text-gray-400 py-16 border-t border-slate-800">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <span className="w-9 h-9 bg-gradient-to-br from-navy-700 to-navy-800 rounded-lg flex items-center justify-center text-gold-500 font-bold text-lg border border-navy-600">
+              <span className="w-9 h-9 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center text-slate-950 font-bold text-lg">
                 W
               </span>
               <span className="text-xl font-extrabold text-white">
-                LendyWendy
+                Lendy<span className="text-amber-500">Wendy</span>
               </span>
             </Link>
             <p className="text-sm leading-relaxed mb-4 max-w-xs">
-              California&apos;s trusted mortgage matching platform. We connect
-              homebuyers with vetted local lenders for the best rates.
+              California&apos;s trusted investment property lending platform. DSCR loans, fix-and-flip, and portfolio financing for real estate investors.
             </p>
             <div className="flex items-center gap-1">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className="h-4 w-4 fill-gold-500 text-gold-500"
+                  className="h-4 w-4 fill-amber-500 text-amber-500"
                 />
               ))}
               <span className="text-xs ml-2 text-gray-500">
-                4.9/5 Customer Rating
+                4.9/5 Investor Rating
               </span>
             </div>
           </div>
 
-          {/* Loan Programs */}
+          {/* Investment Loans */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Loan Programs</h4>
+            <h4 className="text-white font-semibold mb-4">Investment Loans</h4>
             <ul className="space-y-3 text-sm">
               <li>
                 <Link
-                  href="/residential"
-                  className="hover:text-white transition-colors"
+                  href="/investment/dscr-loans"
+                  className="hover:text-amber-500 transition-colors"
                 >
-                  Residential Mortgages
+                  DSCR Loans
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/investment"
-                  className="hover:text-white transition-colors"
+                  href="/investment/fix-and-flip"
+                  className="hover:text-amber-500 transition-colors"
                 >
-                  Investment Property
+                  Fix & Flip
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/commercial"
-                  className="hover:text-white transition-colors"
+                  href="/investment/bridge-loans"
+                  className="hover:text-amber-500 transition-colors"
                 >
-                  Commercial Loans
+                  Bridge Loans
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/non-qm"
-                  className="hover:text-white transition-colors"
+                  href="/investment/portfolio-loans"
+                  className="hover:text-amber-500 transition-colors"
                 >
-                  Non-QM Solutions
+                  Portfolio Loans
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/refinance"
-                  className="hover:text-white transition-colors"
+                  href="/investment/hard-money"
+                  className="hover:text-amber-500 transition-colors"
                 >
-                  Refinancing
+                  Hard Money
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Resources */}
+          {/* Residential & Commercial */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Resources</h4>
+            <h4 className="text-white font-semibold mb-4">More Loans</h4>
             <ul className="space-y-3 text-sm">
               <li>
                 <Link
-                  href="/readiness-score"
-                  className="hover:text-white transition-colors"
+                  href="/residential/conventional"
+                  className="hover:text-amber-500 transition-colors"
                 >
-                  Mortgage Readiness Score
+                  Conventional
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/calculators"
-                  className="hover:text-white transition-colors"
+                  href="/residential/fha"
+                  className="hover:text-amber-500 transition-colors"
                 >
-                  Calculators
+                  FHA Loans
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/how-it-works"
-                  className="hover:text-white transition-colors"
+                  href="/residential/va"
+                  className="hover:text-amber-500 transition-colors"
                 >
-                  How It Works
+                  VA Loans
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/faq"
-                  className="hover:text-white transition-colors"
+                  href="/commercial/sba-7a-loans"
+                  className="hover:text-amber-500 transition-colors"
                 >
-                  FAQ
+                  SBA 7(a)
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/commercial/construction-loans"
+                  className="hover:text-amber-500 transition-colors"
+                >
+                  Construction
                 </Link>
               </li>
             </ul>
@@ -126,7 +133,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/california/los-angeles"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-amber-500 transition-colors"
                 >
                   Los Angeles
                 </Link>
@@ -134,7 +141,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/california/san-francisco"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-amber-500 transition-colors"
                 >
                   San Francisco
                 </Link>
@@ -142,7 +149,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/california/san-diego"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-amber-500 transition-colors"
                 >
                   San Diego
                 </Link>
@@ -150,40 +157,56 @@ export function Footer() {
               <li>
                 <Link
                   href="/california/sacramento"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-amber-500 transition-colors"
                 >
                   Sacramento
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/california/orange-county"
-                  className="hover:text-white transition-colors"
+                  href="/california/oakland"
+                  className="hover:text-amber-500 transition-colors"
                 >
-                  Orange County
+                  Oakland
                 </Link>
               </li>
             </ul>
           </div>
         </div>
 
+        {/* Trust badges */}
+        <div className="border-t border-slate-800 pt-8 mb-8">
+          <div className="flex flex-wrap justify-center gap-8 text-sm text-slate-500">
+            <span className="flex items-center gap-2">
+              <Shield className="h-4 w-4 text-amber-500" />
+              NMLS #1945913
+            </span>
+            <span className="flex items-center gap-2">
+              <BadgeCheck className="h-4 w-4 text-emerald-500" />
+              California DRE Licensed
+            </span>
+            <span className="flex items-center gap-2">
+              <Home className="h-4 w-4 text-blue-400" />
+              Equal Housing Opportunity
+            </span>
+          </div>
+        </div>
+
         {/* Bottom */}
-        <div className="border-t border-navy-700 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
+        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
           <p>
             &copy; {new Date().getFullYear()} LendyWendy. All rights reserved.
-            NMLS #1945913
           </p>
           <div className="flex flex-wrap gap-6 justify-center">
-            <Link href="/privacy" className="hover:text-white transition-colors">
+            <Link href="/privacy" className="hover:text-amber-500 transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-white transition-colors">
+            <Link href="/terms" className="hover:text-amber-500 transition-colors">
               Terms of Service
             </Link>
-            <Link href="/licensing" className="hover:text-white transition-colors">
+            <Link href="/licensing" className="hover:text-amber-500 transition-colors">
               Licensing
             </Link>
-            <span className="text-gray-500">Equal Housing Opportunity</span>
           </div>
         </div>
       </div>

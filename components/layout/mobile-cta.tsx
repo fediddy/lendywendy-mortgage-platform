@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 
 export function MobileCTA() {
   const pathname = usePathname();
@@ -13,12 +14,13 @@ export function MobileCTA() {
   if (shouldHide) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t border-gray-200 p-4 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] z-50">
+    <div className="fixed bottom-0 left-0 right-0 md:hidden bg-slate-900/95 backdrop-blur-sm border-t border-slate-800 p-4 z-50">
       <Link
         href="/get-quote"
-        className="block w-full bg-gold-500 hover:bg-gold-600 text-navy-900 font-bold text-center py-4 rounded-xl transition-colors"
+        className="flex items-center justify-center gap-2 w-full bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold text-center py-4 rounded-xl transition-colors"
       >
-        Get My Free Rate
+        Get Investor Rates
+        <ArrowRight className="h-5 w-5" />
       </Link>
     </div>
   );

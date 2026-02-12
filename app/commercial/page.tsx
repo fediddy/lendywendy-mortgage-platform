@@ -1,20 +1,29 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { prisma } from "@/lib/db";
 
 export const dynamic = 'force-dynamic';
 import { ContentStatus, Segment } from "@prisma/client";
-import { SegmentHubHero } from "@/components/segments/segment-hub-hero";
 import { ContentCard } from "@/components/segments/content-card";
-import { SegmentNavigation } from "@/components/segments/segment-navigation";
-import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { StructuredData } from "@/components/seo/StructuredData";
-import { TrustSignals, TestimonialCards } from "@/components/shared";
-import { CtaSection } from "@/components/shared";
+import {
+  ArrowRight,
+  Building2,
+  CheckCircle,
+  Shield,
+  ChevronDown,
+  Calculator,
+  Clock,
+  DollarSign,
+  Warehouse,
+  Store,
+  Hotel,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   getArticleUrl,
   getGuideUrl,
   getCalculatorUrl,
-  getCategoryUrl,
 } from "@/lib/url-utils";
 
 export const metadata: Metadata = {
@@ -37,8 +46,63 @@ export const metadata: Metadata = {
     description: "SBA loans, multi-family, construction, and commercial property financing for California businesses.",
     type: "website",
     url: "https://lendywendy.com/commercial",
+    images: [{ url: "https://lendywendy.com/api/og?title=California+Commercial+Loans&subtitle=SBA%2C+CRE%2C+and+Construction+Financing.&badge=Commercial+Lending", width: 1200, height: 630, alt: "California Commercial Loans" }],
   },
 };
+
+const loanTypes = [
+  {
+    icon: Building2,
+    title: "SBA 7(a) Loans",
+    rate: "Prime + 2.25%",
+    description: "Government-backed loans for small business real estate and working capital.",
+    features: ["Up to $5M", "10% down possible", "10-25 year terms", "Mixed-use eligible"],
+    href: "/commercial/sba-7a-loans",
+  },
+  {
+    icon: Warehouse,
+    title: "SBA 504 Loans",
+    rate: "Below market",
+    description: "Fixed-rate financing for major real estate and equipment purchases.",
+    features: ["Up to $5.5M", "10% down typical", "Fixed rates on CDC portion", "Owner-occupied only"],
+    href: "/commercial/sba-504-loans",
+  },
+  {
+    icon: Store,
+    title: "Conventional CRE",
+    rate: "From 7%",
+    description: "Traditional commercial mortgages for all property types.",
+    features: ["Office & retail", "Industrial & warehouse", "Mixed-use properties", "25-30% down typical"],
+    href: "/commercial/conventional-cre",
+  },
+  {
+    icon: Hotel,
+    title: "Construction Loans",
+    rate: "From 8%",
+    description: "Ground-up construction and major renovation financing.",
+    features: ["Interest-only during build", "12-24 month terms", "Converts to permanent", "20-30% equity required"],
+    href: "/commercial/construction-loans",
+  },
+];
+
+const faqItems = [
+  {
+    question: "What is the difference between SBA 7(a) and SBA 504 loans?",
+    answer: "SBA 7(a) loans offer up to $5M for various business purposes including real estate, equipment, and working capital. SBA 504 loans offer up to $5.5M specifically for real estate and major equipment, with lower down payments (10%) and fixed rates on the CDC portion."
+  },
+  {
+    question: "What down payment is required for commercial real estate loans?",
+    answer: "Commercial loans typically require 25-30% down for investor-owned properties. Owner-occupied commercial properties may qualify for 10-20% down with SBA programs. Construction loans often require 20-30% equity."
+  },
+  {
+    question: "How long does it take to close a commercial mortgage?",
+    answer: "Commercial loans typically take 30-60 days to close due to more complex underwriting, property appraisals, and environmental assessments. SBA loans may take 60-90 days. Bridge loans can close in 2-4 weeks."
+  },
+  {
+    question: "What types of commercial properties can I finance?",
+    answer: "LendyWendy matches you with lenders for all commercial property types: office buildings, retail centers, multi-family (5+ units), industrial/warehouse, mixed-use properties, hotels, self-storage, and special-purpose buildings."
+  },
+];
 
 export default async function CommercialPage() {
   const segment = Segment.COMMERCIAL;
@@ -53,7 +117,7 @@ export default async function CommercialPage() {
       category: { select: { name: true, slug: true } },
     },
     orderBy: { publishedAt: "desc" },
-    take: 6,
+    take: 3,
   });
 
   const guides = await prisma.guide.findMany({
@@ -66,7 +130,7 @@ export default async function CommercialPage() {
       category: { select: { name: true, slug: true } },
     },
     orderBy: { publishedAt: "desc" },
-    take: 4,
+    take: 2,
   });
 
   const calculators = await prisma.calculator.findMany({
@@ -82,58 +146,8 @@ export default async function CommercialPage() {
     take: 4,
   });
 
-  const categories = await prisma.category.findMany({
-    where: { segment },
-    include: {
-      _count: {
-        select: {
-          articles: {
-            where: {
-              status: ContentStatus.PUBLISHED,
-              publishedAt: { lte: new Date() },
-            },
-          },
-          guides: {
-            where: {
-              status: ContentStatus.PUBLISHED,
-              publishedAt: { lte: new Date() },
-            },
-          },
-          calculators: {
-            where: {
-              status: ContentStatus.PUBLISHED,
-              publishedAt: { lte: new Date() },
-            },
-          },
-        },
-      },
-    },
-    orderBy: { name: "asc" },
-  });
-
-  // FAQ items for commercial segment
-  const faqItems = [
-    {
-      question: "What is the difference between SBA 7(a) and SBA 504 loans?",
-      answer: "SBA 7(a) loans offer up to $5M for various business purposes including real estate, equipment, and working capital. SBA 504 loans offer up to $5.5M specifically for real estate and major equipment, with lower down payments (10%) and fixed rates on the CDC portion."
-    },
-    {
-      question: "What down payment is required for commercial real estate loans?",
-      answer: "Commercial loans typically require 25-30% down for investor-owned properties. Owner-occupied commercial properties may qualify for 10-20% down with SBA programs. Construction loans often require 20-30% equity."
-    },
-    {
-      question: "How long does it take to close a commercial mortgage?",
-      answer: "Commercial loans typically take 30-60 days to close due to more complex underwriting, property appraisals, and environmental assessments. SBA loans may take 60-90 days. Bridge loans can close in 2-4 weeks."
-    },
-    {
-      question: "What types of commercial properties can I finance?",
-      answer: "LendyWendy matches you with lenders for all commercial property types: office buildings, retail centers, multi-family (5+ units), industrial/warehouse, mixed-use properties, hotels, self-storage, and special-purpose buildings."
-    },
-  ];
-
   return (
     <>
-      {/* Structured Data for SEO */}
       <StructuredData
         type="service"
         pageTitle="California Commercial Real Estate Loans | SBA, Multi-Family"
@@ -143,177 +157,279 @@ export default async function CommercialPage() {
         faqItems={faqItems}
       />
 
-      <main className="min-h-screen" itemScope itemType="https://schema.org/WebPage">
-        <SegmentHubHero segment={segment} />
+      <main className="min-h-screen bg-slate-950">
+        {/* Hero Section */}
+        <section className="relative overflow-hidden py-20 lg:py-28">
+          <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent" />
+          <div className="container mx-auto px-4 relative">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-500 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+                <Building2 className="h-4 w-4" />
+                California Commercial Lending
+              </div>
 
-        <div className="container mx-auto px-4 py-12 space-y-16">
-          <Breadcrumbs
-            items={[{ name: "Commercial Real Estate", url: "/commercial" }]}
-          />
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                Commercial Real Estate
+                <br />
+                <span className="text-amber-500">Financing Solutions</span>
+              </h1>
 
-        {categories.length > 0 && (
-          <section>
-            <h2 className="text-3xl font-bold mb-6 text-navy-900">Browse by Category</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {categories.map((category) => {
-                const totalContent =
-                  category._count.articles +
-                  category._count.guides +
-                  category._count.calculators;
+              <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+                SBA loans, multi-family financing, construction loans, and conventional CRE mortgages
+                for California businesses and investors.
+              </p>
 
-                return (
-                  <a
-                    key={category.id}
-                    href={getCategoryUrl(category.slug)}
-                    className="p-6 border rounded-lg hover:shadow-md transition-shadow bg-card"
-                  >
-                    <h3 className="font-semibold text-lg mb-2">
-                      {category.name}
-                    </h3>
-                    {category.description && (
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                        {category.description}
-                      </p>
-                    )}
-                    <p className="text-xs text-muted-foreground">
-                      {totalContent} {totalContent === 1 ? "resource" : "resources"}
-                    </p>
-                  </a>
-                );
-              })}
-            </div>
-          </section>
-        )}
-
-        {articles.length > 0 && (
-          <section>
-            <h2 className="text-3xl font-bold mb-6 text-navy-900">Commercial Financing News</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {articles.map((article) => (
-                <ContentCard
-                  key={article.id}
-                  title={article.title}
-                  excerpt={article.excerpt || undefined}
-                  slug={article.slug}
-                  url={getArticleUrl(article.slug)}
-                  type="article"
-                  publishedAt={article.publishedAt || undefined}
-                  readTime={article.readTime || undefined}
-                  viewCount={article.viewCount}
-                  featuredImage={article.featuredImage || undefined}
-                  category={{
-                    name: article.category.name,
-                    slug: article.category.slug,
-                  }}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {guides.length > 0 && (
-          <section>
-            <h2 className="text-3xl font-bold mb-6 text-navy-900">Commercial Loan Guides</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {guides.map((guide) => (
-                <ContentCard
-                  key={guide.id}
-                  title={guide.title}
-                  excerpt={guide.excerpt || undefined}
-                  slug={guide.slug}
-                  url={getGuideUrl(guide.slug)}
-                  type="guide"
-                  publishedAt={guide.publishedAt || undefined}
-                  readTime={guide.estimatedTime || undefined}
-                  viewCount={guide.viewCount}
-                  featuredImage={guide.featuredImage || undefined}
-                  category={{
-                    name: guide.category.name,
-                    slug: guide.category.slug,
-                  }}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {calculators.length > 0 && (
-          <section aria-labelledby="calculators-heading">
-            <h2 id="calculators-heading" className="text-3xl font-bold mb-6 text-navy-900">Commercial Property Calculators</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {calculators.map((calculator) => (
-                <ContentCard
-                  key={calculator.id}
-                  title={calculator.title}
-                  excerpt={calculator.description || undefined}
-                  slug={calculator.slug}
-                  url={getCalculatorUrl(calculator.slug)}
-                  type="calculator"
-                  publishedAt={calculator.publishedAt || undefined}
-                  viewCount={calculator.usageCount}
-                  category={{
-                    name: calculator.category.name,
-                    slug: calculator.category.slug,
-                  }}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Testimonials */}
-        <section aria-labelledby="testimonials-heading">
-          <h2 id="testimonials-heading" className="text-3xl font-bold mb-6 text-navy-900">
-            What Business Owners Say
-          </h2>
-          <TestimonialCards limit={3} />
-        </section>
-
-        {/* FAQ Section */}
-        <section aria-labelledby="faq-heading" itemScope itemType="https://schema.org/FAQPage">
-          <h2 id="faq-heading" className="text-3xl font-bold mb-6 text-navy-900">
-            Commercial Loan FAQs
-          </h2>
-          <div className="space-y-4">
-            {faqItems.map((item, index) => (
-              <details
-                key={index}
-                className="group bg-gray-50 rounded-xl border border-gray-200 overflow-hidden"
-                itemScope
-                itemProp="mainEntity"
-                itemType="https://schema.org/Question"
-              >
-                <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-100 transition-colors">
-                  <h3 className="font-semibold text-navy-900 text-sm pr-4" itemProp="name">
-                    {item.question}
-                  </h3>
-                </summary>
-                <div
-                  className="px-4 pb-4 text-sm text-gray-600"
-                  itemScope
-                  itemProp="acceptedAnswer"
-                  itemType="https://schema.org/Answer"
-                >
-                  <p itemProp="text">{item.answer}</p>
+              {/* Key Benefits */}
+              <div className="flex flex-wrap justify-center gap-4 mb-10">
+                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
+                  <Clock className="h-4 w-4 text-amber-500" />
+                  <span>Close in 30-60 days</span>
                 </div>
-              </details>
-            ))}
+                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
+                  <DollarSign className="h-4 w-4 text-emerald-500" />
+                  <span>SBA 10% down</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
+                  <Building2 className="h-4 w-4 text-amber-500" />
+                  <span>All property types</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-8" asChild>
+                  <Link href="/get-quote">
+                    Get Commercial Rates <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="border-slate-700 text-white hover:bg-slate-800" asChild>
+                  <Link href="/calculators">
+                    <Calculator className="mr-2 h-5 w-5" />
+                    CRE Calculator
+                  </Link>
+                </Button>
+              </div>
+            </div>
           </div>
         </section>
-      </div>
 
-      {/* Trust Signals */}
-      <TrustSignals variant="light" showStats={true} showCredentials={true} />
+        {/* Loan Types */}
+        <section className="py-20 border-t border-slate-800">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                Commercial Loan Programs
+              </h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Financing solutions for every commercial property need
+              </p>
+            </div>
 
-      {/* Cross-Segment Navigation */}
-      <SegmentNavigation currentSegment={segment} />
+            <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+              {loanTypes.map((loan, index) => (
+                <Link
+                  key={index}
+                  href={loan.href}
+                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-amber-500/10 rounded-lg">
+                        <loan.icon className="h-6 w-6 text-amber-500" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-white group-hover:text-amber-500 transition-colors">{loan.title}</h3>
+                        <p className="text-amber-500 font-semibold">{loan.rate}</p>
+                      </div>
+                    </div>
+                  </div>
 
-      {/* Final CTA */}
-      <CtaSection
-        variant="primary"
-        title="Ready to finance your commercial property?"
-        description="Get matched with lenders who specialize in commercial real estate. SBA, multi-family, construction - we've got you covered."
-      />
+                  <p className="text-gray-400 mb-4">{loan.description}</p>
+
+                  <div className="space-y-2">
+                    {loan.features.map((feature, i) => (
+                      <div key={i} className="flex items-center gap-2 text-sm text-gray-300">
+                        <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                        {feature}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t border-slate-800">
+                    <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                      Learn More <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="text-center mt-10">
+              <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold" asChild>
+                <Link href="/get-quote">
+                  Get Matched with Lenders <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Stats Section */}
+        <section className="py-16 border-t border-slate-800 bg-slate-900/50">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">
+              <div>
+                <div className="text-4xl font-bold text-amber-500 mb-2">$500M+</div>
+                <div className="text-gray-400">Commercial Loans Funded</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-amber-500 mb-2">45 days</div>
+                <div className="text-gray-400">Average Close Time</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-amber-500 mb-2">200+</div>
+                <div className="text-gray-400">CRE Lenders</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-amber-500 mb-2">4.8/5</div>
+                <div className="text-gray-400">Business Owner Rating</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Content Sections */}
+        {(articles.length > 0 || guides.length > 0 || calculators.length > 0) && (
+          <section className="py-20 border-t border-slate-800">
+            <div className="container mx-auto px-4 space-y-16">
+              {articles.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6">Commercial Financing News</h2>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    {articles.map((article) => (
+                      <ContentCard
+                        key={article.id}
+                        title={article.title}
+                        excerpt={article.excerpt || undefined}
+                        slug={article.slug}
+                        url={getArticleUrl(article.slug)}
+                        type="article"
+                        publishedAt={article.publishedAt || undefined}
+                        readTime={article.readTime || undefined}
+                        viewCount={article.viewCount}
+                        featuredImage={article.featuredImage || undefined}
+                        category={{
+                          name: article.category.name,
+                          slug: article.category.slug,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {guides.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6">Commercial Loan Guides</h2>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {guides.map((guide) => (
+                      <ContentCard
+                        key={guide.id}
+                        title={guide.title}
+                        excerpt={guide.excerpt || undefined}
+                        slug={guide.slug}
+                        url={getGuideUrl(guide.slug)}
+                        type="guide"
+                        publishedAt={guide.publishedAt || undefined}
+                        readTime={guide.estimatedTime || undefined}
+                        viewCount={guide.viewCount}
+                        featuredImage={guide.featuredImage || undefined}
+                        category={{
+                          name: guide.category.name,
+                          slug: guide.category.slug,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {calculators.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6">Commercial Calculators</h2>
+                  <div className="grid md:grid-cols-4 gap-6">
+                    {calculators.map((calculator) => (
+                      <ContentCard
+                        key={calculator.id}
+                        title={calculator.title}
+                        excerpt={calculator.description || undefined}
+                        slug={calculator.slug}
+                        url={getCalculatorUrl(calculator.slug)}
+                        type="calculator"
+                        publishedAt={calculator.publishedAt || undefined}
+                        viewCount={calculator.usageCount}
+                        category={{
+                          name: calculator.category.name,
+                          slug: calculator.category.slug,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* FAQ Section */}
+        <section className="py-20 border-t border-slate-800">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto">
+              <h2 className="text-3xl font-bold text-white text-center mb-10">
+                Commercial Loan FAQs
+              </h2>
+              <div className="space-y-4">
+                {faqItems.map((item, index) => (
+                  <details
+                    key={index}
+                    className="group bg-slate-900 rounded-xl border border-slate-800 overflow-hidden"
+                  >
+                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-slate-800/50 transition-colors">
+                      <h3 className="font-semibold text-white pr-4">
+                        {item.question}
+                      </h3>
+                      <ChevronDown className="h-5 w-5 text-gray-400 group-open:rotate-180 transition-transform" />
+                    </summary>
+                    <div className="px-5 pb-5 text-gray-400">
+                      <p>{item.answer}</p>
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="py-20 border-t border-slate-800 bg-gradient-to-b from-slate-900 to-slate-950">
+          <div className="container mx-auto px-4 text-center">
+            <Shield className="h-12 w-12 text-amber-500 mx-auto mb-6" />
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              Ready to Finance Your Commercial Property?
+            </h2>
+            <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+              Get matched with commercial real estate lenders in 60 seconds.
+              SBA, multi-family, construction - we&apos;ve got you covered.
+            </p>
+            <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-10" asChild>
+              <Link href="/get-quote">
+                Get Started <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <p className="text-sm text-gray-500 mt-4">
+              NMLS #1945913 | No credit impact to get matched
+            </p>
+          </div>
+        </section>
       </main>
     </>
   );

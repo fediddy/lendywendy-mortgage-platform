@@ -1,20 +1,27 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { prisma } from "@/lib/db";
 
 export const dynamic = 'force-dynamic';
 import { ContentStatus, Segment } from "@prisma/client";
-import { SegmentHubHero } from "@/components/segments/segment-hub-hero";
 import { ContentCard } from "@/components/segments/content-card";
-import { SegmentNavigation } from "@/components/segments/segment-navigation";
-import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { StructuredData } from "@/components/seo/StructuredData";
-import { TrustSignals, TestimonialCards } from "@/components/shared";
-import { CtaSection } from "@/components/shared";
+import {
+  ArrowRight,
+  Home,
+  CheckCircle,
+  Shield,
+  ChevronDown,
+  Calculator,
+  Users,
+  Clock,
+  DollarSign,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   getArticleUrl,
   getGuideUrl,
   getCalculatorUrl,
-  getCategoryUrl,
 } from "@/lib/url-utils";
 
 export const metadata: Metadata = {
@@ -37,13 +44,63 @@ export const metadata: Metadata = {
     description: "Get pre-approved for California home loans in minutes. FHA, VA, Conventional, Jumbo loans. Compare rates from top lenders.",
     type: "website",
     url: "https://lendywendy.com/residential",
+    images: [{ url: "https://lendywendy.com/api/og?title=California+Residential+Mortgages&subtitle=Conventional%2C+FHA%2C+VA%2C+and+Jumbo+Loans.&badge=Home+Lending", width: 1200, height: 630, alt: "California Residential Mortgages" }],
   },
 };
+
+const loanTypes = [
+  {
+    title: "Conventional Loans",
+    rate: "From 6.5%",
+    description: "Traditional mortgage with 3-20% down. Best for buyers with good credit (620+).",
+    features: ["3% down for first-time buyers", "PMI cancellable at 80% LTV", "Up to $766,550 conforming limit"],
+    href: "/residential/conventional",
+  },
+  {
+    title: "FHA Loans",
+    rate: "From 6.25%",
+    description: "Government-backed loan with lower credit requirements. Ideal for first-time buyers.",
+    features: ["3.5% down with 580+ credit", "Accept 500+ with 10% down", "Lower closing costs"],
+    href: "/residential/fha",
+  },
+  {
+    title: "VA Loans",
+    rate: "From 6%",
+    description: "Zero down payment for eligible veterans, service members, and surviving spouses.",
+    features: ["$0 down payment", "No PMI required", "Competitive rates"],
+    href: "/residential/va",
+  },
+  {
+    title: "Jumbo Loans",
+    rate: "From 6.75%",
+    description: "For high-value California properties above conforming loan limits.",
+    features: ["Loans above $766,550", "10-20% down typical", "700+ credit recommended"],
+    href: "/residential/jumbo",
+  },
+];
+
+const faqItems = [
+  {
+    question: "What credit score do I need for a California home loan?",
+    answer: "Credit requirements vary by loan type: FHA loans accept 580+ (3.5% down), Conventional loans require 620+, VA loans typically need 620+, and Jumbo loans usually require 700+. LendyWendy matches you with lenders who specialize in your credit profile."
+  },
+  {
+    question: "How much down payment do I need to buy a house in California?",
+    answer: "Down payment requirements depend on loan type: VA and USDA loans offer $0 down for eligible borrowers, FHA loans require 3.5% down, Conventional loans start at 3% down for first-time buyers, and Jumbo loans typically require 10-20% down."
+  },
+  {
+    question: "How fast can I get pre-approved for a California mortgage?",
+    answer: "Most borrowers receive pre-qualification within 2 minutes using our AI advisor. Full pre-approval with a matched lender typically takes 24-48 hours after document submission."
+  },
+  {
+    question: "What is the difference between FHA and Conventional loans?",
+    answer: "FHA loans are government-insured with lower credit requirements (580+) and 3.5% down, but require mortgage insurance for the life of the loan. Conventional loans require 620+ credit and 3-20% down, with PMI cancellable at 80% LTV."
+  },
+];
 
 export default async function ResidentialPage() {
   const segment = Segment.RESIDENTIAL;
 
-  // Fetch featured articles
   const articles = await prisma.article.findMany({
     where: {
       status: ContentStatus.PUBLISHED,
@@ -54,10 +111,9 @@ export default async function ResidentialPage() {
       category: { select: { name: true, slug: true } },
     },
     orderBy: { publishedAt: "desc" },
-    take: 6,
+    take: 3,
   });
 
-  // Fetch featured guides
   const guides = await prisma.guide.findMany({
     where: {
       status: ContentStatus.PUBLISHED,
@@ -68,10 +124,9 @@ export default async function ResidentialPage() {
       category: { select: { name: true, slug: true } },
     },
     orderBy: { publishedAt: "desc" },
-    take: 4,
+    take: 2,
   });
 
-  // Fetch calculators
   const calculators = await prisma.calculator.findMany({
     where: {
       status: ContentStatus.PUBLISHED,
@@ -85,59 +140,8 @@ export default async function ResidentialPage() {
     take: 4,
   });
 
-  // Fetch categories for this segment
-  const categories = await prisma.category.findMany({
-    where: { segment },
-    include: {
-      _count: {
-        select: {
-          articles: {
-            where: {
-              status: ContentStatus.PUBLISHED,
-              publishedAt: { lte: new Date() },
-            },
-          },
-          guides: {
-            where: {
-              status: ContentStatus.PUBLISHED,
-              publishedAt: { lte: new Date() },
-            },
-          },
-          calculators: {
-            where: {
-              status: ContentStatus.PUBLISHED,
-              publishedAt: { lte: new Date() },
-            },
-          },
-        },
-      },
-    },
-    orderBy: { name: "asc" },
-  });
-
-  // FAQ items for this segment
-  const faqItems = [
-    {
-      question: "What credit score do I need for a California home loan?",
-      answer: "Credit requirements vary by loan type: FHA loans accept 580+ (3.5% down), Conventional loans require 620+, VA loans typically need 620+, and Jumbo loans usually require 700+. LendyWendy matches you with lenders who specialize in your credit profile."
-    },
-    {
-      question: "How much down payment do I need to buy a house in California?",
-      answer: "Down payment requirements depend on loan type: VA and USDA loans offer $0 down for eligible borrowers, FHA loans require 3.5% down, Conventional loans start at 3% down for first-time buyers, and Jumbo loans typically require 10-20% down."
-    },
-    {
-      question: "How fast can I get pre-approved for a California mortgage?",
-      answer: "Most borrowers receive pre-qualification within 2 minutes using our AI advisor. Full pre-approval with a matched lender typically takes 24-48 hours after document submission."
-    },
-    {
-      question: "What is the difference between FHA and Conventional loans?",
-      answer: "FHA loans are government-insured with lower credit requirements (580+) and 3.5% down, but require mortgage insurance for the life of the loan. Conventional loans require 620+ credit and 3-20% down, with PMI cancellable at 80% LTV."
-    },
-  ];
-
   return (
     <>
-      {/* Structured Data for SEO */}
       <StructuredData
         type="service"
         pageTitle="California Residential Mortgages | Home Loans & Refinancing"
@@ -147,180 +151,275 @@ export default async function ResidentialPage() {
         faqItems={faqItems}
       />
 
-      <main className="min-h-screen" itemScope itemType="https://schema.org/WebPage">
-        <SegmentHubHero segment={segment} />
+      <main className="min-h-screen bg-slate-950">
+        {/* Hero Section */}
+        <section className="relative overflow-hidden py-20 lg:py-28">
+          <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent" />
+          <div className="container mx-auto px-4 relative">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-500 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+                <Home className="h-4 w-4" />
+                California Home Loans
+              </div>
 
-        <div className="container mx-auto px-4 py-12 space-y-16">
-          <Breadcrumbs
-            items={[{ name: "Residential Mortgages", url: "/residential" }]}
-          />
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                Find Your Perfect
+                <br />
+                <span className="text-amber-500">California Home Loan</span>
+              </h1>
 
-        {/* Categories */}
-        {categories.length > 0 && (
-          <section>
-            <h2 className="text-3xl font-bold mb-6 text-navy-900">Browse by Category</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {categories.map((category) => {
-                const totalContent =
-                  category._count.articles +
-                  category._count.guides +
-                  category._count.calculators;
+              <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+                FHA, VA, Conventional, and Jumbo loans from California&apos;s top lenders.
+                Get pre-approved in minutes with no credit impact.
+              </p>
 
-                return (
-                  <a
-                    key={category.id}
-                    href={getCategoryUrl(category.slug)}
-                    className="p-6 border rounded-lg hover:shadow-md transition-shadow bg-card"
-                  >
-                    <h3 className="font-semibold text-lg mb-2">
-                      {category.name}
-                    </h3>
-                    {category.description && (
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                        {category.description}
-                      </p>
-                    )}
-                    <p className="text-xs text-muted-foreground">
-                      {totalContent} {totalContent === 1 ? "resource" : "resources"}
-                    </p>
-                  </a>
-                );
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* Latest Articles */}
-        {articles.length > 0 && (
-          <section>
-            <h2 className="text-3xl font-bold mb-6 text-navy-900">Latest Articles</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {articles.map((article) => (
-                <ContentCard
-                  key={article.id}
-                  title={article.title}
-                  excerpt={article.excerpt || undefined}
-                  slug={article.slug}
-                  url={getArticleUrl(article.slug)}
-                  type="article"
-                  publishedAt={article.publishedAt || undefined}
-                  readTime={article.readTime || undefined}
-                  viewCount={article.viewCount}
-                  featuredImage={article.featuredImage || undefined}
-                  category={{
-                    name: article.category.name,
-                    slug: article.category.slug,
-                  }}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Featured Guides */}
-        {guides.length > 0 && (
-          <section>
-            <h2 className="text-3xl font-bold mb-6 text-navy-900">Step-by-Step Guides</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {guides.map((guide) => (
-                <ContentCard
-                  key={guide.id}
-                  title={guide.title}
-                  excerpt={guide.excerpt || undefined}
-                  slug={guide.slug}
-                  url={getGuideUrl(guide.slug)}
-                  type="guide"
-                  publishedAt={guide.publishedAt || undefined}
-                  readTime={guide.estimatedTime || undefined}
-                  viewCount={guide.viewCount}
-                  featuredImage={guide.featuredImage || undefined}
-                  category={{
-                    name: guide.category.name,
-                    slug: guide.category.slug,
-                  }}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Calculators */}
-        {calculators.length > 0 && (
-          <section aria-labelledby="calculators-heading">
-            <h2 id="calculators-heading" className="text-3xl font-bold mb-6 text-navy-900">Financial Calculators</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {calculators.map((calculator) => (
-                <ContentCard
-                  key={calculator.id}
-                  title={calculator.title}
-                  excerpt={calculator.description || undefined}
-                  slug={calculator.slug}
-                  url={getCalculatorUrl(calculator.slug)}
-                  type="calculator"
-                  publishedAt={calculator.publishedAt || undefined}
-                  viewCount={calculator.usageCount}
-                  category={{
-                    name: calculator.category.name,
-                    slug: calculator.category.slug,
-                  }}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Testimonials */}
-        <section aria-labelledby="testimonials-heading">
-          <h2 id="testimonials-heading" className="text-3xl font-bold mb-6 text-navy-900">
-            What Our Clients Say
-          </h2>
-          <TestimonialCards limit={3} />
-        </section>
-
-        {/* FAQ Section */}
-        <section aria-labelledby="faq-heading" itemScope itemType="https://schema.org/FAQPage">
-          <h2 id="faq-heading" className="text-3xl font-bold mb-6 text-navy-900">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-4">
-            {faqItems.map((item, index) => (
-              <details
-                key={index}
-                className="group bg-gray-50 rounded-xl border border-gray-200 overflow-hidden"
-                itemScope
-                itemProp="mainEntity"
-                itemType="https://schema.org/Question"
-              >
-                <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-100 transition-colors">
-                  <h3 className="font-semibold text-navy-900 text-sm pr-4" itemProp="name">
-                    {item.question}
-                  </h3>
-                </summary>
-                <div
-                  className="px-4 pb-4 text-sm text-gray-600"
-                  itemScope
-                  itemProp="acceptedAnswer"
-                  itemType="https://schema.org/Answer"
-                >
-                  <p itemProp="text">{item.answer}</p>
+              {/* Key Benefits */}
+              <div className="flex flex-wrap justify-center gap-4 mb-10">
+                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
+                  <Clock className="h-4 w-4 text-amber-500" />
+                  <span>Pre-approved in 24hrs</span>
                 </div>
-              </details>
-            ))}
+                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
+                  <DollarSign className="h-4 w-4 text-emerald-500" />
+                  <span>As low as 3% down</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
+                  <Users className="h-4 w-4 text-amber-500" />
+                  <span>500+ lenders</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-8" asChild>
+                  <Link href="/get-quote">
+                    Get Pre-Approved <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="border-slate-700 text-white hover:bg-slate-800" asChild>
+                  <Link href="/calculators">
+                    <Calculator className="mr-2 h-5 w-5" />
+                    Payment Calculator
+                  </Link>
+                </Button>
+              </div>
+            </div>
           </div>
         </section>
-      </div>
 
-      {/* Trust Signals */}
-      <TrustSignals variant="light" showStats={true} showCredentials={true} />
+        {/* Loan Types */}
+        <section className="py-20 border-t border-slate-800">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                Home Loan Programs
+              </h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Find the right loan for your situation
+              </p>
+            </div>
 
-      {/* Readiness Score CTA */}
-      <CtaSection variant="readiness" />
+            <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+              {loanTypes.map((loan, index) => (
+                <Link
+                  key={index}
+                  href={loan.href}
+                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="text-xl font-bold text-white group-hover:text-amber-500 transition-colors">{loan.title}</h3>
+                      <p className="text-amber-500 font-semibold">{loan.rate}</p>
+                    </div>
+                    <Home className="h-6 w-6 text-amber-500" />
+                  </div>
 
-      {/* Cross-Segment Navigation */}
-      <SegmentNavigation currentSegment={segment} />
+                  <p className="text-gray-400 mb-4">{loan.description}</p>
 
-      {/* Final CTA */}
-      <CtaSection variant="primary" />
+                  <div className="space-y-2">
+                    {loan.features.map((feature, i) => (
+                      <div key={i} className="flex items-center gap-2 text-sm text-gray-300">
+                        <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                        {feature}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t border-slate-800">
+                    <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                      Learn More <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="text-center mt-10">
+              <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold" asChild>
+                <Link href="/get-quote">
+                  Find My Best Rate <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Stats Section */}
+        <section className="py-16 border-t border-slate-800 bg-slate-900/50">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">
+              <div>
+                <div className="text-4xl font-bold text-amber-500 mb-2">$2B+</div>
+                <div className="text-gray-400">Loans Facilitated</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-amber-500 mb-2">24hrs</div>
+                <div className="text-gray-400">Pre-Approval Time</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-amber-500 mb-2">10,000+</div>
+                <div className="text-gray-400">Happy Homeowners</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-amber-500 mb-2">4.9/5</div>
+                <div className="text-gray-400">Customer Rating</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Content Sections */}
+        {(articles.length > 0 || guides.length > 0 || calculators.length > 0) && (
+          <section className="py-20 border-t border-slate-800">
+            <div className="container mx-auto px-4 space-y-16">
+              {articles.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6">Latest Home Buying Tips</h2>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    {articles.map((article) => (
+                      <ContentCard
+                        key={article.id}
+                        title={article.title}
+                        excerpt={article.excerpt || undefined}
+                        slug={article.slug}
+                        url={getArticleUrl(article.slug)}
+                        type="article"
+                        publishedAt={article.publishedAt || undefined}
+                        readTime={article.readTime || undefined}
+                        viewCount={article.viewCount}
+                        featuredImage={article.featuredImage || undefined}
+                        category={{
+                          name: article.category.name,
+                          slug: article.category.slug,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {guides.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6">Home Buying Guides</h2>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {guides.map((guide) => (
+                      <ContentCard
+                        key={guide.id}
+                        title={guide.title}
+                        excerpt={guide.excerpt || undefined}
+                        slug={guide.slug}
+                        url={getGuideUrl(guide.slug)}
+                        type="guide"
+                        publishedAt={guide.publishedAt || undefined}
+                        readTime={guide.estimatedTime || undefined}
+                        viewCount={guide.viewCount}
+                        featuredImage={guide.featuredImage || undefined}
+                        category={{
+                          name: guide.category.name,
+                          slug: guide.category.slug,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {calculators.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6">Mortgage Calculators</h2>
+                  <div className="grid md:grid-cols-4 gap-6">
+                    {calculators.map((calculator) => (
+                      <ContentCard
+                        key={calculator.id}
+                        title={calculator.title}
+                        excerpt={calculator.description || undefined}
+                        slug={calculator.slug}
+                        url={getCalculatorUrl(calculator.slug)}
+                        type="calculator"
+                        publishedAt={calculator.publishedAt || undefined}
+                        viewCount={calculator.usageCount}
+                        category={{
+                          name: calculator.category.name,
+                          slug: calculator.category.slug,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* FAQ Section */}
+        <section className="py-20 border-t border-slate-800">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto">
+              <h2 className="text-3xl font-bold text-white text-center mb-10">
+                Home Loan FAQs
+              </h2>
+              <div className="space-y-4">
+                {faqItems.map((item, index) => (
+                  <details
+                    key={index}
+                    className="group bg-slate-900 rounded-xl border border-slate-800 overflow-hidden"
+                  >
+                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-slate-800/50 transition-colors">
+                      <h3 className="font-semibold text-white pr-4">
+                        {item.question}
+                      </h3>
+                      <ChevronDown className="h-5 w-5 text-gray-400 group-open:rotate-180 transition-transform" />
+                    </summary>
+                    <div className="px-5 pb-5 text-gray-400">
+                      <p>{item.answer}</p>
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="py-20 border-t border-slate-800 bg-gradient-to-b from-slate-900 to-slate-950">
+          <div className="container mx-auto px-4 text-center">
+            <Shield className="h-12 w-12 text-amber-500 mx-auto mb-6" />
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              Ready to Find Your California Home Loan?
+            </h2>
+            <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+              Get matched with top California lenders in 60 seconds.
+              FHA, VA, Conventional, Jumbo - we&apos;ve got you covered.
+            </p>
+            <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-10" asChild>
+              <Link href="/get-quote">
+                Get Pre-Approved <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <p className="text-sm text-gray-500 mt-4">
+              NMLS #1945913 | No credit impact to get matched
+            </p>
+          </div>
+        </section>
       </main>
     </>
   );
