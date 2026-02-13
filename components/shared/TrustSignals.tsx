@@ -11,21 +11,19 @@ interface TrustSignalsProps {
 }
 
 const stats = [
-  { value: "2,400+", label: "Happy Clients", icon: Users },
-  { value: "4.9/5", label: "Customer Rating", icon: Star },
+  { value: "2,400+", label: "Borrowers Matched", icon: Users },
   { value: "$500M+", label: "Loans Matched", icon: Award },
-  { value: "24hrs", label: "Avg. Pre-Approval", icon: Clock },
+  { value: "24hrs", label: "Avg. Response", icon: Clock },
+  { value: "100+", label: "Partner Lenders", icon: Shield },
 ];
 
 const credentials = [
-  { label: "NMLS #1945913", icon: Shield },
-  { label: "California DRE Licensed", icon: BadgeCheck },
   { label: "Equal Housing Opportunity", icon: CheckCircle },
 ];
 
 const testimonials = [
   {
-    quote: "Pre-approved in 5 minutes. Rate was 0.375% lower than my bank.",
+    quote: "Matched with lenders in 5 minutes. Rate was 0.375% lower than my bank.",
     name: "Maria S.",
     detail: "First-time buyer, San Diego",
     rating: 5,
@@ -52,7 +50,7 @@ export function TrustSignals({
   className = "",
 }: TrustSignalsProps) {
   const bgClass = {
-    light: "bg-slate-800",
+    light: "bg-gray-100",
     dark: "bg-navy-900 text-white",
     card: "bg-white border rounded-xl shadow-sm",
   }[variant];
@@ -139,18 +137,9 @@ export function TrustBadges({
   className?: string;
 }) {
   const textClass = variant === "dark" ? "text-gray-400" : "text-gray-500";
-  const iconClass = variant === "dark" ? "text-gold-400" : "text-gold-500";
 
   return (
     <div className={`flex flex-wrap justify-center gap-6 text-xs ${className}`}>
-      <span className={`flex items-center gap-1.5 ${textClass}`}>
-        <Shield className={`h-4 w-4 ${iconClass}`} />
-        NMLS #1945913
-      </span>
-      <span className={`flex items-center gap-1.5 ${textClass}`}>
-        <BadgeCheck className={`h-4 w-4 text-green-500`} />
-        CA DRE Licensed
-      </span>
       <span className={`flex items-center gap-1.5 ${textClass}`}>
         <CheckCircle className={`h-4 w-4 text-blue-500`} />
         Equal Housing
@@ -172,7 +161,7 @@ export function TestimonialCards({
       {testimonials.slice(0, limit).map((t, i) => (
         <div
           key={i}
-          className="bg-slate-800 rounded-xl p-5"
+          className="bg-gray-100 rounded-xl p-5"
           itemScope
           itemType="https://schema.org/Review"
         >
@@ -181,7 +170,7 @@ export function TestimonialCards({
               <Star key={j} className="h-4 w-4 fill-gold-500 text-gold-500" />
             ))}
           </div>
-          <p className="text-sm text-gray-700 mb-3" itemProp="reviewBody">
+          <p className="text-sm text-gray-600 mb-3" itemProp="reviewBody">
             &quot;{t.quote}&quot;
           </p>
           <p className="text-sm font-semibold text-navy-900" itemProp="author">{t.name}</p>

@@ -21,7 +21,7 @@ import { StructuredData } from "@/components/seo/StructuredData";
 export const metadata: Metadata = {
   title: "California Construction Loans | Ground-Up & Renovation Financing | LendyWendy",
   description:
-    "Construction loans for California builders and developers. Ground-up construction, major renovations, and spec building financing. Interest-only during build, converts to permanent. Rates from 8%. NMLS #1945913.",
+    "Compare construction loans for California builders and developers. Ground-up construction, major renovations, and spec building financing. Interest-only during build, converts to permanent. Rates from 8%.",
   keywords: [
     "construction loan California",
     "commercial construction financing",
@@ -186,55 +186,55 @@ export default function ConstructionLoansPage() {
         faqItems={faqItems}
       />
 
-      <main className="min-h-screen bg-slate-950">
+      <main className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative overflow-hidden py-20 lg:py-28">
-          <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-teal-600/5 to-transparent" />
           <div className="container mx-auto px-4 relative">
             <div className="max-w-4xl mx-auto text-center">
               {/* Breadcrumb */}
-              <nav className="flex justify-center items-center gap-2 text-sm text-gray-400 mb-6">
-                <Link href="/" className="hover:text-amber-500">
+              <nav className="flex justify-center items-center gap-2 text-sm text-gray-500 mb-6">
+                <Link href="/" className="hover:text-teal-600">
                   Home
                 </Link>
                 <span>/</span>
-                <Link href="/commercial" className="hover:text-amber-500">
+                <Link href="/commercial" className="hover:text-teal-600">
                   Commercial
                 </Link>
                 <span>/</span>
-                <span className="text-amber-500">Construction Loans</span>
+                <span className="text-teal-600">Construction Loans</span>
               </nav>
 
-              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-500 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+              <div className="inline-flex items-center gap-2 bg-teal-600/10 border border-teal-600/30 text-teal-600 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
                 <HardHat className="h-4 w-4" />
                 Development Financing
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-                California <span className="text-amber-500">Construction Loans</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
+                California <span className="text-teal-600">Construction Loans</span>
                 <br />
-                <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-300">
+                <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-600">
                   Build Your Vision From Ground Up
                 </span>
               </h1>
 
-              <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
                 Financing for California builders and developers. Ground-up construction, major
                 renovations, ADUs, and spec building with interest-only during construction.
               </p>
 
               {/* Key Stats */}
               <div className="flex flex-wrap justify-center gap-4 mb-10">
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <TrendingUp className="h-4 w-4 text-amber-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50/50 px-4 py-2 rounded-full border border-gray-200">
+                  <TrendingUp className="h-4 w-4 text-teal-600" />
                   <span>From 8% APR</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <DollarSign className="h-4 w-4 text-emerald-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50/50 px-4 py-2 rounded-full border border-gray-200">
+                  <DollarSign className="h-4 w-4 text-emerald-600" />
                   <span>Up to 80% LTC</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <Clock className="h-4 w-4 text-amber-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50/50 px-4 py-2 rounded-full border border-gray-200">
+                  <Clock className="h-4 w-4 text-teal-600" />
                   <span>12-24 Month Terms</span>
                 </div>
               </div>
@@ -242,17 +242,17 @@ export default function ConstructionLoansPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-8"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-8"
                   asChild
                 >
                   <Link href="/get-quote">
-                    Get Construction Financing <ArrowRight className="ml-2 h-5 w-5" />
+                    Compare Rates <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-slate-700 text-white hover:bg-slate-800"
+                  className="border-gray-200 text-gray-900 hover:bg-gray-100"
                   asChild
                 >
                   <Link href="/calculators">
@@ -266,13 +266,13 @@ export default function ConstructionLoansPage() {
         </section>
 
         {/* Benefits Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                 Construction Loan Benefits
               </h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">
+              <p className="text-gray-500 max-w-2xl mx-auto">
                 Purpose-built financing for California development projects
               </p>
             </div>
@@ -281,13 +281,13 @@ export default function ConstructionLoansPage() {
               {benefits.map((benefit, index) => (
                 <div
                   key={index}
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors"
                 >
-                  <div className="p-3 bg-amber-500/10 rounded-xl w-fit mb-4">
-                    <benefit.icon className="h-6 w-6 text-amber-500" />
+                  <div className="p-3 bg-teal-600/10 rounded-xl w-fit mb-4">
+                    <benefit.icon className="h-6 w-6 text-teal-600" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{benefit.title}</h3>
-                  <p className="text-gray-400 text-sm">{benefit.description}</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{benefit.title}</h3>
+                  <p className="text-gray-500 text-sm">{benefit.description}</p>
                 </div>
               ))}
             </div>
@@ -295,14 +295,14 @@ export default function ConstructionLoansPage() {
         </section>
 
         {/* Project Types */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50/50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Projects We Finance
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   Construction financing for various California projects
                 </p>
               </div>
@@ -311,15 +311,15 @@ export default function ConstructionLoansPage() {
                 {projectTypes.map((project, index) => (
                   <div
                     key={index}
-                    className="bg-slate-900 rounded-xl p-5 border border-slate-800"
+                    className="bg-gray-50 rounded-xl p-5 border border-gray-200"
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-white font-semibold">{project.type}</h3>
-                      <span className="text-xs text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded">
+                      <h3 className="text-gray-900 font-semibold">{project.type}</h3>
+                      <span className="text-xs text-teal-600 bg-teal-600/10 px-2 py-0.5 rounded">
                         {project.ltc}
                       </span>
                     </div>
-                    <p className="text-gray-400 text-sm">{project.description}</p>
+                    <p className="text-gray-500 text-sm">{project.description}</p>
                   </div>
                 ))}
               </div>
@@ -328,14 +328,14 @@ export default function ConstructionLoansPage() {
         </section>
 
         {/* Construction Process */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   The Construction Loan Process
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   From approval to completion
                 </p>
               </div>
@@ -344,14 +344,14 @@ export default function ConstructionLoansPage() {
                 {constructionProcess.map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-4 bg-slate-900 rounded-xl p-5 border border-slate-800"
+                    className="flex items-start gap-4 bg-gray-50 rounded-xl p-5 border border-gray-200"
                   >
-                    <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center text-slate-900 font-bold flex-shrink-0">
+                    <div className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
                       {item.step}
                     </div>
                     <div>
-                      <h3 className="text-white font-semibold mb-1">{item.title}</h3>
-                      <p className="text-gray-400 text-sm">{item.description}</p>
+                      <h3 className="text-gray-900 font-semibold mb-1">{item.title}</h3>
+                      <p className="text-gray-500 text-sm">{item.description}</p>
                     </div>
                   </div>
                 ))}
@@ -361,14 +361,14 @@ export default function ConstructionLoansPage() {
         </section>
 
         {/* Loan Details */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50/50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Construction Loan Terms
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   Competitive terms for California builders
                 </p>
               </div>
@@ -377,10 +377,10 @@ export default function ConstructionLoansPage() {
                 {loanDetails.map((detail, index) => (
                   <div
                     key={index}
-                    className="bg-slate-900 rounded-xl p-5 border border-slate-800 flex justify-between items-center"
+                    className="bg-gray-50 rounded-xl p-5 border border-gray-200 flex justify-between items-center"
                   >
-                    <span className="text-gray-400">{detail.label}</span>
-                    <span className="text-white font-semibold">{detail.value}</span>
+                    <span className="text-gray-500">{detail.label}</span>
+                    <span className="text-gray-900 font-semibold">{detail.value}</span>
                   </div>
                 ))}
               </div>
@@ -388,11 +388,11 @@ export default function ConstructionLoansPage() {
               <div className="mt-8 text-center">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold"
                   asChild
                 >
                   <Link href="/get-quote">
-                    Get Your Project Quoted <ArrowRight className="ml-2 h-5 w-5" />
+                    Compare Rates <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
               </div>
@@ -401,61 +401,61 @@ export default function ConstructionLoansPage() {
         </section>
 
         {/* Comparison Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Related Financing Options
                 </h2>
-                <p className="text-gray-400">Other products for your project needs</p>
+                <p className="text-gray-500">Other products for your project needs</p>
               </div>
 
               <div className="grid md:grid-cols-3 gap-6">
                 <Link
                   href="/investment/fix-and-flip"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     Fix & Flip Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     For residential renovations. Faster closing, simpler process for rehab
                     projects vs new construction.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
 
                 <Link
                   href="/commercial/sba-504-loans"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     SBA 504 Construction
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     SBA 504 can finance owner-occupied construction through CDC interim loan
                     programs.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
 
                 <Link
                   href="/investment/bridge-loans"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     Bridge Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     For land acquisition before construction or to bridge between construction
                     completion and permanent financing.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
@@ -465,23 +465,23 @@ export default function ConstructionLoansPage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50/50">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl font-bold text-white text-center mb-10">
+              <h2 className="text-3xl font-bold text-gray-900 text-center mb-10">
                 Construction Loan FAQs
               </h2>
               <div className="space-y-4">
                 {faqItems.map((item, index) => (
                   <details
                     key={index}
-                    className="group bg-slate-900 rounded-xl border border-slate-800 overflow-hidden"
+                    className="group bg-gray-50 rounded-xl border border-gray-200 overflow-hidden"
                   >
-                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-slate-800/50 transition-colors">
-                      <h3 className="font-semibold text-white pr-4">{item.question}</h3>
-                      <ChevronDown className="h-5 w-5 text-gray-400 group-open:rotate-180 transition-transform flex-shrink-0" />
+                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                      <h3 className="font-semibold text-gray-900 pr-4">{item.question}</h3>
+                      <ChevronDown className="h-5 w-5 text-gray-500 group-open:rotate-180 transition-transform flex-shrink-0" />
                     </summary>
-                    <div className="px-5 pb-5 text-gray-400">
+                    <div className="px-5 pb-5 text-gray-500">
                       <p>{item.answer}</p>
                     </div>
                   </details>
@@ -492,19 +492,19 @@ export default function ConstructionLoansPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-20 border-t border-slate-800 bg-gradient-to-b from-slate-900 to-slate-950">
+        <section className="py-20 border-t border-gray-200 bg-gradient-to-b from-gray-50 to-white">
           <div className="container mx-auto px-4 text-center">
-            <HardHat className="h-12 w-12 text-amber-500 mx-auto mb-6" />
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            <HardHat className="h-12 w-12 text-teal-600 mx-auto mb-6" />
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               Ready to Build in California?
             </h2>
-            <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
               Get matched with construction lenders who specialize in California development.
               Ground-up, renovation, ADU - we have the financing for your project.
             </p>
             <Button
               size="lg"
-              className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-10"
+              className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-10"
               asChild
             >
               <Link href="/get-quote">
@@ -512,7 +512,7 @@ export default function ConstructionLoansPage() {
               </Link>
             </Button>
             <p className="text-sm text-gray-500 mt-4">
-              NMLS #1945913 | California Construction Lending Specialists
+              Equal Housing Opportunity | LendyWendy is not a lender
             </p>
           </div>
         </section>

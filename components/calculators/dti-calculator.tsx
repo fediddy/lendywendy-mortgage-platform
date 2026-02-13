@@ -100,7 +100,7 @@ export function DTICalculator() {
     <Card className="w-full">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Calculator className="w-6 h-6 text-amber-500" />
+          <Calculator className="w-6 h-6 text-teal-600" />
           <CardTitle>Debt-to-Income (DTI) Calculator</CardTitle>
         </div>
         <CardDescription>
@@ -305,30 +305,30 @@ export function DTICalculator() {
             <div className="border-t pt-4">
               {/* Recommendation Alert */}
               {result.qualifiesConventional && (
-                <Alert className="mb-4 bg-emerald-500/10 border-emerald-500/30">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  <AlertTitle className="text-emerald-300">Excellent DTI Ratios!</AlertTitle>
-                  <AlertDescription className="text-emerald-200">
+                <Alert className="mb-4 bg-emerald-50 border-emerald-600/30">
+                  <CheckCircle className="h-4 w-4 text-emerald-600" />
+                  <AlertTitle className="text-emerald-600">Excellent DTI Ratios!</AlertTitle>
+                  <AlertDescription className="text-emerald-600">
                     {result.recommendation}
                   </AlertDescription>
                 </Alert>
               )}
 
               {!result.qualifiesConventional && (result.qualifiesFHA || result.qualifiesVA) && (
-                <Alert className="mb-4 bg-amber-500/10 border-amber-500/30">
-                  <AlertCircle className="h-4 w-4 text-yellow-600" />
-                  <AlertTitle className="text-amber-300">You May Qualify</AlertTitle>
-                  <AlertDescription className="text-amber-200">
+                <Alert className="mb-4 bg-amber-50 border-amber-600/30">
+                  <AlertCircle className="h-4 w-4 text-amber-600" />
+                  <AlertTitle className="text-amber-600">You May Qualify</AlertTitle>
+                  <AlertDescription className="text-amber-600">
                     {result.recommendation}
                   </AlertDescription>
                 </Alert>
               )}
 
               {!result.qualifiesConventional && !result.qualifiesFHA && !result.qualifiesVA && (
-                <Alert className="mb-4 bg-red-500/10 border-red-500/30">
+                <Alert className="mb-4 bg-red-50 border-red-600/30">
                   <XCircle className="h-4 w-4 text-red-600" />
-                  <AlertTitle className="text-red-300">DTI Too High</AlertTitle>
-                  <AlertDescription className="text-red-200">
+                  <AlertTitle className="text-red-600">DTI Too High</AlertTitle>
+                  <AlertDescription className="text-red-600">
                     {result.recommendation}
                   </AlertDescription>
                 </Alert>
@@ -369,42 +369,42 @@ export function DTICalculator() {
               <div className="space-y-3 mb-6">
                 <h4 className="font-semibold text-sm">Loan Qualification</h4>
 
-                <div className={`p-4 border rounded-lg ${result.qualifiesConventional ? "bg-emerald-500/10 border-emerald-500/30" : "bg-slate-800"}`}>
+                <div className={`p-4 border rounded-lg ${result.qualifiesConventional ? "bg-emerald-50 border-emerald-600/30" : "bg-gray-100"}`}>
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="font-medium">Conventional Loan</span>
-                      <p className="text-xs text-muted-foreground">28% front / 43% back</p>
+                      <p className="text-xs text-gray-600">28% front / 43% back</p>
                     </div>
                     {result.qualifiesConventional ? (
-                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      <CheckCircle className="w-5 h-5 text-emerald-600" />
                     ) : (
                       <XCircle className="w-5 h-5 text-red-600" />
                     )}
                   </div>
                 </div>
 
-                <div className={`p-4 border rounded-lg ${result.qualifiesFHA ? "bg-emerald-500/10 border-emerald-500/30" : "bg-slate-800"}`}>
+                <div className={`p-4 border rounded-lg ${result.qualifiesFHA ? "bg-emerald-50 border-emerald-600/30" : "bg-gray-100"}`}>
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="font-medium">FHA Loan</span>
-                      <p className="text-xs text-muted-foreground">31% front / 43% back</p>
+                      <p className="text-xs text-gray-600">31% front / 43% back</p>
                     </div>
                     {result.qualifiesFHA ? (
-                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      <CheckCircle className="w-5 h-5 text-emerald-600" />
                     ) : (
                       <XCircle className="w-5 h-5 text-red-600" />
                     )}
                   </div>
                 </div>
 
-                <div className={`p-4 border rounded-lg ${result.qualifiesVA ? "bg-emerald-500/10 border-emerald-500/30" : "bg-slate-800"}`}>
+                <div className={`p-4 border rounded-lg ${result.qualifiesVA ? "bg-emerald-50 border-emerald-600/30" : "bg-gray-100"}`}>
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="font-medium">VA Loan</span>
-                      <p className="text-xs text-muted-foreground">No front limit / 41% back</p>
+                      <p className="text-xs text-gray-600">No front limit / 41% back</p>
                     </div>
                     {result.qualifiesVA ? (
-                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      <CheckCircle className="w-5 h-5 text-emerald-600" />
                     ) : (
                       <XCircle className="w-5 h-5 text-red-600" />
                     )}
@@ -413,19 +413,19 @@ export function DTICalculator() {
               </div>
 
               {/* Breakdown */}
-              <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+              <div className="p-4 bg-teal-50 border border-teal-600/30 rounded-lg">
                 <h4 className="font-semibold mb-3 text-sm">Maximum Housing Payment</h4>
-                <p className="text-2xl font-bold text-blue-600 mb-2">
+                <p className="text-2xl font-bold text-teal-600 mb-2">
                   ${result.maxHousingPayment.toLocaleString('en-US', { maximumFractionDigits: 0 })}/month
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-gray-600">
                   Based on your income and existing debts, this is the maximum monthly housing payment you can afford while qualifying for most loans.
                 </p>
               </div>
 
-              <div className="mt-4 p-4 bg-slate-800 border rounded-lg">
+              <div className="mt-4 p-4 bg-gray-100 border rounded-lg">
                 <h4 className="font-semibold text-sm mb-2">Tips to Improve Your DTI</h4>
-                <ul className="text-sm space-y-1 text-muted-foreground">
+                <ul className="text-sm space-y-1 text-gray-600">
                   <li>• Pay down credit card balances and other revolving debt</li>
                   <li>• Avoid taking on new debt before applying for a mortgage</li>
                   <li>• Increase your income through raises, bonuses, or side work</li>

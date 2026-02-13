@@ -23,21 +23,21 @@ export default function GlobalError({
   return (
     <html>
       <body>
-        <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
-          <Card className="max-w-md w-full p-8">
+        <div className="min-h-screen flex items-center justify-center bg-white px-4">
+          <Card className="max-w-md w-full p-8 border-gray-200">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-white mb-4">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 Critical Error
               </h2>
-              <p className="text-gray-400 mb-6">
+              <p className="text-gray-600 mb-6">
                 A critical error occurred. Please refresh the page or contact support if the problem persists.
               </p>
               {process.env.NODE_ENV === "development" && (
                 <details className="mb-6 text-left">
-                  <summary className="cursor-pointer text-sm text-gray-400 mb-2">
+                  <summary className="cursor-pointer text-sm text-gray-600 mb-2">
                     Error details (development only)
                   </summary>
-                  <pre className="text-xs bg-slate-800 p-4 rounded overflow-auto max-h-48">
+                  <pre className="text-xs bg-gray-100 p-4 rounded overflow-auto max-h-48">
                     {error.message}
                     {error.stack}
                   </pre>

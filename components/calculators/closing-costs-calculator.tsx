@@ -150,7 +150,7 @@ export function ClosingCostsCalculator() {
     <Card className="w-full">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <FileText className="w-6 h-6 text-amber-500" />
+          <FileText className="w-6 h-6 text-teal-600" />
           <CardTitle>Closing Costs Calculator</CardTitle>
         </div>
         <CardDescription>
@@ -254,14 +254,14 @@ export function ClosingCostsCalculator() {
               <h3 className="text-lg font-semibold mb-4">Estimated Closing Costs</h3>
 
               {/* Summary */}
-              <Card className="bg-amber-500/10 border-amber-500/30 mb-6">
+              <Card className="bg-teal-50 border-teal-600/30 mb-6">
                 <CardContent className="pt-6">
                   <div className="text-center">
-                    <p className="text-sm text-muted-foreground mb-2">Total Closing Costs</p>
-                    <p className="text-5xl font-bold text-amber-500">
+                    <p className="text-sm text-gray-600 mb-2">Total Closing Costs</p>
+                    <p className="text-5xl font-bold text-teal-600">
                       ${result.grandTotal.toLocaleString('en-US', { maximumFractionDigits: 0 })}
                     </p>
-                    <p className="text-sm text-muted-foreground mt-2">
+                    <p className="text-sm text-gray-600 mt-2">
                       {result.percentOfHomePrice.toFixed(2)}% of home price
                     </p>
                   </div>
@@ -408,7 +408,7 @@ export function ClosingCostsCalculator() {
               </div>
 
               {/* Total Cash Needed */}
-              <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+              <div className="mt-6 p-4 bg-teal-50 border border-teal-600/30 rounded-lg">
                 <h4 className="font-semibold mb-2">Total Cash Needed at Closing</h4>
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">
@@ -421,13 +421,13 @@ export function ClosingCostsCalculator() {
                   </div>
                   <div className="flex justify-between pt-2 border-t font-bold text-base">
                     <span>Total</span>
-                    <span className="text-blue-300">${(homePrice - loanAmount + result.grandTotal).toLocaleString('en-US', { maximumFractionDigits: 0 })}</span>
+                    <span className="text-teal-600">${(homePrice - loanAmount + result.grandTotal).toLocaleString('en-US', { maximumFractionDigits: 0 })}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg">
-                <p className="text-sm text-amber-300">
+              <div className="mt-4 p-4 bg-amber-50 border border-amber-600/30 rounded-lg">
+                <p className="text-sm text-amber-600">
                   <strong>Note:</strong> These are estimates. Actual costs vary by lender, location, and property.
                   Some costs may be negotiable or paid by the seller. Always review your Loan Estimate carefully.
                 </p>

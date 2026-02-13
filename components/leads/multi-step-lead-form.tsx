@@ -116,9 +116,9 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>Get Your Free Mortgage Quote</CardTitle>
+        <CardTitle>Get Matched with Lenders</CardTitle>
         <CardDescription>
-          Connect with top lenders in minutes. No commitment required.
+          Compare rates from top lenders in minutes. No commitment required.
         </CardDescription>
         <Progress value={progress} className="mt-4" />
         <p className="text-sm text-muted-foreground mt-2">
@@ -134,7 +134,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
               <div>
                 <label className="block text-sm font-medium mb-2">What type of mortgage do you need?</label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.RESIDENTIAL ? 'border-blue-500 bg-blue-500/10' : 'hover:border-slate-500'}`}>
+                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.RESIDENTIAL ? 'border-teal-600 bg-teal-50' : 'hover:border-gray-300'}`}>
                     <input
                       type="radio"
                       value={Segment.RESIDENTIAL}
@@ -147,7 +147,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                     </span>
                   </label>
 
-                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.INVESTMENT ? 'border-blue-500 bg-blue-500/10' : 'hover:border-slate-500'}`}>
+                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.INVESTMENT ? 'border-teal-600 bg-teal-50' : 'hover:border-gray-300'}`}>
                     <input
                       type="radio"
                       value={Segment.INVESTMENT}
@@ -160,7 +160,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                     </span>
                   </label>
 
-                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.COMMERCIAL ? 'border-blue-500 bg-blue-500/10' : 'hover:border-slate-500'}`}>
+                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.COMMERCIAL ? 'border-teal-600 bg-teal-50' : 'hover:border-gray-300'}`}>
                     <input
                       type="radio"
                       value={Segment.COMMERCIAL}
@@ -180,7 +180,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                 <label className="block text-sm font-medium mb-2">Specific loan type</label>
                 <select
                   {...register("loanType")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                 >
                   <option value="">Select loan type...</option>
                   {getLoanTypesForSegment(segment).map((type) => (
@@ -201,7 +201,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                 <label className="block text-sm font-medium mb-2">Property type</label>
                 <select
                   {...register("propertyType")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                 >
                   <option value="">Select property type...</option>
                   {getPropertyTypesForSegment(segment).map((type) => (
@@ -221,7 +221,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                   <input
                     type="number"
                     {...register("propertyValue", { valueAsNumber: true })}
-                    className="w-full pl-7 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full pl-7 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                     placeholder="300000"
                   />
                 </div>
@@ -232,7 +232,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                 <input
                   type="text"
                   {...register("propertyLocation")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                   placeholder="City, State or ZIP"
                 />
               </div>
@@ -247,7 +247,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                 <input
                   type="text"
                   {...register("name")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                   placeholder="John Doe"
                 />
                 {errors.name && <p className="text-sm text-red-600 mt-1">{errors.name.message}</p>}
@@ -258,7 +258,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                 <input
                   type="email"
                   {...register("email")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                   placeholder="john@example.com"
                 />
                 {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>}
@@ -269,7 +269,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                 <input
                   type="tel"
                   {...register("phone")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                   placeholder="(555) 123-4567"
                 />
               </div>
@@ -283,7 +283,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                 <label className="block text-sm font-medium mb-2">Credit score range</label>
                 <select
                   {...register("creditRange")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                 >
                   <option value="">Select credit range...</option>
                   <option value={CreditRange.EXCELLENT_740_PLUS}>Excellent (740+)</option>
@@ -301,7 +301,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                   <input
                     type="number"
                     {...register("downPayment", { valueAsNumber: true })}
-                    className="w-full pl-7 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full pl-7 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                     placeholder="60000"
                   />
                 </div>
@@ -311,7 +311,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                 <label className="block text-sm font-medium mb-2">When do you need the loan?</label>
                 <select
                   {...register("timeline")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                 >
                   <option value="">Select timeline...</option>
                   <option value={Timeline.ASAP}>As soon as possible</option>
@@ -327,7 +327,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                 <label className="block text-sm font-medium mb-2">Employment status</label>
                 <select
                   {...register("employmentStatus")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                 >
                   <option value="">Select employment status...</option>
                   <option value={EmploymentStatus.EMPLOYED_W2}>Employed (W-2)</option>
@@ -345,7 +345,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                   <input
                     type="number"
                     {...register("annualIncome", { valueAsNumber: true })}
-                    className="w-full pl-7 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full pl-7 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                     placeholder="75000"
                   />
                 </div>
@@ -381,7 +381,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                     Submitting...
                   </>
                 ) : (
-                  "Get My Quote"
+                  "Compare Rates"
                 )}
               </Button>
             )}

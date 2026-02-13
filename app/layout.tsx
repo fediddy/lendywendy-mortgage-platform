@@ -15,16 +15,15 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://lendywendy.com'),
   title: {
-    default: "LendyWendy - California's #1 AI Mortgage Matching | Wendy Landeros NMLS #1945913",
-    template: "%s | LendyWendy - California Mortgage Expert"
+    default: "LendyWendy - California's #1 AI Mortgage Matching",
+    template: "%s | LendyWendy - California Mortgage Matching"
   },
-  description: "Get pre-approved in minutes with California's top-rated mortgage matching service. AI-powered technology connects you with local lenders for the best rates on Conventional, FHA, VA, Jumbo, DSCR, and Commercial loans. Founded by Wendy Landeros, NMLS #1945913.",
+  description: "Get pre-approved in minutes with California's top-rated mortgage matching service. AI-powered technology connects you with local lenders for the best rates on Conventional, FHA, VA, Jumbo, DSCR, and Commercial loans. Compare rates from multiple California lenders in 60 seconds.",
   keywords: [
     // Primary entities (highest salience)
     "California mortgage",
     "mortgage lender California",
     "LendyWendy",
-    "Wendy Landeros",
     // High-value n-grams (2-3 word phrases)
     "home loan pre-approval",
     "California mortgage rates",
@@ -59,18 +58,15 @@ export const metadata: Metadata = {
     "how to get mortgage California",
     "best mortgage lender California 2025",
     "California home loan requirements",
-    "mortgage calculator California",
-    // Entity identifiers
-    "NMLS 1945913",
-    "California DRE licensed"
+    "mortgage calculator California"
   ],
   authors: [
     {
-      name: "Wendy Landeros, NMLS #1945913",
-      url: "https://lendywendy.com/about"
+      name: "LendyWendy",
+      url: "https://lendywendy.com"
     }
   ],
-  creator: "Wendy Landeros",
+  creator: "LendyWendy",
   publisher: "LendyWendy",
   formatDetection: {
     telephone: true,
@@ -136,10 +132,6 @@ export const metadata: Metadata = {
     },
   },
   other: {
-    // E-E-A-T signals
-    "author-credentials": "NMLS #1945913, California DRE Licensed",
-    "expertise": "Mortgage Lending, Real Estate Finance",
-    "experience": "10+ years mortgage industry experience",
     // Geo/Local SEO
     "geo.region": "US-CA",
     "geo.placename": "California",
@@ -148,7 +140,6 @@ export const metadata: Metadata = {
     // Business identifiers
     "business:contact_data:locality": "California",
     "business:contact_data:country_name": "United States",
-    "business:contact_data:phone_number": "+1-800-555-1234",
     // Content classification
     "rating": "General",
     "distribution": "Global",
@@ -167,7 +158,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <StructuredData
           type="home"
@@ -177,7 +168,7 @@ export default function RootLayout({
         />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <meta name="theme-color" content="#1e40af" />
+        <meta name="theme-color" content="#0D9488" />
       </head>
       <body className={`${inter.variable} font-sans antialiased`}>
         <Header />

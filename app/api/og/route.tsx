@@ -146,21 +146,10 @@ export async function GET(request: NextRequest) {
             left: "60px",
             right: "60px",
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             alignItems: "center",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              gap: "24px",
-              fontSize: "16px",
-              color: "#64748b",
-            }}
-          >
-            <span>NMLS #1945913</span>
-            <span>California DRE Licensed</span>
-          </div>
           <div
             style={{
               fontSize: "16px",

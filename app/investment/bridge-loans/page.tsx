@@ -21,7 +21,7 @@ import { StructuredData } from "@/components/seo/StructuredData";
 export const metadata: Metadata = {
   title: "California Bridge Loans | Quick Close, Flexible Terms | LendyWendy",
   description:
-    "Bridge loans for California real estate investors. Short-term financing for acquisitions, stabilization, and time-sensitive opportunities. Close in 10-21 days. Rates from 8%. No prepay penalties. NMLS #1945913.",
+    "Bridge loans for California real estate investors. Short-term financing for acquisitions, stabilization, and time-sensitive opportunities. Lenders close in 10-21 days. Rates from 8%. No prepay penalties.",
   keywords: [
     "bridge loan California",
     "bridge financing California",
@@ -54,7 +54,7 @@ const benefits = [
     icon: Clock,
     title: "Quick Closing",
     description:
-      "Close in 10-21 days when timing is critical. Move fast on opportunities that require immediate action.",
+      "Lenders in our network close in 10-21 days when timing is critical. Move fast on opportunities that require immediate action.",
   },
   {
     icon: RefreshCw,
@@ -178,55 +178,55 @@ export default function BridgeLoansPage() {
         faqItems={faqItems}
       />
 
-      <main className="min-h-screen bg-slate-950">
+      <main className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative overflow-hidden py-20 lg:py-28">
-          <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-teal-600/5 to-transparent" />
           <div className="container mx-auto px-4 relative">
             <div className="max-w-4xl mx-auto text-center">
               {/* Breadcrumb */}
-              <nav className="flex justify-center items-center gap-2 text-sm text-gray-400 mb-6">
-                <Link href="/" className="hover:text-amber-500">
+              <nav className="flex justify-center items-center gap-2 text-sm text-gray-500 mb-6">
+                <Link href="/" className="hover:text-teal-600">
                   Home
                 </Link>
                 <span>/</span>
-                <Link href="/investment" className="hover:text-amber-500">
+                <Link href="/investment" className="hover:text-teal-600">
                   Investment
                 </Link>
                 <span>/</span>
-                <span className="text-amber-500">Bridge Loans</span>
+                <span className="text-teal-600">Bridge Loans</span>
               </nav>
 
-              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-500 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+              <div className="inline-flex items-center gap-2 bg-teal-600/10 border border-teal-600/30 text-teal-600 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
                 <Building className="h-4 w-4" />
                 Short-Term Financing
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-                California <span className="text-amber-500">Bridge Loans</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
+                California <span className="text-teal-600">Bridge Loans</span>
                 <br />
-                <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-300">
+                <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-600">
                   Bridge the Gap to Your Exit
                 </span>
               </h1>
 
-              <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
                 Short-term financing for acquisitions, stabilization, and time-sensitive
                 opportunities. Move fast with flexible terms and no prepay penalties.
               </p>
 
               {/* Key Stats */}
               <div className="flex flex-wrap justify-center gap-4 mb-10">
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <TrendingUp className="h-4 w-4 text-amber-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                  <TrendingUp className="h-4 w-4 text-teal-600" />
                   <span>From 8% APR</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <Clock className="h-4 w-4 text-emerald-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                  <Clock className="h-4 w-4 text-emerald-600" />
                   <span>10-21 Day Close</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <RefreshCw className="h-4 w-4 text-amber-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                  <RefreshCw className="h-4 w-4 text-teal-600" />
                   <span>No Prepay Penalty</span>
                 </div>
               </div>
@@ -234,17 +234,17 @@ export default function BridgeLoansPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-8"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-8"
                   asChild
                 >
                   <Link href="/get-quote">
-                    Get Bridge Rates <ArrowRight className="ml-2 h-5 w-5" />
+                    Compare Bridge Rates <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-slate-700 text-white hover:bg-slate-800"
+                  className="border-gray-200 text-gray-900 hover:bg-gray-100"
                   asChild
                 >
                   <Link href="/calculators">
@@ -258,13 +258,13 @@ export default function BridgeLoansPage() {
         </section>
 
         {/* Benefits Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                 Why Choose Bridge Financing
               </h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">
+              <p className="text-gray-500 max-w-2xl mx-auto">
                 Flexible short-term capital for California investors
               </p>
             </div>
@@ -273,13 +273,13 @@ export default function BridgeLoansPage() {
               {benefits.map((benefit, index) => (
                 <div
                   key={index}
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors"
                 >
-                  <div className="p-3 bg-amber-500/10 rounded-xl w-fit mb-4">
-                    <benefit.icon className="h-6 w-6 text-amber-500" />
+                  <div className="p-3 bg-teal-600/10 rounded-xl w-fit mb-4">
+                    <benefit.icon className="h-6 w-6 text-teal-600" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{benefit.title}</h3>
-                  <p className="text-gray-400 text-sm">{benefit.description}</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{benefit.title}</h3>
+                  <p className="text-gray-500 text-sm">{benefit.description}</p>
                 </div>
               ))}
             </div>
@@ -287,14 +287,14 @@ export default function BridgeLoansPage() {
         </section>
 
         {/* Use Cases */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Common Bridge Loan Uses
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   Flexible financing for various investment scenarios
                 </p>
               </div>
@@ -303,11 +303,11 @@ export default function BridgeLoansPage() {
                 {useCases.map((useCase, index) => (
                   <div
                     key={index}
-                    className="bg-slate-900 rounded-xl p-5 border border-slate-800"
+                    className="bg-gray-50 rounded-xl p-5 border border-gray-200"
                   >
-                    <h3 className="text-white font-semibold mb-2">{useCase.title}</h3>
-                    <p className="text-gray-400 text-sm mb-3">{useCase.description}</p>
-                    <span className="text-amber-500 text-xs font-medium">{useCase.timeframe}</span>
+                    <h3 className="text-gray-900 font-semibold mb-2">{useCase.title}</h3>
+                    <p className="text-gray-500 text-sm mb-3">{useCase.description}</p>
+                    <span className="text-teal-600 text-xs font-medium">{useCase.timeframe}</span>
                   </div>
                 ))}
               </div>
@@ -316,14 +316,14 @@ export default function BridgeLoansPage() {
         </section>
 
         {/* Loan Details */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Bridge Loan Terms
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   Competitive terms for California investors
                 </p>
               </div>
@@ -332,10 +332,10 @@ export default function BridgeLoansPage() {
                 {loanDetails.map((detail, index) => (
                   <div
                     key={index}
-                    className="bg-slate-900 rounded-xl p-5 border border-slate-800 flex justify-between items-center"
+                    className="bg-gray-50 rounded-xl p-5 border border-gray-200 flex justify-between items-center"
                   >
-                    <span className="text-gray-400">{detail.label}</span>
-                    <span className="text-white font-semibold">{detail.value}</span>
+                    <span className="text-gray-500">{detail.label}</span>
+                    <span className="text-gray-900 font-semibold">{detail.value}</span>
                   </div>
                 ))}
               </div>
@@ -343,11 +343,11 @@ export default function BridgeLoansPage() {
               <div className="mt-8 text-center">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold"
                   asChild
                 >
                   <Link href="/get-quote">
-                    Get Your Bridge Quote <ArrowRight className="ml-2 h-5 w-5" />
+                    Compare Bridge Rates <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
               </div>
@@ -356,61 +356,61 @@ export default function BridgeLoansPage() {
         </section>
 
         {/* Comparison Section */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Compare Investor Loan Options
                 </h2>
-                <p className="text-gray-400">Find the right product for your strategy</p>
+                <p className="text-gray-500">Find the right product for your strategy</p>
               </div>
 
               <div className="grid md:grid-cols-3 gap-6">
                 <Link
                   href="/investment/dscr-loans"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     DSCR Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     Permanent financing for stabilized rentals. Refinance your bridge loan into DSCR
                     once the property is leased.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
 
                 <Link
                   href="/investment/fix-and-flip"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     Fix & Flip Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     For heavy renovations. Higher leverage (90% LTC) and 100% rehab funding. Bridge
                     is better for light value-add.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
 
                 <Link
                   href="/investment/portfolio-loans"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     Portfolio Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     Finance multiple properties under one loan. Consolidate several bridge loans
                     or acquire a package of properties.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
@@ -420,23 +420,23 @@ export default function BridgeLoansPage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl font-bold text-white text-center mb-10">
+              <h2 className="text-3xl font-bold text-gray-900 text-center mb-10">
                 Bridge Loan FAQs
               </h2>
               <div className="space-y-4">
                 {faqItems.map((item, index) => (
                   <details
                     key={index}
-                    className="group bg-slate-900 rounded-xl border border-slate-800 overflow-hidden"
+                    className="group bg-gray-50 rounded-xl border border-gray-200 overflow-hidden"
                   >
-                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-slate-800/50 transition-colors">
-                      <h3 className="font-semibold text-white pr-4">{item.question}</h3>
-                      <ChevronDown className="h-5 w-5 text-gray-400 group-open:rotate-180 transition-transform flex-shrink-0" />
+                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                      <h3 className="font-semibold text-gray-900 pr-4">{item.question}</h3>
+                      <ChevronDown className="h-5 w-5 text-gray-500 group-open:rotate-180 transition-transform flex-shrink-0" />
                     </summary>
-                    <div className="px-5 pb-5 text-gray-400">
+                    <div className="px-5 pb-5 text-gray-500">
                       <p>{item.answer}</p>
                     </div>
                   </details>
@@ -447,27 +447,27 @@ export default function BridgeLoansPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-20 border-t border-slate-800 bg-gradient-to-b from-slate-900 to-slate-950">
+        <section className="py-20 border-t border-gray-200 bg-gradient-to-b from-gray-50 to-white">
           <div className="container mx-auto px-4 text-center">
-            <Shield className="h-12 w-12 text-amber-500 mx-auto mb-6" />
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            <Shield className="h-12 w-12 text-teal-600 mx-auto mb-6" />
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               Need to Move Fast on a Deal?
             </h2>
-            <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-              Get bridge financing that closes when you need it. 10-21 day closings, flexible
-              terms, and clear exit strategies for California investors.
+            <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
+              Connect with bridge lenders who close when you need it. Lenders close in 10-21 days with flexible
+              terms and clear exit strategies for California investors.
             </p>
             <Button
               size="lg"
-              className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-10"
+              className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-10"
               asChild
             >
               <Link href="/get-quote">
-                Get Bridge Financing <ArrowRight className="ml-2 h-5 w-5" />
+                Compare Bridge Rates <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <p className="text-sm text-gray-500 mt-4">
-              NMLS #1945913 | California Bridge Lending Specialists
+              California Bridge Lending Network | Equal Housing Opportunity
             </p>
           </div>
         </section>

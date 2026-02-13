@@ -22,16 +22,16 @@ interface CtaSectionProps {
 
 const defaultContent = {
   primary: {
-    title: "Ready to find your best mortgage rate?",
+    title: "Ready to compare mortgage rates?",
     description: "Join thousands of Californians who found better rates through LendyWendy. It takes 60 seconds.",
-    primaryCta: { text: "Get My Rates Now", href: "/get-quote" },
-    secondaryCta: { text: "Call (800) 555-1234", href: "tel:+18005551234" },
+    primaryCta: { text: "Compare Rates", href: "/get-quote" },
+    secondaryCta: { text: "Learn More", href: "/get-quote" },
   },
   secondary: {
     title: "Have questions? Let's chat.",
-    description: "Our AI advisor Wendy is available 24/7 to answer your mortgage questions.",
-    primaryCta: { text: "Chat with Wendy", href: "/get-quote" },
-    secondaryCta: { text: "Call Us", href: "tel:+18005551234" },
+    description: "Our AI advisor is available 24/7 to answer your mortgage questions.",
+    primaryCta: { text: "Chat with AI", href: "/get-quote" },
+    secondaryCta: { text: "Learn More", href: "/get-quote" },
   },
   readiness: {
     title: "Not ready to talk to a lender yet?",
@@ -131,14 +131,13 @@ export function CtaSection({
               asChild
             >
               <Link href={displaySecondaryCta.href}>
-                <Phone className="mr-2 h-5 w-5" />
                 {displaySecondaryCta.text}
               </Link>
             </Button>
           )}
         </div>
         <p className="text-gray-500 text-sm mt-4">
-          NMLS #1945913 | Equal Housing Opportunity
+          Equal Housing Opportunity
         </p>
       </div>
     </section>

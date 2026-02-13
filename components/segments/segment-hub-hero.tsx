@@ -39,7 +39,7 @@ const segmentConfig: Record<Segment, {
     description: "Expert guidance on California home loans, from first-time buyer programs to jumbo refinancing. Get pre-approved in minutes with our AI-powered matching.",
     tagline: "California Home Loans Made Simple",
     features: ["FHA 3.5% Down", "VA $0 Down", "Jumbo to $5M+", "Refinance Options"],
-    ctaText: "Get Home Loan Rates",
+    ctaText: "Compare Rates",
     ctaHref: "/get-quote?segment=residential",
     rateRange: "From 6.125% APR*",
     audience: "First-time buyers, move-up buyers, refinancers",
@@ -48,7 +48,7 @@ const segmentConfig: Record<Segment, {
     description: "Maximize your real estate portfolio with DSCR loans, fix-and-flip financing, and bridge loans. No tax returns needed for qualified investors.",
     tagline: "Financing for Real Estate Investors",
     features: ["DSCR No Tax Returns", "Fix & Flip 10-Day Close", "Portfolio Loans", "Bridge Financing"],
-    ctaText: "Get Investor Rates",
+    ctaText: "Compare Rates",
     ctaHref: "/get-quote?segment=investment",
     rateRange: "From 7.5% APR*",
     audience: "Real estate investors, landlords, flippers",
@@ -57,7 +57,7 @@ const segmentConfig: Record<Segment, {
     description: "Navigate commercial real estate financing with confidence. SBA loans, multi-family, retail, office, and construction financing across California.",
     tagline: "Commercial & Business Property Loans",
     features: ["SBA 7(a) & 504", "Multi-Family 5+", "Construction", "Owner-Occupied"],
-    ctaText: "Get Commercial Rates",
+    ctaText: "Compare Rates",
     ctaHref: "/get-quote?segment=commercial",
     rateRange: "From 7.0% APR*",
     audience: "Business owners, commercial investors, developers",
@@ -152,7 +152,7 @@ export function SegmentHubHero({
           <div className="flex flex-wrap justify-center gap-6 mt-8 pt-6 border-t border-white/10">
             <span className="flex items-center gap-2 text-sm text-gray-400">
               <Shield className="h-4 w-4 text-green-400" />
-              NMLS #1945913
+              Licensed Lenders
             </span>
             <span className="flex items-center gap-2 text-sm text-gray-400">
               <Zap className="h-4 w-4 text-gold-400" />

@@ -45,11 +45,11 @@ interface ContentItem {
 }
 
 const statusColors: Record<string, string> = {
-  DRAFT: "bg-slate-700 text-slate-300",
-  IN_REVIEW: "bg-amber-500/20 text-amber-400",
-  SCHEDULED: "bg-blue-500/20 text-blue-400",
-  PUBLISHED: "bg-emerald-500/20 text-emerald-400",
-  ARCHIVED: "bg-gray-500/20 text-gray-400",
+  DRAFT: "bg-gray-200 text-gray-700",
+  IN_REVIEW: "bg-amber-50 text-amber-700",
+  SCHEDULED: "bg-blue-50 text-blue-700",
+  PUBLISHED: "bg-emerald-50 text-emerald-700",
+  ARCHIVED: "bg-gray-100 text-gray-600",
 };
 
 export default function ContentAdminPage() {
@@ -102,21 +102,21 @@ export default function ContentAdminPage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-950 py-8">
+    <div className="min-h-screen bg-white py-8">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">Content Manager</h1>
-            <p className="text-gray-400 mt-1">
+            <h1 className="text-3xl font-bold text-gray-900">Content Manager</h1>
+            <p className="text-gray-500 mt-1">
               {total} {type === "article" ? "articles" : "guides"} total
             </p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" className="border-slate-700 text-gray-300" asChild>
+            <Button variant="outline" className="border-gray-200 text-gray-700" asChild>
               <Link href="/admin/leads">Leads</Link>
             </Button>
-            <Button className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold" asChild>
+            <Button className="bg-teal-600 hover:bg-teal-700 text-white font-bold" asChild>
               <Link href={`/admin/content/new?type=${type}`}>
                 <Plus className="mr-2 h-4 w-4" />
                 New {type === "article" ? "Article" : "Guide"}
@@ -126,7 +126,7 @@ export default function ContentAdminPage() {
         </div>
 
         {/* Filters */}
-        <Card className="bg-slate-900 border-slate-800 mb-6">
+        <Card className="bg-gray-50 border-gray-200 mb-6">
           <CardContent className="p-4">
             <div className="flex flex-wrap gap-4 items-center">
               <div className="flex gap-2">
@@ -136,8 +136,8 @@ export default function ContentAdminPage() {
                   onClick={() => setType("article")}
                   className={
                     type === "article"
-                      ? "bg-amber-500 text-slate-900"
-                      : "border-slate-700 text-gray-300"
+                      ? "bg-teal-600 text-white"
+                      : "border-gray-200 text-gray-700"
                   }
                 >
                   <FileText className="mr-1.5 h-4 w-4" />
@@ -149,8 +149,8 @@ export default function ContentAdminPage() {
                   onClick={() => setType("guide")}
                   className={
                     type === "guide"
-                      ? "bg-amber-500 text-slate-900"
-                      : "border-slate-700 text-gray-300"
+                      ? "bg-teal-600 text-white"
+                      : "border-gray-200 text-gray-700"
                   }
                 >
                   <BookOpen className="mr-1.5 h-4 w-4" />
@@ -159,7 +159,7 @@ export default function ContentAdminPage() {
               </div>
 
               <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger className="w-40 bg-slate-800 border-slate-700 text-white">
+                <SelectTrigger className="w-40 bg-gray-100 border-gray-200 text-gray-900">
                   <SelectValue placeholder="All statuses" />
                 </SelectTrigger>
                 <SelectContent>
@@ -175,7 +175,7 @@ export default function ContentAdminPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                 <Input
                   placeholder="Search by title or slug..."
-                  className="pl-9 bg-slate-800 border-slate-700 text-white"
+                  className="pl-9 bg-gray-100 border-gray-200 text-gray-900"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
@@ -185,16 +185,16 @@ export default function ContentAdminPage() {
         </Card>
 
         {/* Content Table */}
-        <Card className="bg-slate-900 border-slate-800">
+        <Card className="bg-white border-gray-200">
           <CardContent className="p-0">
             {loading ? (
-              <div className="p-12 text-center text-gray-400">Loading...</div>
+              <div className="p-12 text-center text-gray-500">Loading...</div>
             ) : filtered.length === 0 ? (
               <div className="p-12 text-center">
-                <p className="text-gray-400 mb-4">
+                <p className="text-gray-500 mb-4">
                   No {type === "article" ? "articles" : "guides"} found.
                 </p>
-                <Button className="bg-amber-500 hover:bg-amber-600 text-slate-900" asChild>
+                <Button className="bg-teal-600 hover:bg-teal-700 text-white" asChild>
                   <Link href={`/admin/content/new?type=${type}`}>
                     <Plus className="mr-2 h-4 w-4" />
                     Create your first {type}
@@ -204,26 +204,26 @@ export default function ContentAdminPage() {
             ) : (
               <Table>
                 <TableHeader>
-                  <TableRow className="border-slate-800 hover:bg-transparent">
-                    <TableHead className="text-gray-400">Title</TableHead>
-                    <TableHead className="text-gray-400">Category</TableHead>
-                    <TableHead className="text-gray-400">Status</TableHead>
-                    <TableHead className="text-gray-400 text-right">Views</TableHead>
-                    <TableHead className="text-gray-400">Updated</TableHead>
-                    <TableHead className="text-gray-400 text-right">Actions</TableHead>
+                  <TableRow className="border-gray-200 hover:bg-transparent">
+                    <TableHead className="text-gray-500">Title</TableHead>
+                    <TableHead className="text-gray-500">Category</TableHead>
+                    <TableHead className="text-gray-500">Status</TableHead>
+                    <TableHead className="text-gray-500 text-right">Views</TableHead>
+                    <TableHead className="text-gray-500">Updated</TableHead>
+                    <TableHead className="text-gray-500 text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filtered.map((item) => (
-                    <TableRow key={item.id} className="border-slate-800">
+                    <TableRow key={item.id} className="border-gray-200">
                       <TableCell>
                         <div>
-                          <p className="text-white font-medium">{item.title}</p>
+                          <p className="text-gray-900 font-medium">{item.title}</p>
                           <p className="text-gray-500 text-xs">/{item.slug}</p>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className="border-slate-700 text-gray-300">
+                        <Badge variant="outline" className="border-gray-200 text-gray-700">
                           {item.category.name}
                         </Badge>
                       </TableCell>
@@ -245,15 +245,15 @@ export default function ContentAdminPage() {
                           </SelectContent>
                         </Select>
                       </TableCell>
-                      <TableCell className="text-right text-gray-400">
+                      <TableCell className="text-right text-gray-500">
                         {item.viewCount.toLocaleString()}
                       </TableCell>
-                      <TableCell className="text-gray-400 text-sm">
+                      <TableCell className="text-gray-500 text-sm">
                         {new Date(item.updatedAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white" asChild>
+                          <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-900" asChild>
                             <Link href={`/admin/content/edit?type=${type}&id=${item.id}`}>
                               <Pencil className="h-4 w-4" />
                             </Link>
@@ -261,7 +261,7 @@ export default function ContentAdminPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-gray-400 hover:text-red-400"
+                            className="text-gray-500 hover:text-red-600"
                             onClick={() => handleDelete(item.id)}
                           >
                             <Trash2 className="h-4 w-4" />

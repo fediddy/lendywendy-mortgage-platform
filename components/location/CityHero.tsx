@@ -48,7 +48,7 @@ export function CityHero({ city }: CityHeroProps) {
 
           {/* Subtitle */}
           <p className="text-lg text-gray-300 text-center mb-6 max-w-2xl mx-auto">
-            Get pre-approved for a {city.name} home loan in minutes. Compare rates from top local mortgage lenders.
+            Compare rates for a {city.name} home loan in minutes. Get matched with top local mortgage lenders.
           </p>
 
           {/* Market Stats Grid */}
@@ -96,7 +96,7 @@ export function CityHero({ city }: CityHeroProps) {
               asChild
             >
               <Link href="/get-quote">
-                Get {city.name} Rates
+                Compare Rates
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -116,7 +116,7 @@ export function CityHero({ city }: CityHeroProps) {
           <div className="flex flex-wrap justify-center gap-6 mt-8 pt-6 border-t border-white/10">
             <span className="flex items-center gap-2 text-sm text-gray-400">
               <Shield className="h-4 w-4 text-green-400" />
-              NMLS #1945913
+              Licensed Lenders
             </span>
             <span className="flex items-center gap-2 text-sm text-gray-400">
               <Zap className="h-4 w-4 text-gold-400" />

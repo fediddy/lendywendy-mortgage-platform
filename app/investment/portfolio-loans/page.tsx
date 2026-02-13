@@ -21,7 +21,7 @@ import { StructuredData } from "@/components/seo/StructuredData";
 export const metadata: Metadata = {
   title: "California Portfolio Loans | Finance 5-100+ Properties Under One Loan | LendyWendy",
   description:
-    "Portfolio loans for California real estate investors. Consolidate multiple properties under one loan. Finance 5-100+ rentals with simplified management. DSCR qualification, no property limits. Rates from 6.5%. NMLS #1945913.",
+    "Portfolio loans for California real estate investors. Consolidate multiple properties under one loan. Finance 5-100+ rentals with simplified management. DSCR qualification, no property limits. Rates from 6.5%.",
   keywords: [
     "portfolio loan California",
     "blanket loan California",
@@ -181,55 +181,55 @@ export default function PortfolioLoansPage() {
         faqItems={faqItems}
       />
 
-      <main className="min-h-screen bg-slate-950">
+      <main className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative overflow-hidden py-20 lg:py-28">
-          <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-teal-600/5 to-transparent" />
           <div className="container mx-auto px-4 relative">
             <div className="max-w-4xl mx-auto text-center">
               {/* Breadcrumb */}
-              <nav className="flex justify-center items-center gap-2 text-sm text-gray-400 mb-6">
-                <Link href="/" className="hover:text-amber-500">
+              <nav className="flex justify-center items-center gap-2 text-sm text-gray-500 mb-6">
+                <Link href="/" className="hover:text-teal-600">
                   Home
                 </Link>
                 <span>/</span>
-                <Link href="/investment" className="hover:text-amber-500">
+                <Link href="/investment" className="hover:text-teal-600">
                   Investment
                 </Link>
                 <span>/</span>
-                <span className="text-amber-500">Portfolio Loans</span>
+                <span className="text-teal-600">Portfolio Loans</span>
               </nav>
 
-              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-500 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+              <div className="inline-flex items-center gap-2 bg-teal-600/10 border border-teal-600/30 text-teal-600 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
                 <Layers className="h-4 w-4" />
                 Scale Your Portfolio
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-                California <span className="text-amber-500">Portfolio Loans</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
+                California <span className="text-teal-600">Portfolio Loans</span>
                 <br />
-                <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-300">
+                <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-600">
                   5-100+ Properties Under One Loan
                 </span>
               </h1>
 
-              <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
                 Simplify your rental portfolio with blanket financing. One loan, one payment,
                 unlimited scaling potential for California real estate investors.
               </p>
 
               {/* Key Stats */}
               <div className="flex flex-wrap justify-center gap-4 mb-10">
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <TrendingUp className="h-4 w-4 text-amber-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                  <TrendingUp className="h-4 w-4 text-teal-600" />
                   <span>From 6.5% APR</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <Layers className="h-4 w-4 text-emerald-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                  <Layers className="h-4 w-4 text-emerald-600" />
                   <span>5-100+ Properties</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <DollarSign className="h-4 w-4 text-amber-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                  <DollarSign className="h-4 w-4 text-teal-600" />
                   <span>Up to $50M</span>
                 </div>
               </div>
@@ -237,17 +237,17 @@ export default function PortfolioLoansPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-8"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-8"
                   asChild
                 >
                   <Link href="/get-quote">
-                    Get Portfolio Rates <ArrowRight className="ml-2 h-5 w-5" />
+                    Compare Portfolio Rates <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-slate-700 text-white hover:bg-slate-800"
+                  className="border-gray-200 text-gray-900 hover:bg-gray-100"
                   asChild
                 >
                   <Link href="/calculators">
@@ -261,13 +261,13 @@ export default function PortfolioLoansPage() {
         </section>
 
         {/* Benefits Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                 Why Consolidate Your Portfolio
               </h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">
+              <p className="text-gray-500 max-w-2xl mx-auto">
                 Simplify management and unlock new growth opportunities
               </p>
             </div>
@@ -276,13 +276,13 @@ export default function PortfolioLoansPage() {
               {benefits.map((benefit, index) => (
                 <div
                   key={index}
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors"
                 >
-                  <div className="p-3 bg-amber-500/10 rounded-xl w-fit mb-4">
-                    <benefit.icon className="h-6 w-6 text-amber-500" />
+                  <div className="p-3 bg-teal-600/10 rounded-xl w-fit mb-4">
+                    <benefit.icon className="h-6 w-6 text-teal-600" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{benefit.title}</h3>
-                  <p className="text-gray-400 text-sm">{benefit.description}</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{benefit.title}</h3>
+                  <p className="text-gray-500 text-sm">{benefit.description}</p>
                 </div>
               ))}
             </div>
@@ -290,14 +290,14 @@ export default function PortfolioLoansPage() {
         </section>
 
         {/* Portfolio Types */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Portfolio Loan Types
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   Financing solutions for different portfolio compositions
                 </p>
               </div>
@@ -306,17 +306,17 @@ export default function PortfolioLoansPage() {
                 {portfolioTypes.map((type, index) => (
                   <div
                     key={index}
-                    className="bg-slate-900 rounded-xl p-6 border border-slate-800"
+                    className="bg-gray-50 rounded-xl p-6 border border-gray-200"
                   >
-                    <h3 className="text-xl font-bold text-amber-500 mb-2">{type.title}</h3>
-                    <p className="text-gray-400 text-sm mb-3">{type.description}</p>
+                    <h3 className="text-xl font-bold text-teal-600 mb-2">{type.title}</h3>
+                    <p className="text-gray-500 text-sm mb-3">{type.description}</p>
                     <div className="flex justify-between text-sm mb-2">
                       <span className="text-gray-500">Min Properties</span>
-                      <span className="text-white">{type.minProperties}</span>
+                      <span className="text-gray-900">{type.minProperties}</span>
                     </div>
-                    <div className="pt-3 border-t border-slate-800">
+                    <div className="pt-3 border-t border-gray-200">
                       <span className="text-gray-500 text-xs">Best for: </span>
-                      <span className="text-gray-300 text-xs">{type.bestFor}</span>
+                      <span className="text-gray-600 text-xs">{type.bestFor}</span>
                     </div>
                   </div>
                 ))}
@@ -326,14 +326,14 @@ export default function PortfolioLoansPage() {
         </section>
 
         {/* Use Cases */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Common Portfolio Loan Uses
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   How investors use portfolio financing
                 </p>
               </div>
@@ -342,10 +342,10 @@ export default function PortfolioLoansPage() {
                 {useCases.map((useCase, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-3 bg-slate-900 rounded-xl p-4 border border-slate-800"
+                    className="flex items-center gap-3 bg-gray-50 rounded-xl p-4 border border-gray-200"
                   >
-                    <CheckCircle className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-                    <span className="text-white">{useCase}</span>
+                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
+                    <span className="text-gray-900">{useCase}</span>
                   </div>
                 ))}
               </div>
@@ -354,14 +354,14 @@ export default function PortfolioLoansPage() {
         </section>
 
         {/* Loan Details */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Portfolio Loan Terms
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   Competitive terms for California portfolio investors
                 </p>
               </div>
@@ -370,10 +370,10 @@ export default function PortfolioLoansPage() {
                 {loanDetails.map((detail, index) => (
                   <div
                     key={index}
-                    className="bg-slate-900 rounded-xl p-5 border border-slate-800 flex justify-between items-center"
+                    className="bg-gray-50 rounded-xl p-5 border border-gray-200 flex justify-between items-center"
                   >
-                    <span className="text-gray-400">{detail.label}</span>
-                    <span className="text-white font-semibold">{detail.value}</span>
+                    <span className="text-gray-500">{detail.label}</span>
+                    <span className="text-gray-900 font-semibold">{detail.value}</span>
                   </div>
                 ))}
               </div>
@@ -381,11 +381,11 @@ export default function PortfolioLoansPage() {
               <div className="mt-8 text-center">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold"
                   asChild
                 >
                   <Link href="/get-quote">
-                    Get Your Portfolio Quote <ArrowRight className="ml-2 h-5 w-5" />
+                    Compare Portfolio Rates <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
               </div>
@@ -394,61 +394,61 @@ export default function PortfolioLoansPage() {
         </section>
 
         {/* Comparison Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Compare Investor Loan Options
                 </h2>
-                <p className="text-gray-400">Find the right product for your strategy</p>
+                <p className="text-gray-500">Find the right product for your strategy</p>
               </div>
 
               <div className="grid md:grid-cols-3 gap-6">
                 <Link
                   href="/investment/dscr-loans"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     Individual DSCR Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     Finance properties one at a time. More flexibility to sell, but multiple
                     payments and relationships to manage.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
 
                 <Link
                   href="/investment/bridge-loans"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     Bridge Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     Short-term financing for acquisitions. Use bridge to acquire, then consolidate
                     into portfolio loan.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
 
                 <Link
                   href="/investment/fix-and-flip"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     Fix & Flip Lines
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     Revolving credit lines for high-volume flippers. Different use case than
                     portfolio loans for rentals.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
@@ -458,23 +458,23 @@ export default function PortfolioLoansPage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl font-bold text-white text-center mb-10">
+              <h2 className="text-3xl font-bold text-gray-900 text-center mb-10">
                 Portfolio Loan FAQs
               </h2>
               <div className="space-y-4">
                 {faqItems.map((item, index) => (
                   <details
                     key={index}
-                    className="group bg-slate-900 rounded-xl border border-slate-800 overflow-hidden"
+                    className="group bg-gray-50 rounded-xl border border-gray-200 overflow-hidden"
                   >
-                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-slate-800/50 transition-colors">
-                      <h3 className="font-semibold text-white pr-4">{item.question}</h3>
-                      <ChevronDown className="h-5 w-5 text-gray-400 group-open:rotate-180 transition-transform flex-shrink-0" />
+                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                      <h3 className="font-semibold text-gray-900 pr-4">{item.question}</h3>
+                      <ChevronDown className="h-5 w-5 text-gray-500 group-open:rotate-180 transition-transform flex-shrink-0" />
                     </summary>
-                    <div className="px-5 pb-5 text-gray-400">
+                    <div className="px-5 pb-5 text-gray-500">
                       <p>{item.answer}</p>
                     </div>
                   </details>
@@ -485,27 +485,27 @@ export default function PortfolioLoansPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-20 border-t border-slate-800 bg-gradient-to-b from-slate-900 to-slate-950">
+        <section className="py-20 border-t border-gray-200 bg-gradient-to-b from-gray-50 to-white">
           <div className="container mx-auto px-4 text-center">
-            <Layers className="h-12 w-12 text-amber-500 mx-auto mb-6" />
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            <Layers className="h-12 w-12 text-teal-600 mx-auto mb-6" />
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               Ready to Consolidate Your Portfolio?
             </h2>
-            <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-              Get matched with lenders who specialize in California portfolio financing.
+            <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
+              Connect with lenders who specialize in California portfolio financing.
               One loan, one payment, unlimited growth potential.
             </p>
             <Button
               size="lg"
-              className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-10"
+              className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-10"
               asChild
             >
               <Link href="/get-quote">
-                Get Portfolio Financing <ArrowRight className="ml-2 h-5 w-5" />
+                Compare Portfolio Rates <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <p className="text-sm text-gray-500 mt-4">
-              NMLS #1945913 | California Portfolio Lending Specialists
+              California Portfolio Lending Network | Equal Housing Opportunity
             </p>
           </div>
         </section>

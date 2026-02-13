@@ -15,20 +15,20 @@ export const metadata: Metadata = {
 
 export default function LeadSubmittedPage() {
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
-      <Card className="max-w-2xl w-full">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <Card className="max-w-2xl w-full border-gray-200">
         <CardHeader className="text-center">
-          <div className="mx-auto w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mb-4">
-            <CheckCircle className="w-10 h-10 text-green-600" />
+          <div className="mx-auto w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle className="w-10 h-10 text-emerald-600" />
           </div>
-          <CardTitle className="text-3xl">Thank You!</CardTitle>
+          <CardTitle className="text-3xl">You've Been Matched!</CardTitle>
           <CardDescription className="text-lg">
-            Your information has been successfully submitted
+            A lender from our network will contact you shortly
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-6">
-          <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
             <h3 className="font-semibold text-lg mb-3">What Happens Next?</h3>
             <ul className="space-y-3">
               <li className="flex items-start">
@@ -36,9 +36,9 @@ export default function LeadSubmittedPage() {
                   1
                 </span>
                 <div>
-                  <div className="font-medium">Review Your Information</div>
+                  <div className="font-medium">We Match You with Licensed Lenders</div>
                   <div className="text-sm text-muted-foreground">
-                    Our team will review your mortgage needs within 2 business hours
+                    We've connected you with lenders who fit your investment needs
                   </div>
                 </div>
               </li>
@@ -48,9 +48,9 @@ export default function LeadSubmittedPage() {
                   2
                 </span>
                 <div>
-                  <div className="font-medium">Match with Top Lenders</div>
+                  <div className="font-medium">Lenders Review Your Profile</div>
                   <div className="text-sm text-muted-foreground">
-                    We'll connect you with lenders who offer the best rates for your situation
+                    Matched lenders will review your information and prepare competitive quotes
                   </div>
                 </div>
               </li>
@@ -60,9 +60,9 @@ export default function LeadSubmittedPage() {
                   3
                 </span>
                 <div>
-                  <div className="font-medium">Receive Your Personalized Quotes</div>
+                  <div className="font-medium">Lender Contacts You with Quotes</div>
                   <div className="text-sm text-muted-foreground">
-                    Get competitive quotes via email and phone within 24-48 hours
+                    Expect contact from matched lenders via email and phone within 24-48 hours
                   </div>
                 </div>
               </li>
@@ -78,7 +78,7 @@ export default function LeadSubmittedPage() {
             <div className="grid gap-3">
               <Link
                 href="/residential"
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-800 transition-colors"
+                className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <span className="font-medium">Browse Mortgage Guides</span>
                 <ArrowRight className="w-4 h-4" />
@@ -86,7 +86,7 @@ export default function LeadSubmittedPage() {
 
               <Link
                 href="/calculators"
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-800 transition-colors"
+                className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <span className="font-medium">Try Our Mortgage Calculators</span>
                 <ArrowRight className="w-4 h-4" />
@@ -94,7 +94,7 @@ export default function LeadSubmittedPage() {
 
               <Link
                 href="/articles"
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-800 transition-colors"
+                className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <span className="font-medium">Read Latest Articles</span>
                 <ArrowRight className="w-4 h-4" />
@@ -112,7 +112,7 @@ export default function LeadSubmittedPage() {
           </div>
 
           <div className="text-center text-sm text-muted-foreground">
-            <p>Questions? Contact us at <a href="mailto:support@lendywendy.com" className="text-blue-600 hover:underline">support@lendywendy.com</a></p>
+            <p>Questions? Contact us at <a href="mailto:support@lendywendy.com" className="text-teal-600 hover:underline">support@lendywendy.com</a></p>
           </div>
         </CardContent>
       </Card>

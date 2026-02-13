@@ -23,7 +23,7 @@ import { StructuredData } from "@/components/seo/StructuredData";
 export const metadata: Metadata = {
   title: "California Hard Money Loans | Fast Funding, Asset-Based | LendyWendy",
   description:
-    "Hard money loans for California real estate investors. Asset-based lending with 7-10 day closings. No income verification. Up to 75% LTV on purchase, 100% rehab funding. Rates from 9.99%. Private money lenders. NMLS #1945913.",
+    "Hard money loans for California real estate investors. Asset-based lending with 7-10 day closings. No income verification. Up to 75% LTV on purchase, 100% rehab funding. Rates from 9.99%. Private money lenders.",
   keywords: [
     "hard money loan California",
     "hard money lender California",
@@ -229,55 +229,55 @@ export default function HardMoneyPage() {
         faqItems={faqItems}
       />
 
-      <main className="min-h-screen bg-slate-950">
+      <main className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative overflow-hidden py-20 lg:py-28">
-          <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-teal-600/5 to-transparent" />
           <div className="container mx-auto px-4 relative">
             <div className="max-w-4xl mx-auto text-center">
               {/* Breadcrumb */}
-              <nav className="flex justify-center items-center gap-2 text-sm text-gray-400 mb-6">
-                <Link href="/" className="hover:text-amber-500">
+              <nav className="flex justify-center items-center gap-2 text-sm text-gray-500 mb-6">
+                <Link href="/" className="hover:text-teal-600">
                   Home
                 </Link>
                 <span>/</span>
-                <Link href="/investment" className="hover:text-amber-500">
+                <Link href="/investment" className="hover:text-teal-600">
                   Investment
                 </Link>
                 <span>/</span>
-                <span className="text-amber-500">Hard Money Loans</span>
+                <span className="text-teal-600">Hard Money Loans</span>
               </nav>
 
-              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-500 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+              <div className="inline-flex items-center gap-2 bg-teal-600/10 border border-teal-600/30 text-teal-600 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
                 <Zap className="h-4 w-4" />
                 Fastest Funding in California
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-                California <span className="text-amber-500">Hard Money Loans</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
+                California <span className="text-teal-600">Hard Money Loans</span>
                 <br />
-                <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-300">
+                <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-600">
                   Close in Days, Not Months
                 </span>
               </h1>
 
-              <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
                 Asset-based lending for investors who need speed and flexibility. No income
                 docs, no bank approvals, no red tape. The property is the story.
               </p>
 
               {/* Key Stats */}
               <div className="flex flex-wrap justify-center gap-4 mb-10">
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <Zap className="h-4 w-4 text-amber-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                  <Zap className="h-4 w-4 text-teal-600" />
                   <span>Close in 7 Days</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <Building className="h-4 w-4 text-emerald-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                  <Building className="h-4 w-4 text-emerald-600" />
                   <span>Any Property Type</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <DollarSign className="h-4 w-4 text-amber-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                  <DollarSign className="h-4 w-4 text-teal-600" />
                   <span>Up to $20M+</span>
                 </div>
               </div>
@@ -285,17 +285,17 @@ export default function HardMoneyPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-8"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-8"
                   asChild
                 >
                   <Link href="/get-quote">
-                    Get Hard Money Rates <ArrowRight className="ml-2 h-5 w-5" />
+                    Compare Hard Money Rates <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-slate-700 text-white hover:bg-slate-800"
+                  className="border-gray-200 text-gray-900 hover:bg-gray-100"
                   asChild
                 >
                   <Link href="/calculators">
@@ -309,13 +309,13 @@ export default function HardMoneyPage() {
         </section>
 
         {/* Benefits Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                 Why Investors Use Hard Money
               </h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">
+              <p className="text-gray-500 max-w-2xl mx-auto">
                 When speed, flexibility, and certainty of close matter more than rate
               </p>
             </div>
@@ -324,13 +324,13 @@ export default function HardMoneyPage() {
               {benefits.map((benefit, index) => (
                 <div
                   key={index}
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors"
                 >
-                  <div className="p-3 bg-amber-500/10 rounded-xl w-fit mb-4">
-                    <benefit.icon className="h-6 w-6 text-amber-500" />
+                  <div className="p-3 bg-teal-600/10 rounded-xl w-fit mb-4">
+                    <benefit.icon className="h-6 w-6 text-teal-600" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{benefit.title}</h3>
-                  <p className="text-gray-400 text-sm">{benefit.description}</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{benefit.title}</h3>
+                  <p className="text-gray-500 text-sm">{benefit.description}</p>
                 </div>
               ))}
             </div>
@@ -338,14 +338,14 @@ export default function HardMoneyPage() {
         </section>
 
         {/* Use Cases Section */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   When to Use Hard Money
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   The most common strategies funded by private capital
                 </p>
               </div>
@@ -354,13 +354,13 @@ export default function HardMoneyPage() {
                 {useCases.map((useCase, index) => (
                   <div
                     key={index}
-                    className="bg-slate-900 rounded-2xl p-6 border border-slate-800"
+                    className="bg-gray-50 rounded-2xl p-6 border border-gray-200"
                   >
-                    <h3 className="text-lg font-bold text-white mb-2">{useCase.title}</h3>
-                    <p className="text-gray-400 text-sm mb-4">{useCase.description}</p>
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">{useCase.title}</h3>
+                    <p className="text-gray-500 text-sm mb-4">{useCase.description}</p>
                     <div className="flex items-center gap-2 text-sm">
-                      <ArrowRight className="h-4 w-4 text-emerald-500" />
-                      <span className="text-emerald-500 font-medium">
+                      <ArrowRight className="h-4 w-4 text-emerald-600" />
+                      <span className="text-emerald-600 font-medium">
                         Exit: {useCase.exitStrategy}
                       </span>
                     </div>
@@ -372,14 +372,14 @@ export default function HardMoneyPage() {
         </section>
 
         {/* Loan Details */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Hard Money Loan Terms
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   Typical terms from California private lenders
                 </p>
               </div>
@@ -388,10 +388,10 @@ export default function HardMoneyPage() {
                 {loanDetails.map((detail, index) => (
                   <div
                     key={index}
-                    className="bg-slate-900 rounded-xl p-5 border border-slate-800 flex justify-between items-center"
+                    className="bg-gray-50 rounded-xl p-5 border border-gray-200 flex justify-between items-center"
                   >
-                    <span className="text-gray-400">{detail.label}</span>
-                    <span className="text-white font-semibold">{detail.value}</span>
+                    <span className="text-gray-500">{detail.label}</span>
+                    <span className="text-gray-900 font-semibold">{detail.value}</span>
                   </div>
                 ))}
               </div>
@@ -399,11 +399,11 @@ export default function HardMoneyPage() {
               <div className="mt-8 text-center">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold"
                   asChild
                 >
                   <Link href="/get-quote">
-                    Get Your Hard Money Quote <ArrowRight className="ml-2 h-5 w-5" />
+                    Compare Hard Money Rates <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
               </div>
@@ -412,42 +412,42 @@ export default function HardMoneyPage() {
         </section>
 
         {/* Hard Money vs Conventional Comparison */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Hard Money vs. Conventional Loans
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   Understanding the trade-offs between speed and cost
                 </p>
               </div>
 
-              <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
-                <div className="grid grid-cols-3 gap-4 p-4 bg-slate-800 text-sm font-semibold text-white">
+              <div className="bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden">
+                <div className="grid grid-cols-3 gap-4 p-4 bg-gray-100 text-sm font-semibold text-gray-900">
                   <span>Feature</span>
-                  <span className="text-amber-500">Hard Money</span>
+                  <span className="text-teal-600">Hard Money</span>
                   <span>Conventional</span>
                 </div>
                 {hardMoneyVsConventional.map((row, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-3 gap-4 p-4 border-t border-slate-800 text-sm"
+                    className="grid grid-cols-3 gap-4 p-4 border-t border-gray-200 text-sm"
                   >
-                    <span className="text-white font-medium">{row.feature}</span>
-                    <span className="text-amber-500">{row.hardMoney}</span>
-                    <span className="text-gray-400">{row.conventional}</span>
+                    <span className="text-gray-900 font-medium">{row.feature}</span>
+                    <span className="text-teal-600">{row.hardMoney}</span>
+                    <span className="text-gray-500">{row.conventional}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-6 bg-slate-900 rounded-xl p-5 border border-amber-500/30">
+              <div className="mt-6 bg-gray-50 rounded-xl p-5 border border-teal-600/30">
                 <div className="flex items-start gap-3">
-                  <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                  <AlertTriangle className="h-5 w-5 text-teal-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-white font-semibold mb-1">When Hard Money Makes Sense</h4>
-                    <p className="text-gray-400 text-sm">
+                    <h4 className="text-gray-900 font-semibold mb-1">When Hard Money Makes Sense</h4>
+                    <p className="text-gray-500 text-sm">
                       Hard money's higher cost is offset when the deal requires speed (auction,
                       competitive market), the property doesn't qualify for conventional (condition,
                       vacancy), or you need certainty of close. Most investors use hard money as
@@ -462,61 +462,61 @@ export default function HardMoneyPage() {
         </section>
 
         {/* Compare Loan Products */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Compare Investor Loan Options
                 </h2>
-                <p className="text-gray-400">Find the right product for your strategy</p>
+                <p className="text-gray-500">Find the right product for your strategy</p>
               </div>
 
               <div className="grid md:grid-cols-3 gap-6">
                 <Link
                   href="/investment/dscr-loans"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     DSCR Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     Long-term rental financing. Qualify on cash flow, no income docs. Lower rates
                     than hard money for stabilized properties.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
 
                 <Link
                   href="/investment/fix-and-flip"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     Fix & Flip Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     Similar to hard money but specifically structured for renovation projects with
                     100% rehab funding and draw schedules.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
 
                 <Link
                   href="/investment/bridge-loans"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     Bridge Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     Short-term financing to bridge acquisitions or stabilize properties before
                     refinancing to permanent debt.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
@@ -526,23 +526,23 @@ export default function HardMoneyPage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl font-bold text-white text-center mb-10">
+              <h2 className="text-3xl font-bold text-gray-900 text-center mb-10">
                 Hard Money Loan FAQs
               </h2>
               <div className="space-y-4">
                 {faqItems.map((item, index) => (
                   <details
                     key={index}
-                    className="group bg-slate-900 rounded-xl border border-slate-800 overflow-hidden"
+                    className="group bg-gray-50 rounded-xl border border-gray-200 overflow-hidden"
                   >
-                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-slate-800/50 transition-colors">
-                      <h3 className="font-semibold text-white pr-4">{item.question}</h3>
-                      <ChevronDown className="h-5 w-5 text-gray-400 group-open:rotate-180 transition-transform flex-shrink-0" />
+                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                      <h3 className="font-semibold text-gray-900 pr-4">{item.question}</h3>
+                      <ChevronDown className="h-5 w-5 text-gray-500 group-open:rotate-180 transition-transform flex-shrink-0" />
                     </summary>
-                    <div className="px-5 pb-5 text-gray-400">
+                    <div className="px-5 pb-5 text-gray-500">
                       <p>{item.answer}</p>
                     </div>
                   </details>
@@ -553,27 +553,27 @@ export default function HardMoneyPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-20 border-t border-slate-800 bg-gradient-to-b from-slate-900 to-slate-950">
+        <section className="py-20 border-t border-gray-200 bg-gradient-to-b from-gray-50 to-white">
           <div className="container mx-auto px-4 text-center">
-            <Shield className="h-12 w-12 text-amber-500 mx-auto mb-6" />
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            <Shield className="h-12 w-12 text-teal-600 mx-auto mb-6" />
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               Need Fast Capital for Your Next Deal?
             </h2>
-            <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-              Get matched with California's top hard money lenders. Proof of funds in 24
-              hours. Close in 7-10 days. No income verification required.
+            <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
+              Connect with California's top hard money lenders. Proof of funds in 24
+              hours. Lenders close in 7-10 days. No income verification required.
             </p>
             <Button
               size="lg"
-              className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-10"
+              className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-10"
               asChild
             >
               <Link href="/get-quote">
-                Get Hard Money Pre-Approval <ArrowRight className="ml-2 h-5 w-5" />
+                Compare Hard Money Lenders <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <p className="text-sm text-gray-500 mt-4">
-              NMLS #1945913 | California Private Lending Specialists
+              California Private Lending Network | Equal Housing Opportunity
             </p>
           </div>
         </section>

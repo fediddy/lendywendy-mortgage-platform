@@ -9,22 +9,22 @@ const segmentData = [
     segment: Segment.RESIDENTIAL,
     icon: Home,
     description: "First-time buyers, refinancing, and home equity solutions",
-    color: "text-blue-400",
-    bgColor: "bg-blue-500/10",
+    color: "text-teal-600",
+    bgColor: "bg-teal-50",
   },
   {
     segment: Segment.INVESTMENT,
     icon: TrendingUp,
     description: "Rental properties, REITs, and portfolio financing strategies",
-    color: "text-emerald-400",
-    bgColor: "bg-emerald-500/10",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
   },
   {
     segment: Segment.COMMERCIAL,
     icon: Building2,
     description: "Office buildings, retail spaces, and commercial loans",
-    color: "text-purple-400",
-    bgColor: "bg-purple-500/10",
+    color: "text-purple-600",
+    bgColor: "bg-purple-50",
   },
 ];
 

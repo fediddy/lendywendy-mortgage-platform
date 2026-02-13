@@ -15,63 +15,14 @@ export interface SchemaProps {
   locationName?: string;
   includeHowTo?: boolean;
   includeVideoObject?: boolean;
+  interestRate?: string;
+  loanTermMonths?: string;
+  loanAmountMin?: string;
+  loanAmountMax?: string;
+  downPaymentMin?: string;
 }
 
-// Owner/Author Information - Wendy Landeros
-const WENDY_LANDEROS = {
-  "@type": "Person",
-  "@id": "https://lendywendy.com/#wendy-landeros",
-  "name": "Wendy Landeros",
-  "givenName": "Wendy",
-  "familyName": "Landeros",
-  "jobTitle": "Mortgage Loan Officer",
-  "description": "Licensed Mortgage Loan Officer specializing in California home loans, investment property financing, and commercial mortgages. NMLS #1945913.",
-  "identifier": {
-    "@type": "PropertyValue",
-    "name": "NMLS",
-    "value": "1945913"
-  },
-  "hasCredential": {
-    "@type": "EducationalOccupationalCredential",
-    "credentialCategory": "license",
-    "name": "NMLS License",
-    "identifier": "1945913",
-    "recognizedBy": {
-      "@type": "Organization",
-      "name": "Nationwide Multistate Licensing System"
-    }
-  },
-  "knowsAbout": [
-    "Mortgage Lending",
-    "Home Loans",
-    "California Real Estate",
-    "FHA Loans",
-    "VA Loans",
-    "Conventional Mortgages",
-    "Jumbo Loans",
-    "DSCR Loans",
-    "Investment Property Loans",
-    "Commercial Mortgages",
-    "Non-QM Loans",
-    "Refinancing"
-  ],
-  "areaServed": {
-    "@type": "State",
-    "name": "California",
-    "containedInPlace": {
-      "@type": "Country",
-      "name": "United States"
-    }
-  },
-  "worksFor": {
-    "@type": "Organization",
-    "@id": "https://lendywendy.com/#organization"
-  },
-  "sameAs": [
-    "https://www.linkedin.com/in/wendylanderos",
-    "https://www.facebook.com/lendywendy"
-  ]
-};
+// Removed individual person schema - LendyWendy is a lead generation platform
 
 // Organization Schema
 const ORGANIZATION_SCHEMA = {
@@ -89,7 +40,6 @@ const ORGANIZATION_SCHEMA = {
     "height": 512
   },
   "image": "https://lendywendy.com/og-image.jpg",
-  "founder": WENDY_LANDEROS,
   "foundingDate": "2024",
   "areaServed": {
     "@type": "State",
@@ -150,38 +100,23 @@ const ORGANIZATION_SCHEMA = {
       }
     ]
   },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "bestRating": "5",
-    "worstRating": "1",
-    "ratingCount": "2400",
-    "reviewCount": "2400"
-  },
   "contactPoint": [
     {
       "@type": "ContactPoint",
-      "telephone": "+1-800-555-1234",
       "contactType": "customer service",
       "areaServed": "US",
       "availableLanguage": ["English", "Spanish"]
     }
-  ],
-  "sameAs": [
-    "https://www.facebook.com/lendywendy",
-    "https://www.linkedin.com/company/lendywendy",
-    "https://twitter.com/lendywendy"
   ]
 };
 
-// LocalBusiness Schema (Mortgage Broker)
+// LocalBusiness Schema
 const LOCAL_BUSINESS_SCHEMA = {
-  "@type": ["LocalBusiness", "FinancialService", "MortgageBroker"],
+  "@type": ["LocalBusiness", "FinancialService"],
   "@id": "https://lendywendy.com/#localbusiness",
   "name": "LendyWendy",
-  "description": "California mortgage matching service connecting homebuyers with local mortgage lenders",
+  "description": "California mortgage matching and comparison service connecting homebuyers with local mortgage lenders",
   "url": "https://lendywendy.com",
-  "telephone": "+1-800-555-1234",
   "priceRange": "Free Service",
   "image": "https://lendywendy.com/og-image.jpg",
   "address": {
@@ -204,32 +139,10 @@ const LOCAL_BUSINESS_SCHEMA = {
     "opens": "00:00",
     "closes": "23:59",
     "description": "AI Advisor available 24/7"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "bestRating": "5",
-    "ratingCount": "2400"
-  },
-  "review": [
-    {
-      "@type": "Review",
-      "author": { "@type": "Person", "name": "Maria S." },
-      "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-      "reviewBody": "I was pre-approved in literally 5 minutes. The AI advisor helped me understand my options and I got a rate 0.375% lower than my bank offered!",
-      "datePublished": "2025-12-15"
-    },
-    {
-      "@type": "Review",
-      "author": { "@type": "Person", "name": "James T." },
-      "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-      "reviewBody": "As a self-employed business owner, I struggled to get approved anywhere. LendyWendy matched me with a lender who did bank statement loans. Closed in 3 weeks!",
-      "datePublished": "2025-11-20"
-    }
-  ]
+  }
 };
 
-// Website Schema with SearchAction
+// Website Schema
 const WEBSITE_SCHEMA = {
   "@type": "WebSite",
   "@id": "https://lendywendy.com/#website",
@@ -238,14 +151,6 @@ const WEBSITE_SCHEMA = {
   "description": "AI-powered mortgage matching for California homebuyers",
   "url": "https://lendywendy.com",
   "publisher": { "@id": "https://lendywendy.com/#organization" },
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": {
-      "@type": "EntryPoint",
-      "urlTemplate": "https://lendywendy.com/search?q={search_term_string}"
-    },
-    "query-input": "required name=search_term_string"
-  },
   "inLanguage": "en-US"
 };
 
@@ -409,7 +314,7 @@ const HOWTO_MORTGAGE_MATCHING = {
       "@type": "HowToStep",
       "position": 1,
       "name": "Tell us your mortgage goals",
-      "text": "Spend 60 seconds chatting with Wendy, our AI advisor, or fill out a quick form. Tell us if you're buying, refinancing, or investing, your budget, and timeline.",
+      "text": "Spend 60 seconds chatting with our AI advisor, or fill out a quick form. Tell us if you're buying, refinancing, or investing, your budget, and timeline.",
       "url": "https://lendywendy.com/get-quote",
       "image": "https://lendywendy.com/images/step-1-goals.jpg"
     },
@@ -632,6 +537,28 @@ const ENTITY_RELATIONSHIPS = {
   ]
 };
 
+// AI Advisor Software Application Schema
+const AI_ADVISOR_SCHEMA = {
+  "@type": "SoftwareApplication",
+  "@id": "https://lendywendy.com/#ai-advisor",
+  "name": "LendyWendy AI Mortgage Advisor",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Web Browser",
+  "description": "AI-powered mortgage advisor that helps California homebuyers understand loan options and get matched with lenders",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "Instant mortgage rate comparison",
+    "AI-powered loan recommendation",
+    "Mortgage readiness scoring",
+    "24/7 availability"
+  ],
+  "provider": { "@id": "https://lendywendy.com/#organization" }
+};
+
 // ProfessionalService Schema - E-E-A-T signals
 const PROFESSIONAL_SERVICE = {
   "@type": "ProfessionalService",
@@ -640,26 +567,6 @@ const PROFESSIONAL_SERVICE = {
   "description": "Licensed mortgage advisory service connecting California borrowers with qualified lenders",
   "url": "https://lendywendy.com",
   "serviceType": ["Mortgage Broker", "Financial Advisory", "Loan Matching"],
-  "hasCredential": [
-    {
-      "@type": "EducationalOccupationalCredential",
-      "credentialCategory": "license",
-      "name": "California DRE License",
-      "recognizedBy": {
-        "@type": "Organization",
-        "name": "California Department of Real Estate"
-      }
-    },
-    {
-      "@type": "EducationalOccupationalCredential",
-      "credentialCategory": "license",
-      "name": "NMLS License #1945913",
-      "recognizedBy": {
-        "@type": "Organization",
-        "name": "Nationwide Multistate Licensing System"
-      }
-    }
-  ],
   "knowsAbout": [
     "California real estate market",
     "Mortgage underwriting guidelines",
@@ -716,8 +623,7 @@ function generateWebPage(props: SchemaProps) {
     "description": props.pageDescription || "AI-powered mortgage matching for California homebuyers",
     "isPartOf": { "@id": "https://lendywendy.com/#website" },
     "about": { "@id": "https://lendywendy.com/#organization" },
-    "author": { "@id": "https://lendywendy.com/#wendy-landeros" },
-    "creator": { "@id": "https://lendywendy.com/#wendy-landeros" },
+    "publisher": { "@id": "https://lendywendy.com/#organization" },
     "inLanguage": "en-US",
     "datePublished": "2024-01-01",
     "dateModified": new Date().toISOString().split('T')[0]
@@ -732,13 +638,19 @@ export function StructuredData({
   pageUrl = '/',
   breadcrumbs,
   faqItems,
-  includeHowTo = false
+  includeHowTo = false,
+  serviceName,
+  locationName,
+  interestRate,
+  loanTermMonths,
+  loanAmountMin,
+  loanAmountMax,
+  downPaymentMin
 }: SchemaProps) {
 
   // Build the complete schema graph with comprehensive semantic markup
   const schemaGraph: Record<string, unknown>[] = [
-    // Core Entity Schemas (E-E-A-T)
-    WENDY_LANDEROS,
+    // Core Entity Schemas
     ORGANIZATION_SCHEMA,
     LOCAL_BUSINESS_SCHEMA,
     WEBSITE_SCHEMA,
@@ -765,6 +677,59 @@ export function StructuredData({
 
     // Semantic relationships (triples)
     schemaGraph.push(ENTITY_RELATIONSHIPS);
+
+    // Speakable schema for voice search
+    schemaGraph.push(SPEAKABLE_SCHEMA);
+
+    // AI Advisor software application
+    schemaGraph.push(AI_ADVISOR_SCHEMA);
+  }
+
+  // Add per-page FinancialProduct schema for service pages
+  if (type === 'service' && serviceName) {
+    const productSchema: Record<string, unknown> = {
+      "@type": "FinancialProduct",
+      "@id": `https://lendywendy.com${pageUrl}#product`,
+      "name": serviceName || pageTitle,
+      "description": pageDescription,
+      "category": "Mortgage",
+      "provider": { "@id": "https://lendywendy.com/#organization" },
+      "areaServed": { "@type": "State", "name": "California" },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Free mortgage matching service"
+      }
+    };
+
+    if (interestRate) {
+      productSchema.interestRate = interestRate;
+    }
+    if (loanTermMonths) {
+      productSchema.loanTerm = loanTermMonths;
+    }
+    if (loanAmountMin && loanAmountMax) {
+      productSchema.amount = {
+        "@type": "MonetaryAmount",
+        "currency": "USD",
+        "minValue": loanAmountMin,
+        "maxValue": loanAmountMax
+      };
+    }
+
+    schemaGraph.push(productSchema);
+  }
+
+  // Add location-specific schema
+  if (type === 'location' && locationName) {
+    schemaGraph.push({
+      "@type": "Place",
+      "@id": `https://lendywendy.com${pageUrl}#location`,
+      "name": locationName,
+      "containedInPlace": { "@type": "State", "name": "California" },
+      "geo": { "@type": "GeoCoordinates" }
+    });
   }
 
   // Add HowTo on service pages if requested
@@ -815,7 +780,7 @@ export function SemanticMeta({
   keywords,
   canonicalUrl,
   ogImage = "https://lendywendy.com/og-image.jpg",
-  author = "Wendy Landeros, NMLS #1945913"
+  author = "LendyWendy"
 }: {
   title: string;
   description: string;

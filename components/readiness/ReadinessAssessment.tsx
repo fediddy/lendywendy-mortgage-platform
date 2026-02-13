@@ -277,7 +277,7 @@ export function ReadinessAssessment({ onComplete }: ReadinessAssessmentProps) {
             <CardContent className="p-6">
               <h4 className="font-semibold text-gray-900 mb-2">Get Your Detailed Report</h4>
               <p className="text-sm text-gray-600 mb-4">
-                Enter your email to receive a personalized report with specific recommendations and get matched with a local mortgage expert.
+                Enter your email to receive a personalized report with specific recommendations and get matched with local lenders.
               </p>
               <div className="flex gap-2">
                 <input
@@ -285,7 +285,7 @@ export function ReadinessAssessment({ onComplete }: ReadinessAssessmentProps) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                 />
                 <Button onClick={handleEmailSubmit} disabled={!email}>
                   <Mail className="h-4 w-4 mr-2" />
@@ -311,7 +311,7 @@ export function ReadinessAssessment({ onComplete }: ReadinessAssessmentProps) {
             Share Score
           </Button>
           <Button asChild className="flex-1">
-            <a href="/get-quote">Get Matched with Expert</a>
+            <a href="/get-quote">Get Matched with Lenders</a>
           </Button>
         </div>
       </div>
@@ -343,7 +343,7 @@ export function ReadinessAssessment({ onComplete }: ReadinessAssessmentProps) {
                 value={locationInput}
                 onChange={(e) => setLocationInput(e.target.value)}
                 placeholder="e.g., Los Angeles, CA or 90210"
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 text-lg"
                 onKeyDown={(e) => e.key === 'Enter' && handleLocationSubmit()}
               />
               <Button
@@ -363,9 +363,9 @@ export function ReadinessAssessment({ onComplete }: ReadinessAssessmentProps) {
                   key={option.value}
                   onClick={() => handleSelect(option.value)}
                   className={cn(
-                    'w-full p-4 rounded-lg border-2 text-left transition-all hover:border-blue-500 hover:bg-blue-500/10',
+                    'w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-600 hover:bg-teal-50',
                     responses[currentQuestion.id] === option.value
-                      ? 'border-blue-500 bg-blue-500/10'
+                      ? 'border-teal-600 bg-teal-50'
                       : 'border-gray-200'
                   )}
                 >

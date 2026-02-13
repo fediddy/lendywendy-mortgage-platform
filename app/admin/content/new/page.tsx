@@ -29,8 +29,8 @@ export default function NewContentPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-          <p className="text-gray-400">Loading...</p>
+        <div className="min-h-screen bg-white flex items-center justify-center">
+          <p className="text-gray-500">Loading...</p>
         </div>
       }
     >
@@ -111,24 +111,24 @@ function NewContentInner() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 py-8">
+    <div className="min-h-screen bg-white py-8">
       <div className="container mx-auto px-4 max-w-5xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="text-gray-400" asChild>
+            <Button variant="ghost" size="sm" className="text-gray-500" asChild>
               <Link href="/admin/content">
                 <ArrowLeft className="mr-1 h-4 w-4" />
                 Back
               </Link>
             </Button>
-            <h1 className="text-2xl font-bold text-white">
+            <h1 className="text-2xl font-bold text-gray-900">
               New {type === "article" ? "Article" : "Guide"}
             </h1>
           </div>
           <div className="flex gap-3">
             <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger className="w-36 bg-slate-800 border-slate-700 text-white">
+              <SelectTrigger className="w-36 bg-gray-100 border-gray-200 text-gray-900">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -140,7 +140,7 @@ function NewContentInner() {
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold"
+              className="bg-teal-600 hover:bg-teal-700 text-white font-bold"
             >
               <Save className="mr-2 h-4 w-4" />
               {saving ? "Saving..." : "Save"}
@@ -151,32 +151,32 @@ function NewContentInner() {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Main Editor */}
           <div className="lg:col-span-2 space-y-6">
-            <Card className="bg-slate-900 border-slate-800">
+            <Card className="bg-white border-gray-200">
               <CardContent className="p-6 space-y-4">
                 <div>
-                  <Label className="text-gray-300">Title</Label>
+                  <Label className="text-gray-700">Title</Label>
                   <Input
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Enter title..."
-                    className="mt-1 bg-slate-800 border-slate-700 text-white text-lg"
+                    className="mt-1 bg-gray-100 border-gray-200 text-gray-900 text-lg"
                   />
                 </div>
                 <div>
-                  <Label className="text-gray-300">Slug</Label>
+                  <Label className="text-gray-700">Slug</Label>
                   <Input
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
                     placeholder="url-friendly-slug"
-                    className="mt-1 bg-slate-800 border-slate-700 text-white font-mono text-sm"
+                    className="mt-1 bg-gray-100 border-gray-200 text-gray-900 font-mono text-sm"
                   />
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-slate-900 border-slate-800">
+            <Card className="bg-white border-gray-200">
               <CardContent className="p-6">
-                <Label className="text-gray-300 mb-2 block">Content</Label>
+                <Label className="text-gray-700 mb-2 block">Content</Label>
                 <RichTextEditor
                   content={content}
                   onChange={setContent}
@@ -188,12 +188,12 @@ function NewContentInner() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            <Card className="bg-slate-900 border-slate-800">
+            <Card className="bg-white border-gray-200">
               <CardContent className="p-6 space-y-4">
                 <div>
-                  <Label className="text-gray-300">Category</Label>
+                  <Label className="text-gray-700">Category</Label>
                   <Select value={categoryId} onValueChange={setCategoryId}>
-                    <SelectTrigger className="mt-1 bg-slate-800 border-slate-700 text-white">
+                    <SelectTrigger className="mt-1 bg-gray-100 border-gray-200 text-gray-900">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -207,30 +207,30 @@ function NewContentInner() {
                 </div>
 
                 <div>
-                  <Label className="text-gray-300">Excerpt</Label>
+                  <Label className="text-gray-700">Excerpt</Label>
                   <Textarea
                     value={excerpt}
                     onChange={(e) => setExcerpt(e.target.value)}
                     placeholder="Brief summary for previews and SEO..."
-                    className="mt-1 bg-slate-800 border-slate-700 text-white"
+                    className="mt-1 bg-gray-100 border-gray-200 text-gray-900"
                     rows={3}
                   />
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-slate-900 border-slate-800">
+            <Card className="bg-white border-gray-200">
               <CardContent className="p-6">
-                <h3 className="text-white font-semibold mb-3">SEO Preview</h3>
-                <div className="bg-slate-800 rounded-lg p-4">
-                  <p className="text-blue-400 text-sm truncate">
+                <h3 className="text-gray-900 font-semibold mb-3">SEO Preview</h3>
+                <div className="bg-gray-100 rounded-lg p-4">
+                  <p className="text-blue-600 text-sm truncate">
                     {title || "Page Title"}
                   </p>
-                  <p className="text-emerald-500 text-xs truncate">
+                  <p className="text-emerald-600 text-xs truncate">
                     lendywendy.com/{type === "article" ? "articles" : "guides"}/
                     {slug || "slug"}
                   </p>
-                  <p className="text-gray-400 text-xs mt-1 line-clamp-2">
+                  <p className="text-gray-500 text-xs mt-1 line-clamp-2">
                     {excerpt || "Page description will appear here..."}
                   </p>
                 </div>

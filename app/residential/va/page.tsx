@@ -20,7 +20,7 @@ import { StructuredData } from "@/components/seo/StructuredData";
 export const metadata: Metadata = {
   title: "California VA Loans | $0 Down, No PMI for Veterans | LendyWendy",
   description:
-    "VA home loans in California with zero down payment and no monthly PMI. Exclusive benefits for veterans, active duty, National Guard, and surviving spouses. Competitive rates, no loan limits for full entitlement. NMLS #1945913.",
+    "Compare VA home loan rates in California with zero down payment and no monthly PMI. Exclusive benefits for veterans, active duty, National Guard, and surviving spouses. Competitive rates, no loan limits for full entitlement.",
   keywords: [
     "VA loan California",
     "VA mortgage California",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "California VA Loans | $0 Down for Veterans | LendyWendy",
     description:
-      "VA mortgages for California veterans and military. Zero down payment, no PMI, competitive rates. Thank you for your service.",
+      "Compare VA mortgage rates for California veterans and military. Zero down payment, no PMI, competitive rates. Thank you for your service.",
     type: "website",
     url: "https://lendywendy.com/residential/va",
     images: [{ url: "https://lendywendy.com/api/og?title=California+VA+Loans&subtitle=%240+Down+for+Veterans.+No+PMI.+Best+Rates+Available.&badge=For+Veterans", width: 1200, height: 630, alt: "California VA Loans" }],
@@ -105,7 +105,7 @@ const faqItems = [
   {
     question: "Is there a VA loan limit in California?",
     answer:
-      "For veterans with full entitlement (never used VA loan or paid off previous VA loan), there is NO loan limit - you can borrow as much as a lender will approve with $0 down. For veterans with reduced entitlement, limits apply based on county. California's high-cost counties allow up to $1,149,825 with full entitlement benefits.",
+      "For veterans with full entitlement (never used VA loan or paid off previous VA loan), there is NO loan limit - you can borrow as much as a lender will approve with $0 down. For veterans with reduced entitlement, limits apply based on county. California's high-cost counties allow up to $1,249,125 with full entitlement benefits.",
   },
   {
     question: "What is the VA funding fee and can it be waived?",
@@ -140,7 +140,7 @@ export default function VALoansPage() {
       <StructuredData
         type="service"
         pageTitle="California VA Loans | $0 Down for Veterans"
-        pageDescription="VA home loans in California with zero down payment and no PMI for veterans, active duty, and surviving spouses. Competitive rates and flexible guidelines."
+        pageDescription="Compare VA home loan rates in California with zero down payment and no PMI for veterans, active duty, and surviving spouses. Competitive rates and flexible guidelines."
         pageUrl="/residential/va"
         breadcrumbs={[
           { name: "Residential", url: "/residential" },
@@ -149,23 +149,23 @@ export default function VALoansPage() {
         faqItems={faqItems}
       />
 
-      <main className="min-h-screen bg-slate-950">
+      <main className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative overflow-hidden py-20 lg:py-28">
-          <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-teal-600/5 to-transparent" />
           <div className="container mx-auto px-4 relative">
             <div className="max-w-4xl mx-auto text-center">
               {/* Breadcrumb */}
-              <nav className="flex justify-center items-center gap-2 text-sm text-gray-400 mb-6">
-                <Link href="/" className="hover:text-amber-500">
+              <nav className="flex justify-center items-center gap-2 text-sm text-gray-500 mb-6">
+                <Link href="/" className="hover:text-teal-600">
                   Home
                 </Link>
                 <span>/</span>
-                <Link href="/residential" className="hover:text-amber-500">
+                <Link href="/residential" className="hover:text-teal-600">
                   Residential
                 </Link>
                 <span>/</span>
-                <span className="text-amber-500">VA Loans</span>
+                <span className="text-teal-600">VA Loans</span>
               </nav>
 
               <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 text-blue-400 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
@@ -173,30 +173,30 @@ export default function VALoansPage() {
                 Exclusive Veteran Benefits
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-                California <span className="text-amber-500">VA Loans</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
+                California <span className="text-teal-600">VA Loans</span>
                 <br />
-                <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-300">
+                <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-600">
                   $0 Down | No PMI | Best Rates
                 </span>
               </h1>
 
-              <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
                 Thank you for your service. Access the best mortgage benefits available - zero down
                 payment, no monthly PMI, and the lowest rates in the market.
               </p>
 
               {/* Key Stats */}
               <div className="flex flex-wrap justify-center gap-4 mb-10">
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <TrendingUp className="h-4 w-4 text-amber-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50/50 px-4 py-2 rounded-full border border-gray-200">
+                  <TrendingUp className="h-4 w-4 text-teal-600" />
                   <span>From 6.0% APR</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <DollarSign className="h-4 w-4 text-emerald-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50/50 px-4 py-2 rounded-full border border-gray-200">
+                  <DollarSign className="h-4 w-4 text-emerald-600" />
                   <span>$0 Down</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50/50 px-4 py-2 rounded-full border border-gray-200">
                   <Shield className="h-4 w-4 text-blue-400" />
                   <span>No PMI</span>
                 </div>
@@ -205,17 +205,17 @@ export default function VALoansPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-8"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-8"
                   asChild
                 >
                   <Link href="/get-quote">
-                    Get VA Rates <ArrowRight className="ml-2 h-5 w-5" />
+                    Compare VA Rates <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-slate-700 text-white hover:bg-slate-800"
+                  className="border-gray-200 text-gray-900 hover:bg-gray-100"
                   asChild
                 >
                   <Link href="/calculators">
@@ -229,13 +229,13 @@ export default function VALoansPage() {
         </section>
 
         {/* Benefits Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                 VA Loan Benefits
               </h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">
+              <p className="text-gray-500 max-w-2xl mx-auto">
                 The best mortgage program available - exclusive benefits for those who served
               </p>
             </div>
@@ -244,13 +244,13 @@ export default function VALoansPage() {
               {benefits.map((benefit, index) => (
                 <div
                   key={index}
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors"
                 >
-                  <div className="p-3 bg-amber-500/10 rounded-xl w-fit mb-4">
-                    <benefit.icon className="h-6 w-6 text-amber-500" />
+                  <div className="p-3 bg-teal-600/10 rounded-xl w-fit mb-4">
+                    <benefit.icon className="h-6 w-6 text-teal-600" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{benefit.title}</h3>
-                  <p className="text-gray-400 text-sm">{benefit.description}</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{benefit.title}</h3>
+                  <p className="text-gray-500 text-sm">{benefit.description}</p>
                 </div>
               ))}
             </div>
@@ -258,14 +258,14 @@ export default function VALoansPage() {
         </section>
 
         {/* Eligibility Section */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50/50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Who Qualifies for VA Loans?
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   VA loan eligibility requirements for California veterans
                 </p>
               </div>
@@ -274,10 +274,10 @@ export default function VALoansPage() {
                 {eligibility.map((item, index) => (
                   <div
                     key={index}
-                    className="bg-slate-900 rounded-xl p-5 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                    className="bg-gray-50 rounded-xl p-5 border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
                   >
-                    <span className="text-white font-semibold">{item.service}</span>
-                    <span className="text-gray-400 text-sm sm:text-right">{item.requirement}</span>
+                    <span className="text-gray-900 font-semibold">{item.service}</span>
+                    <span className="text-gray-500 text-sm sm:text-right">{item.requirement}</span>
                   </div>
                 ))}
               </div>
@@ -286,8 +286,8 @@ export default function VALoansPage() {
                 <div className="flex items-start gap-4">
                   <BadgeCheck className="h-6 w-6 text-blue-400 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="text-white font-semibold mb-2">Not Sure If You Qualify?</h3>
-                    <p className="text-gray-400 text-sm">
+                    <h3 className="text-gray-900 font-semibold mb-2">Not Sure If You Qualify?</h3>
+                    <p className="text-gray-500 text-sm">
                       Many veterans don't realize they're eligible. If you served 90+ days during
                       wartime, 181+ days during peacetime, or 6+ years in Guard/Reserves, you likely
                       qualify. LendyWendy can help verify your eligibility.
@@ -299,7 +299,7 @@ export default function VALoansPage() {
               <div className="mt-8 text-center">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold"
                   asChild
                 >
                   <Link href="/get-quote">
@@ -312,20 +312,20 @@ export default function VALoansPage() {
         </section>
 
         {/* Funding Fee Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   VA Funding Fee Breakdown
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   One-time fee that can be financed into your loan
                 </p>
               </div>
 
-              <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
-                <div className="grid grid-cols-3 gap-4 p-4 bg-slate-800 text-sm font-semibold text-white">
+              <div className="bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden">
+                <div className="grid grid-cols-3 gap-4 p-4 bg-gray-100 text-sm font-semibold text-gray-900">
                   <span>Loan Type</span>
                   <span>Regular Military</span>
                   <span>Disabled/Exempt</span>
@@ -333,21 +333,21 @@ export default function VALoansPage() {
                 {fundingFees.map((item, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-3 gap-4 p-4 border-t border-slate-800 text-sm"
+                    className="grid grid-cols-3 gap-4 p-4 border-t border-gray-200 text-sm"
                   >
-                    <span className="text-white">{item.type}</span>
-                    <span className="text-amber-500 font-semibold">{item.regular}</span>
-                    <span className="text-emerald-500 font-semibold">{item.disabled}</span>
+                    <span className="text-gray-900">{item.type}</span>
+                    <span className="text-teal-600 font-semibold">{item.regular}</span>
+                    <span className="text-emerald-600 font-semibold">{item.disabled}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-6 p-6 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
+              <div className="mt-6 p-6 bg-emerald-50 border border-emerald-500/30 rounded-xl">
                 <div className="flex items-start gap-4">
-                  <Star className="h-6 w-6 text-emerald-500 flex-shrink-0 mt-1" />
+                  <Star className="h-6 w-6 text-emerald-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="text-white font-semibold mb-2">Funding Fee Exemptions</h3>
-                    <p className="text-gray-400 text-sm">
+                    <h3 className="text-gray-900 font-semibold mb-2">Funding Fee Exemptions</h3>
+                    <p className="text-gray-500 text-sm">
                       Veterans receiving VA disability compensation, Purple Heart recipients
                       (active duty), and eligible surviving spouses pay NO funding fee. This can
                       save $10,000+ on a typical California home purchase.
@@ -360,61 +360,61 @@ export default function VALoansPage() {
         </section>
 
         {/* Comparison Section */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50/50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   VA Loans vs. Other Options
                 </h2>
-                <p className="text-gray-400">See why VA is the best choice for eligible veterans</p>
+                <p className="text-gray-500">See why VA is the best choice for eligible veterans</p>
               </div>
 
               <div className="grid md:grid-cols-3 gap-6">
                 <Link
                   href="/residential/conventional"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     VA vs Conventional
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     VA: $0 down, no PMI, lower rates. Conventional: 3-20% down, PMI until 20%
                     equity. VA wins for eligible veterans.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Compare Conventional <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
 
                 <Link
                   href="/residential/fha"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     VA vs FHA
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     VA: $0 down, no mortgage insurance. FHA: 3.5% down, lifetime MIP. VA is
                     significantly better if you qualify.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Compare FHA <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
 
                 <Link
                   href="/residential/jumbo"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     VA Jumbo Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     With full entitlement, VA has no loan limit. Buy a $2M+ California home with $0
                     down and no PMI.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn About Jumbo <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
@@ -424,23 +424,23 @@ export default function VALoansPage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl font-bold text-white text-center mb-10">
+              <h2 className="text-3xl font-bold text-gray-900 text-center mb-10">
                 VA Loan FAQs
               </h2>
               <div className="space-y-4">
                 {faqItems.map((item, index) => (
                   <details
                     key={index}
-                    className="group bg-slate-900 rounded-xl border border-slate-800 overflow-hidden"
+                    className="group bg-gray-50 rounded-xl border border-gray-200 overflow-hidden"
                   >
-                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-slate-800/50 transition-colors">
-                      <h3 className="font-semibold text-white pr-4">{item.question}</h3>
-                      <ChevronDown className="h-5 w-5 text-gray-400 group-open:rotate-180 transition-transform flex-shrink-0" />
+                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                      <h3 className="font-semibold text-gray-900 pr-4">{item.question}</h3>
+                      <ChevronDown className="h-5 w-5 text-gray-500 group-open:rotate-180 transition-transform flex-shrink-0" />
                     </summary>
-                    <div className="px-5 pb-5 text-gray-400">
+                    <div className="px-5 pb-5 text-gray-500">
                       <p>{item.answer}</p>
                     </div>
                   </details>
@@ -451,27 +451,27 @@ export default function VALoansPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-20 border-t border-slate-800 bg-gradient-to-b from-slate-900 to-slate-950">
+        <section className="py-20 border-t border-gray-200 bg-gradient-to-b from-gray-50 to-white">
           <div className="container mx-auto px-4 text-center">
-            <Award className="h-12 w-12 text-amber-500 mx-auto mb-6" />
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            <Award className="h-12 w-12 text-teal-600 mx-auto mb-6" />
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               Thank You for Your Service
             </h2>
-            <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
               Let us help you use the VA loan benefits you've earned. Get matched with VA-approved
               lenders in 60 seconds with no credit impact.
             </p>
             <Button
               size="lg"
-              className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-10"
+              className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-10"
               asChild
             >
               <Link href="/get-quote">
-                Get VA Pre-Approved <ArrowRight className="ml-2 h-5 w-5" />
+                Get Matched <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <p className="text-sm text-gray-500 mt-4">
-              NMLS #1945913 | VA-Approved Lender Network
+              Equal Housing Opportunity | LendyWendy is not a lender
             </p>
           </div>
         </section>

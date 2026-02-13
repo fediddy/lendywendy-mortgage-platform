@@ -21,7 +21,7 @@ import { StructuredData } from "@/components/seo/StructuredData";
 export const metadata: Metadata = {
   title: "California Fix and Flip Loans | Close in 7-14 Days, 90% LTC | LendyWendy",
   description:
-    "Hard money fix and flip loans for California investors. Close in 7-14 days, up to 90% of purchase price, 100% rehab financing. Rates from 9%. Fund acquisitions and renovations fast. NMLS #1945913.",
+    "Hard money fix and flip loans for California investors. Lenders close in 7-14 days, up to 90% of purchase price, 100% rehab financing. Rates from 9%. Fund acquisitions and renovations fast.",
   keywords: [
     "fix and flip loan California",
     "hard money loan California",
@@ -54,7 +54,7 @@ const benefits = [
     icon: Zap,
     title: "7-14 Day Closing",
     description:
-      "Beat the competition with lightning-fast closings. Fund deals that other buyers can't because of slow financing.",
+      "Lenders in our network offer lightning-fast closings. Fund deals that other buyers can't because of slow financing.",
   },
   {
     icon: DollarSign,
@@ -66,7 +66,7 @@ const benefits = [
     icon: Hammer,
     title: "100% Rehab Funding",
     description:
-      "Get all your renovation costs covered. Draws released in 1-3 days as you complete work.",
+      "Available through our network: 100% renovation funding. Draws released in 1-3 days as you complete work.",
   },
   {
     icon: RefreshCw,
@@ -95,13 +95,13 @@ const flippingProcess = [
   },
   {
     step: "2",
-    title: "Get Pre-Approved",
-    description: "Submit your deal for review. Same-day pre-approval letters available.",
+    title: "Get Matched",
+    description: "Submit your deal for review. Same-day pre-approval letters available from lenders.",
   },
   {
     step: "3",
     title: "Close Fast",
-    description: "Fund in 7-14 days. Beat cash buyers who need longer to close.",
+    description: "Lenders fund in 7-14 days. Beat cash buyers who need longer to close.",
   },
   {
     step: "4",
@@ -194,55 +194,55 @@ export default function FixAndFlipLoansPage() {
         faqItems={faqItems}
       />
 
-      <main className="min-h-screen bg-slate-950">
+      <main className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative overflow-hidden py-20 lg:py-28">
-          <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-teal-600/5 to-transparent" />
           <div className="container mx-auto px-4 relative">
             <div className="max-w-4xl mx-auto text-center">
               {/* Breadcrumb */}
-              <nav className="flex justify-center items-center gap-2 text-sm text-gray-400 mb-6">
-                <Link href="/" className="hover:text-amber-500">
+              <nav className="flex justify-center items-center gap-2 text-sm text-gray-500 mb-6">
+                <Link href="/" className="hover:text-teal-600">
                   Home
                 </Link>
                 <span>/</span>
-                <Link href="/investment" className="hover:text-amber-500">
+                <Link href="/investment" className="hover:text-teal-600">
                   Investment
                 </Link>
                 <span>/</span>
-                <span className="text-amber-500">Fix and Flip</span>
+                <span className="text-teal-600">Fix and Flip</span>
               </nav>
 
-              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-500 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+              <div className="inline-flex items-center gap-2 bg-teal-600/10 border border-teal-600/30 text-teal-600 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
                 <Hammer className="h-4 w-4" />
                 Hard Money Financing
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-                California <span className="text-amber-500">Fix & Flip Loans</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
+                California <span className="text-teal-600">Fix & Flip Loans</span>
                 <br />
-                <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-300">
+                <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-600">
                   Close in 7 Days. Fund 90% LTC.
                 </span>
               </h1>
 
-              <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
                 Move fast on California flip opportunities. Lightning-quick closings, high leverage,
                 and 100% rehab funding to maximize your returns.
               </p>
 
               {/* Key Stats */}
               <div className="flex flex-wrap justify-center gap-4 mb-10">
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <TrendingUp className="h-4 w-4 text-amber-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                  <TrendingUp className="h-4 w-4 text-teal-600" />
                   <span>From 9% APR</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <Clock className="h-4 w-4 text-emerald-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                  <Clock className="h-4 w-4 text-emerald-600" />
                   <span>7-14 Day Close</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
-                  <DollarSign className="h-4 w-4 text-amber-500" />
+                <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                  <DollarSign className="h-4 w-4 text-teal-600" />
                   <span>90% LTC</span>
                 </div>
               </div>
@@ -250,17 +250,17 @@ export default function FixAndFlipLoansPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-8"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-8"
                   asChild
                 >
                   <Link href="/get-quote">
-                    Get Flip Financing <ArrowRight className="ml-2 h-5 w-5" />
+                    Compare Flip Lenders <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-slate-700 text-white hover:bg-slate-800"
+                  className="border-gray-200 text-gray-900 hover:bg-gray-100"
                   asChild
                 >
                   <Link href="/calculators">
@@ -274,13 +274,13 @@ export default function FixAndFlipLoansPage() {
         </section>
 
         {/* Benefits Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                 Why Flippers Choose Hard Money
               </h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">
+              <p className="text-gray-500 max-w-2xl mx-auto">
                 Speed and flexibility that traditional lenders can't match
               </p>
             </div>
@@ -289,13 +289,13 @@ export default function FixAndFlipLoansPage() {
               {benefits.map((benefit, index) => (
                 <div
                   key={index}
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors"
                 >
-                  <div className="p-3 bg-amber-500/10 rounded-xl w-fit mb-4">
-                    <benefit.icon className="h-6 w-6 text-amber-500" />
+                  <div className="p-3 bg-teal-600/10 rounded-xl w-fit mb-4">
+                    <benefit.icon className="h-6 w-6 text-teal-600" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{benefit.title}</h3>
-                  <p className="text-gray-400 text-sm">{benefit.description}</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{benefit.title}</h3>
+                  <p className="text-gray-500 text-sm">{benefit.description}</p>
                 </div>
               ))}
             </div>
@@ -303,14 +303,14 @@ export default function FixAndFlipLoansPage() {
         </section>
 
         {/* Loan Details */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Fix & Flip Loan Terms
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   Competitive terms for California flippers
                 </p>
               </div>
@@ -319,10 +319,10 @@ export default function FixAndFlipLoansPage() {
                 {loanDetails.map((detail, index) => (
                   <div
                     key={index}
-                    className="bg-slate-900 rounded-xl p-5 border border-slate-800 flex justify-between items-center"
+                    className="bg-gray-50 rounded-xl p-5 border border-gray-200 flex justify-between items-center"
                   >
-                    <span className="text-gray-400">{detail.label}</span>
-                    <span className="text-white font-semibold">{detail.value}</span>
+                    <span className="text-gray-500">{detail.label}</span>
+                    <span className="text-gray-900 font-semibold">{detail.value}</span>
                   </div>
                 ))}
               </div>
@@ -331,14 +331,14 @@ export default function FixAndFlipLoansPage() {
         </section>
 
         {/* Process Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   The Flipping Process
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   From deal finding to profit taking
                 </p>
               </div>
@@ -347,14 +347,14 @@ export default function FixAndFlipLoansPage() {
                 {flippingProcess.map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-4 bg-slate-900 rounded-xl p-5 border border-slate-800"
+                    className="flex items-start gap-4 bg-gray-50 rounded-xl p-5 border border-gray-200"
                   >
-                    <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center text-slate-900 font-bold flex-shrink-0">
+                    <div className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
                       {item.step}
                     </div>
                     <div>
-                      <h3 className="text-white font-semibold mb-1">{item.title}</h3>
-                      <p className="text-gray-400 text-sm">{item.description}</p>
+                      <h3 className="text-gray-900 font-semibold mb-1">{item.title}</h3>
+                      <p className="text-gray-500 text-sm">{item.description}</p>
                     </div>
                   </div>
                 ))}
@@ -364,14 +364,14 @@ export default function FixAndFlipLoansPage() {
         </section>
 
         {/* Experience Levels */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Terms by Experience Level
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   More experience = better terms
                 </p>
               </div>
@@ -380,21 +380,21 @@ export default function FixAndFlipLoansPage() {
                 {experienceLevels.map((exp, index) => (
                   <div
                     key={index}
-                    className="bg-slate-900 rounded-2xl p-6 border border-slate-800"
+                    className="bg-gray-50 rounded-2xl p-6 border border-gray-200"
                   >
-                    <h3 className="text-lg font-bold text-amber-500 mb-4">{exp.level}</h3>
+                    <h3 className="text-lg font-bold text-teal-600 mb-4">{exp.level}</h3>
                     <div className="space-y-3 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Max LTC</span>
-                        <span className="text-white font-semibold">{exp.ltc}</span>
+                        <span className="text-gray-500">Max LTC</span>
+                        <span className="text-gray-900 font-semibold">{exp.ltc}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Rate Range</span>
-                        <span className="text-white font-semibold">{exp.rate}</span>
+                        <span className="text-gray-500">Rate Range</span>
+                        <span className="text-gray-900 font-semibold">{exp.rate}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Reserves</span>
-                        <span className="text-white font-semibold">{exp.reserves}</span>
+                        <span className="text-gray-500">Reserves</span>
+                        <span className="text-gray-900 font-semibold">{exp.reserves}</span>
                       </div>
                     </div>
                   </div>
@@ -404,11 +404,11 @@ export default function FixAndFlipLoansPage() {
               <div className="mt-8 text-center">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold"
                   asChild
                 >
                   <Link href="/get-quote">
-                    Get Your Flip Quote <ArrowRight className="ml-2 h-5 w-5" />
+                    Compare Flip Rates <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
               </div>
@@ -417,61 +417,61 @@ export default function FixAndFlipLoansPage() {
         </section>
 
         {/* Comparison Section */}
-        <section className="py-20 border-t border-slate-800">
+        <section className="py-20 border-t border-gray-200">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   Compare Investor Loan Options
                 </h2>
-                <p className="text-gray-400">Find the right product for your strategy</p>
+                <p className="text-gray-500">Find the right product for your strategy</p>
               </div>
 
               <div className="grid md:grid-cols-3 gap-6">
                 <Link
                   href="/investment/dscr-loans"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     DSCR Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     For stabilized rentals you'll hold long-term. Lower rates, 30-year terms.
                     Refinance your flip into DSCR if you decide to keep it.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
 
                 <Link
                   href="/investment/bridge-loans"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     Bridge Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     Similar to fix & flip but for properties needing light work or stabilization.
                     Typically lower rates than hard money.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
 
                 <Link
                   href="/investment/portfolio-loans"
-                  className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-amber-500/50 transition-colors group"
+                  className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-teal-600/50 transition-colors group"
                 >
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-amber-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-teal-600">
                     Portfolio Loans
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     Finance multiple flips under one loan. Ideal for high-volume flippers doing
                     5+ deals simultaneously.
                   </p>
-                  <span className="text-amber-500 text-sm font-medium flex items-center gap-1">
+                  <span className="text-teal-600 text-sm font-medium flex items-center gap-1">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
@@ -481,23 +481,23 @@ export default function FixAndFlipLoansPage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-20 border-t border-slate-800 bg-slate-900/50">
+        <section className="py-20 border-t border-gray-200 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl font-bold text-white text-center mb-10">
+              <h2 className="text-3xl font-bold text-gray-900 text-center mb-10">
                 Fix & Flip Loan FAQs
               </h2>
               <div className="space-y-4">
                 {faqItems.map((item, index) => (
                   <details
                     key={index}
-                    className="group bg-slate-900 rounded-xl border border-slate-800 overflow-hidden"
+                    className="group bg-gray-50 rounded-xl border border-gray-200 overflow-hidden"
                   >
-                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-slate-800/50 transition-colors">
-                      <h3 className="font-semibold text-white pr-4">{item.question}</h3>
-                      <ChevronDown className="h-5 w-5 text-gray-400 group-open:rotate-180 transition-transform flex-shrink-0" />
+                    <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                      <h3 className="font-semibold text-gray-900 pr-4">{item.question}</h3>
+                      <ChevronDown className="h-5 w-5 text-gray-500 group-open:rotate-180 transition-transform flex-shrink-0" />
                     </summary>
-                    <div className="px-5 pb-5 text-gray-400">
+                    <div className="px-5 pb-5 text-gray-500">
                       <p>{item.answer}</p>
                     </div>
                   </details>
@@ -508,27 +508,27 @@ export default function FixAndFlipLoansPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-20 border-t border-slate-800 bg-gradient-to-b from-slate-900 to-slate-950">
+        <section className="py-20 border-t border-gray-200 bg-gradient-to-b from-gray-50 to-white">
           <div className="container mx-auto px-4 text-center">
-            <Hammer className="h-12 w-12 text-amber-500 mx-auto mb-6" />
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            <Hammer className="h-12 w-12 text-teal-600 mx-auto mb-6" />
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               Ready to Fund Your Next Flip?
             </h2>
-            <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-              Get matched with hard money lenders who close fast on California flips.
-              Same-day pre-approval. 7-14 day closing. 90% LTC available.
+            <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
+              Connect with hard money lenders who close fast on California flips.
+              Same-day pre-approval. Lenders close in 7-14 days. 90% LTC available.
             </p>
             <Button
               size="lg"
-              className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg px-10"
+              className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-10"
               asChild
             >
               <Link href="/get-quote">
-                Get Flip Financing <ArrowRight className="ml-2 h-5 w-5" />
+                Compare Flip Rates <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <p className="text-sm text-gray-500 mt-4">
-              NMLS #1945913 | California Hard Money Specialists
+              California Hard Money Lending Network | Equal Housing Opportunity
             </p>
           </div>
         </section>

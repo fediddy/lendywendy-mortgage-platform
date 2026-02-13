@@ -343,30 +343,30 @@ export function RentVsBuyCalculator() {
             <div className="border-t pt-4">
               {/* Recommendation Alert */}
               {result.recommendation === "buy" && (
-                <Alert className="mb-4 bg-emerald-500/10 border-emerald-500/30">
-                  <TrendingUp className="h-4 w-4 text-green-600" />
-                  <AlertTitle className="text-emerald-300">Buying Looks Better!</AlertTitle>
-                  <AlertDescription className="text-emerald-200">
+                <Alert className="mb-4 bg-emerald-50 border-emerald-600/30">
+                  <TrendingUp className="h-4 w-4 text-emerald-600" />
+                  <AlertTitle className="text-emerald-600">Buying Looks Better!</AlertTitle>
+                  <AlertDescription className="text-emerald-600">
                     Based on your inputs, buying would save you ${Math.abs(result.netDifference).toLocaleString('en-US', { maximumFractionDigits: 0 })} over {yearsToAnalyze} years compared to renting.
                   </AlertDescription>
                 </Alert>
               )}
 
               {result.recommendation === "rent" && (
-                <Alert className="mb-4 bg-blue-500/10 border-blue-500/30">
-                  <Home className="h-4 w-4 text-blue-600" />
-                  <AlertTitle className="text-blue-300">Renting May Be Better</AlertTitle>
-                  <AlertDescription className="text-blue-200">
+                <Alert className="mb-4 bg-teal-50 border-teal-600/30">
+                  <Home className="h-4 w-4 text-teal-600" />
+                  <AlertTitle className="text-teal-600">Renting May Be Better</AlertTitle>
+                  <AlertDescription className="text-teal-600">
                     Renting could save you ${Math.abs(result.netDifference).toLocaleString('en-US', { maximumFractionDigits: 0 })} over {yearsToAnalyze} years. Consider your plans and other factors.
                   </AlertDescription>
                 </Alert>
               )}
 
               {result.recommendation === "close" && (
-                <Alert className="mb-4 bg-amber-500/10 border-amber-500/30">
-                  <DollarSign className="h-4 w-4 text-yellow-600" />
-                  <AlertTitle className="text-amber-300">It's Close!</AlertTitle>
-                  <AlertDescription className="text-amber-200">
+                <Alert className="mb-4 bg-amber-50 border-amber-600/30">
+                  <DollarSign className="h-4 w-4 text-amber-600" />
+                  <AlertTitle className="text-amber-600">It's Close!</AlertTitle>
+                  <AlertDescription className="text-amber-600">
                     The costs are similar. Consider lifestyle factors, job stability, and how long you plan to stay.
                   </AlertDescription>
                 </Alert>
@@ -376,31 +376,31 @@ export function RentVsBuyCalculator() {
 
               {/* Cost Comparison */}
               <div className="grid md:grid-cols-2 gap-4 mb-6">
-                <Card className="bg-blue-500/10 border-blue-500/30">
+                <Card className="bg-teal-50 border-teal-600/30">
                   <CardContent className="pt-6">
                     <div className="flex items-center gap-2 mb-2">
-                      <Home className="w-5 h-5 text-blue-600" />
-                      <p className="text-sm font-medium text-blue-300">Total Cost of Renting</p>
+                      <Home className="w-5 h-5 text-teal-600" />
+                      <p className="text-sm font-medium text-teal-600">Total Cost of Renting</p>
                     </div>
-                    <p className="text-3xl font-bold text-blue-600">
+                    <p className="text-3xl font-bold text-teal-600">
                       ${result.totalCostRenting.toLocaleString('en-US', { maximumFractionDigits: 0 })}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       Starting at ${monthlyRent}/mo, {rentIncrease}% annual increase
                     </p>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-emerald-500/10 border-emerald-500/30">
+                <Card className="bg-emerald-50 border-emerald-600/30">
                   <CardContent className="pt-6">
                     <div className="flex items-center gap-2 mb-2">
-                      <TrendingUp className="w-5 h-5 text-green-600" />
-                      <p className="text-sm font-medium text-emerald-300">Net Cost of Buying</p>
+                      <TrendingUp className="w-5 h-5 text-emerald-600" />
+                      <p className="text-sm font-medium text-emerald-600">Net Cost of Buying</p>
                     </div>
-                    <p className="text-3xl font-bold text-green-600">
+                    <p className="text-3xl font-bold text-emerald-600">
                       ${result.totalCostBuying.toLocaleString('en-US', { maximumFractionDigits: 0 })}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       After accounting for ${result.homeEquity.toLocaleString('en-US', { maximumFractionDigits: 0 })} equity
                     </p>
                   </CardContent>
@@ -409,61 +409,61 @@ export function RentVsBuyCalculator() {
 
               {/* Key Metrics */}
               <div className="space-y-3">
-                <div className="p-4 bg-slate-800 rounded-lg">
+                <div className="p-4 bg-gray-100 rounded-lg">
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Monthly Cost Comparison</span>
                   </div>
                   <div className="mt-2 space-y-1 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Rent (starting)</span>
+                      <span className="text-gray-600">Rent (starting)</span>
                       <span>${monthlyRent.toLocaleString('en-US', { maximumFractionDigits: 0 })}/mo</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Homeownership (total)</span>
+                      <span className="text-gray-600">Homeownership (total)</span>
                       <span>${result.monthlyMortgage.toLocaleString('en-US', { maximumFractionDigits: 0 })}/mo</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-4 bg-slate-800 rounded-lg">
+                <div className="p-4 bg-gray-100 rounded-lg">
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Home Equity Built</span>
-                    <span className="text-lg font-bold text-green-600">
+                    <span className="text-lg font-bold text-emerald-600">
                       ${result.homeEquity.toLocaleString('en-US', { maximumFractionDigits: 0 })}
                     </span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-gray-600 mt-1">
                     Home value: ${result.homeValue.toLocaleString('en-US', { maximumFractionDigits: 0 })} (from ${homePrice.toLocaleString('en-US', { maximumFractionDigits: 0 })})
                   </p>
                 </div>
 
-                <div className="p-4 bg-slate-800 rounded-lg">
+                <div className="p-4 bg-gray-100 rounded-lg">
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Break-Even Point</span>
                     <span className="text-lg font-bold">
                       {result.breakEvenYears} years
                     </span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-gray-600 mt-1">
                     When buying becomes cheaper than renting
                   </p>
                 </div>
 
-                <div className="p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+                <div className="p-4 bg-purple-50 border border-purple-600/30 rounded-lg">
                   <div className="flex justify-between items-center">
                     <span className="font-semibold">Net Difference</span>
-                    <span className={`text-xl font-bold ${result.netDifference > 0 ? "text-green-600" : "text-red-600"}`}>
+                    <span className={`text-xl font-bold ${result.netDifference > 0 ? "text-emerald-600" : "text-red-600"}`}>
                       {result.netDifference > 0 ? "Save " : "Cost "}${Math.abs(result.netDifference).toLocaleString('en-US', { maximumFractionDigits: 0 })}
                     </span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-gray-600 mt-1">
                     By buying instead of renting over {yearsToAnalyze} years
                   </p>
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                <p className="text-sm text-blue-300">
+              <div className="mt-6 p-4 bg-teal-50 border border-teal-600/30 rounded-lg">
+                <p className="text-sm text-teal-600">
                   <strong>Important:</strong> This analysis considers financial factors only.
                   Also consider lifestyle, job stability, mobility needs, and local market conditions.
                 </p>
