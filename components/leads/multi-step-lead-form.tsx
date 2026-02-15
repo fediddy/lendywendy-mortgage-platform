@@ -5,8 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+// Card/Progress replaced with custom markup for design consistency
 import { Segment, LoanType, PropertyType, CreditRange, Timeline, EmploymentStatus } from "@prisma/client";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
@@ -114,27 +113,31 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
   };
 
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>Get Matched with Lenders</CardTitle>
-        <CardDescription>
-          Compare rates from top lenders in minutes. No commitment required.
-        </CardDescription>
-        <Progress value={progress} className="mt-4" />
-        <p className="text-sm text-muted-foreground mt-2">
-          Step {step} of {totalSteps}
-        </p>
-      </CardHeader>
+    <div className={className}>
+      {/* Header with progress */}
+      <div className="px-6 pt-6 pb-4 border-b border-gray-100">
+        <div className="flex items-center justify-between mb-1">
+          <h2 className="text-lg font-bold text-gray-900">Get Matched with Lenders</h2>
+          <span className="text-sm font-medium text-teal-600">Step {step}/{totalSteps}</span>
+        </div>
+        <p className="text-sm text-gray-500 mb-4">Compare rates from top lenders in minutes. No commitment required.</p>
+        <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full transition-all duration-500 ease-out"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
 
-      <CardContent>
+      <div className="px-6 py-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Step 1: Loan Type */}
           {step === 1 && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium mb-2">What type of mortgage do you need?</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">What type of mortgage do you need?</label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.RESIDENTIAL ? 'border-teal-600 bg-teal-50' : 'hover:border-gray-300'}`}>
+                  <label className={`flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${segment === Segment.RESIDENTIAL ? 'border-teal-500 bg-teal-50 shadow-sm shadow-teal-500/10' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}>
                     <input
                       type="radio"
                       value={Segment.RESIDENTIAL}
@@ -142,12 +145,12 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                       className="sr-only"
                     />
                     <span className="text-center">
-                      <div className="font-semibold">Residential</div>
-                      <div className="text-xs text-muted-foreground">Home Purchase or Refinance</div>
+                      <div className="font-semibold text-gray-900">Residential</div>
+                      <div className="text-xs text-gray-500 mt-0.5">Home Purchase or Refinance</div>
                     </span>
                   </label>
 
-                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.INVESTMENT ? 'border-teal-600 bg-teal-50' : 'hover:border-gray-300'}`}>
+                  <label className={`flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${segment === Segment.INVESTMENT ? 'border-teal-500 bg-teal-50 shadow-sm shadow-teal-500/10' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}>
                     <input
                       type="radio"
                       value={Segment.INVESTMENT}
@@ -155,12 +158,12 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                       className="sr-only"
                     />
                     <span className="text-center">
-                      <div className="font-semibold">Investment</div>
-                      <div className="text-xs text-muted-foreground">Rental or Investment Property</div>
+                      <div className="font-semibold text-gray-900">Investment</div>
+                      <div className="text-xs text-gray-500 mt-0.5">Rental or Investment Property</div>
                     </span>
                   </label>
 
-                  <label className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors ${segment === Segment.COMMERCIAL ? 'border-teal-600 bg-teal-50' : 'hover:border-gray-300'}`}>
+                  <label className={`flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${segment === Segment.COMMERCIAL ? 'border-teal-500 bg-teal-50 shadow-sm shadow-teal-500/10' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}>
                     <input
                       type="radio"
                       value={Segment.COMMERCIAL}
@@ -168,8 +171,8 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                       className="sr-only"
                     />
                     <span className="text-center">
-                      <div className="font-semibold">Commercial</div>
-                      <div className="text-xs text-muted-foreground">Business or Commercial Property</div>
+                      <div className="font-semibold text-gray-900">Commercial</div>
+                      <div className="text-xs text-gray-500 mt-0.5">Business or Commercial Property</div>
                     </span>
                   </label>
                 </div>
@@ -177,10 +180,10 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Specific loan type</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Specific loan type</label>
                 <select
                   {...register("loanType")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-colors"
                 >
                   <option value="">Select loan type...</option>
                   {getLoanTypesForSegment(segment).map((type) => (
@@ -196,12 +199,12 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
 
           {/* Step 2: Property Details */}
           {step === 2 && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium mb-2">Property type</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Property type</label>
                 <select
                   {...register("propertyType")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-colors"
                 >
                   <option value="">Select property type...</option>
                   {getPropertyTypesForSegment(segment).map((type) => (
@@ -213,26 +216,26 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
                   {loanType === LoanType.PURCHASE ? "Purchase price" : "Estimated property value"}
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-muted-foreground">$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
                   <input
                     type="number"
                     {...register("propertyValue", { valueAsNumber: true })}
-                    className="w-full pl-7 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                    className="w-full pl-8 pr-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-colors"
                     placeholder="300000"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Property location</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Property location</label>
                 <input
                   type="text"
                   {...register("propertyLocation")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-colors"
                   placeholder="City, State or ZIP"
                 />
               </div>
@@ -241,35 +244,35 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
 
           {/* Step 3: Contact Information */}
           {step === 3 && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium mb-2">Full name *</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Full name *</label>
                 <input
                   type="text"
                   {...register("name")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-colors"
                   placeholder="John Doe"
                 />
                 {errors.name && <p className="text-sm text-red-600 mt-1">{errors.name.message}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Email address *</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Email address *</label>
                 <input
                   type="email"
                   {...register("email")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-colors"
                   placeholder="john@example.com"
                 />
                 {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Phone number (optional)</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Phone number (optional)</label>
                 <input
                   type="tel"
                   {...register("phone")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-colors"
                   placeholder="(555) 123-4567"
                 />
               </div>
@@ -278,12 +281,12 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
 
           {/* Step 4: Qualification */}
           {step === 4 && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium mb-2">Credit score range</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Credit score range</label>
                 <select
                   {...register("creditRange")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-colors"
                 >
                   <option value="">Select credit range...</option>
                   <option value={CreditRange.EXCELLENT_740_PLUS}>Excellent (740+)</option>
@@ -295,23 +298,23 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Down payment amount</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Down payment amount</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-muted-foreground">$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
                   <input
                     type="number"
                     {...register("downPayment", { valueAsNumber: true })}
-                    className="w-full pl-7 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                    className="w-full pl-8 pr-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-colors"
                     placeholder="60000"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">When do you need the loan?</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">When do you need the loan?</label>
                 <select
                   {...register("timeline")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-colors"
                 >
                   <option value="">Select timeline...</option>
                   <option value={Timeline.ASAP}>As soon as possible</option>
@@ -324,10 +327,10 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Employment status</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Employment status</label>
                 <select
                   {...register("employmentStatus")}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-colors"
                 >
                   <option value="">Select employment status...</option>
                   <option value={EmploymentStatus.EMPLOYED_W2}>Employed (W-2)</option>
@@ -339,13 +342,13 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Annual household income</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Annual household income</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-muted-foreground">$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
                   <input
                     type="number"
                     {...register("annualIncome", { valueAsNumber: true })}
-                    className="w-full pl-7 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                    className="w-full pl-8 pr-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-colors"
                     placeholder="75000"
                   />
                 </div>
@@ -354,27 +357,27 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
           )}
 
           {submitError && (
-            <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-              <p className="text-sm text-red-400">{submitError}</p>
+            <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+              <p className="text-sm text-red-600">{submitError}</p>
             </div>
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between pt-4 border-t">
+          <div className="flex justify-between pt-5 border-t border-gray-100">
             {step > 1 && (
-              <Button type="button" variant="outline" onClick={prevStep}>
+              <Button type="button" variant="outline" onClick={prevStep} className="border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl px-5 cursor-pointer">
                 <ChevronLeft className="w-4 h-4 mr-2" />
                 Back
               </Button>
             )}
 
             {step < totalSteps ? (
-              <Button type="button" onClick={nextStep} className="ml-auto">
+              <Button type="button" onClick={nextStep} className="ml-auto bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-700 hover:to-teal-600 text-white font-semibold rounded-xl px-6 shadow-md shadow-teal-600/15 cursor-pointer">
                 Next
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             ) : (
-              <Button type="submit" disabled={isSubmitting} className="ml-auto">
+              <Button type="submit" disabled={isSubmitting} className="ml-auto bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold rounded-xl px-8 shadow-lg shadow-teal-600/20 cursor-pointer">
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -387,8 +390,8 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
             )}
           </div>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 

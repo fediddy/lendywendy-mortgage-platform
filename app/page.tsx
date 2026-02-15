@@ -11,7 +11,6 @@ import {
   Shield,
   Clock,
   Zap,
-  Phone,
   Star,
   MapPin,
   BadgeCheck,
@@ -28,6 +27,8 @@ import {
   Briefcase,
   BarChart3,
   ArrowUpRight,
+  Users,
+  ChevronRight,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -86,34 +87,37 @@ export default function HomePage() {
       <StructuredData
         type="home"
         pageTitle="LendyWendy | Investor Loans California | DSCR, Fix & Flip, Bridge Financing"
-        pageDescription="Close your next investment property in 14 days. DSCR loans with no tax returns, fix-and-flip financing, bridge loans, portfolio lending. Built for California real estate investors. NMLS #1945913."
+        pageDescription="Close your next investment property in 14 days. DSCR loans with no tax returns, fix-and-flip financing, bridge loans, portfolio lending. Built for California real estate investors."
         pageUrl="/"
       />
 
       <main className="min-h-screen bg-white text-gray-900 overflow-hidden">
-        {/* Subtle ambient background */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-600/5 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-50 rounded-full blur-[120px]" />
-        </div>
 
         {/* ============ HERO - INVESTOR FOCUSED ============ */}
-        <section className="relative pt-6 pb-16 lg:pt-10 lg:pb-24">
-          <div className="container mx-auto px-4">
+        <section className="relative pt-6 pb-16 lg:pt-10 lg:pb-24 overflow-hidden">
+          {/* Hero background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+          {/* Decorative orbs */}
+          <div className="absolute top-20 right-[10%] w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 left-[5%] w-[400px] h-[400px] bg-teal-600/8 rounded-full blur-[100px]" />
+          {/* Grid pattern overlay */}
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+
+          <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-6xl mx-auto">
               {/* Compact trust bar */}
               <div className={`flex flex-wrap items-center justify-center gap-6 mb-8 text-sm transition-all duration-500 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
-                <div className="flex items-center gap-2 text-gray-500">
-                  <Shield className="h-4 w-4 text-teal-600" />
+                <div className="flex items-center gap-2 text-slate-400">
+                  <Shield className="h-4 w-4 text-teal-400" />
                   <span>Free Service</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-500">
-                  <BarChart3 className="h-4 w-4 text-emerald-600" />
-                  <span><strong className="text-gray-900">15+</strong> California Lenders</span>
+                <div className="flex items-center gap-2 text-slate-400">
+                  <BarChart3 className="h-4 w-4 text-teal-400" />
+                  <span><strong className="text-white">15+</strong> California Lenders</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-500">
-                  <Timer className="h-4 w-4 text-teal-600" />
-                  <span><strong className="text-gray-900">14-Day</strong> Avg Lender Close</span>
+                <div className="flex items-center gap-2 text-slate-400">
+                  <Timer className="h-4 w-4 text-teal-400" />
+                  <span><strong className="text-white">14-Day</strong> Avg Lender Close</span>
                 </div>
               </div>
 
@@ -121,21 +125,21 @@ export default function HomePage() {
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 {/* Left - Message */}
                 <div className={`transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-500/20 text-emerald-600 text-sm font-medium mb-6">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-sm font-medium mb-6">
                     <Zap className="h-4 w-4" />
                     Built for investors who move fast
                   </div>
 
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6">
+                  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 text-white">
                     Close your next deal
                     <br />
-                    <span className="bg-gradient-to-r from-teal-600 to-teal-500 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
                       in 14 days.
                     </span>
                   </h1>
 
-                  <p className="text-xl text-gray-500 mb-8 max-w-lg">
-                    DSCR loans with <strong className="text-gray-900">no tax returns</strong>. Fix-and-flip in 7 days. Scale to 100+ properties. California investor lending that moves at your speed.
+                  <p className="text-xl text-slate-400 mb-8 max-w-lg">
+                    DSCR loans with <strong className="text-white">no tax returns</strong>. Fix-and-flip in 7 days. Scale to 100+ properties. California investor lending that moves at your speed.
                   </p>
 
                   {/* Key value props */}
@@ -146,9 +150,9 @@ export default function HomePage() {
                       { icon: Layers, text: "Unlimited properties" },
                       { icon: Wallet, text: "Qualify on rent" },
                     ].map((item, i) => (
-                      <div key={i} className="flex items-center gap-3 text-gray-600">
-                        <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
-                          <item.icon className="h-4 w-4 text-teal-600" />
+                      <div key={i} className="flex items-center gap-3 text-slate-300">
+                        <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
+                          <item.icon className="h-4 w-4 text-teal-400" />
                         </div>
                         <span className="text-sm font-medium">{item.text}</span>
                       </div>
@@ -159,7 +163,7 @@ export default function HomePage() {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button
                       size="lg"
-                      className="bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-700 hover:to-teal-600 text-white font-bold text-lg h-14 px-8 rounded-xl shadow-lg shadow-teal-600/20 hover:shadow-xl hover:shadow-teal-600/25 hover:scale-[1.02] transition-all cursor-pointer"
+                      className="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-bold text-lg h-14 px-8 rounded-xl shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30 hover:scale-[1.02] transition-all cursor-pointer"
                       asChild
                     >
                       <Link href="/get-quote">
@@ -169,7 +173,7 @@ export default function HomePage() {
                     <Button
                       size="lg"
                       variant="outline"
-                      className="border-gray-200 bg-gray-50 text-gray-900 hover:bg-gray-100 font-medium h-14 px-6 rounded-xl cursor-pointer"
+                      className="border-white/20 bg-white/5 text-white hover:bg-white/10 font-medium h-14 px-6 rounded-xl cursor-pointer"
                       asChild
                     >
                       <Link href="/investment">
@@ -181,63 +185,63 @@ export default function HomePage() {
 
                 {/* Right - Quick Rate Calculator */}
                 <div className={`transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                  <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6">
+                  <div className="bg-white/[0.07] backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl shadow-black/20">
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 rounded-xl bg-teal-600/10 flex items-center justify-center">
-                        <Calculator className="h-5 w-5 text-teal-600" />
+                      <div className="w-10 h-10 rounded-xl bg-teal-500/20 flex items-center justify-center">
+                        <Calculator className="h-5 w-5 text-teal-400" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-gray-900">Quick Rate Estimate</h3>
-                        <p className="text-xs text-gray-500">Estimate from Our Lender Network</p>
+                        <h3 className="font-semibold text-white">Quick Rate Estimate</h3>
+                        <p className="text-xs text-slate-400">Estimate from Our Lender Network</p>
                       </div>
                     </div>
 
                     <div className="space-y-4 mb-6">
                       <div>
-                        <label className="text-sm text-gray-500 mb-2 block">Property Value</label>
+                        <label className="text-sm text-slate-400 mb-2 block">Property Value</label>
                         <div className="relative">
-                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">$</span>
                           <input
                             type="number"
                             value={calcValues.propertyValue}
                             onChange={(e) => setCalcValues(prev => ({ ...prev, propertyValue: Number(e.target.value) }))}
-                            className="w-full bg-gray-100 border border-gray-200 rounded-xl pl-8 pr-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-600/50 focus:border-teal-600"
+                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-8 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 placeholder-slate-500"
                           />
                         </div>
                       </div>
                       <div>
-                        <label className="text-sm text-gray-500 mb-2 block">Loan Amount</label>
+                        <label className="text-sm text-slate-400 mb-2 block">Loan Amount</label>
                         <div className="relative">
-                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">$</span>
                           <input
                             type="number"
                             value={calcValues.loanAmount}
                             onChange={(e) => setCalcValues(prev => ({ ...prev, loanAmount: Number(e.target.value) }))}
-                            className="w-full bg-gray-100 border border-gray-200 rounded-xl pl-8 pr-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-600/50 focus:border-teal-600"
+                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-8 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 placeholder-slate-500"
                           />
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-gray-100/50 rounded-xl p-4 mb-4">
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-4 mb-4">
                       <div className="grid grid-cols-3 gap-4 text-center">
                         <div>
-                          <div className="text-2xl font-bold text-teal-600">{estimatedRate}%</div>
-                          <div className="text-xs text-gray-500">Est. Rate</div>
+                          <div className="text-2xl font-bold text-teal-400">{estimatedRate}%</div>
+                          <div className="text-xs text-slate-400">Est. Rate</div>
                         </div>
                         <div>
-                          <div className="text-2xl font-bold text-gray-900">${monthlyPayment.toLocaleString()}</div>
-                          <div className="text-xs text-gray-500">Monthly</div>
+                          <div className="text-2xl font-bold text-white">${monthlyPayment.toLocaleString()}</div>
+                          <div className="text-xs text-slate-400">Monthly</div>
                         </div>
                         <div>
-                          <div className="text-2xl font-bold text-gray-900">{ltv}%</div>
-                          <div className="text-xs text-gray-500">LTV</div>
+                          <div className="text-2xl font-bold text-white">{ltv}%</div>
+                          <div className="text-xs text-slate-400">LTV</div>
                         </div>
                       </div>
                     </div>
 
                     <Button
-                      className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold h-12 rounded-xl cursor-pointer"
+                      className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-bold h-12 rounded-xl shadow-lg shadow-teal-500/20 cursor-pointer"
                       asChild
                     >
                       <Link href="/get-quote">
@@ -245,7 +249,7 @@ export default function HomePage() {
                       </Link>
                     </Button>
 
-                    <p className="text-xs text-gray-400 text-center mt-3">
+                    <p className="text-xs text-slate-500 text-center mt-3">
                       Rates shown are estimates from our lender network. Actual rates vary by lender, credit score, and property.
                     </p>
                   </div>
@@ -253,17 +257,31 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+
+          {/* Hero bottom wave/curve transition */}
+          <div className="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full" preserveAspectRatio="none">
+              <path d="M0 60V30C240 5 480 0 720 10C960 20 1200 40 1440 30V60H0Z" fill="white" />
+            </svg>
+          </div>
         </section>
 
         {/* ============ INVESTOR LOAN PRODUCTS ============ */}
-        <section className="relative py-16 lg:py-20 border-t border-gray-200/50">
-          <div className="container mx-auto px-4">
+        <section className="relative py-16 lg:py-24">
+          {/* Subtle background texture */}
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-50 rounded-full blur-[150px] opacity-50" />
+
+          <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-12">
+              <div className="text-center mb-14">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200 text-teal-700 text-sm font-medium mb-4">
+                  <TrendingUp className="h-4 w-4" />
+                  Investment Products
+                </div>
                 <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                   Investor Loan Products
                 </h2>
-                <p className="text-gray-500 max-w-2xl mx-auto">
+                <p className="text-gray-500 max-w-2xl mx-auto text-lg">
                   Purpose-built financing for real estate investors. No W2s. No tax returns. Just results.
                 </p>
               </div>
@@ -272,22 +290,24 @@ export default function HomePage() {
                 {investorLoans.map((loan, i) => (
                   <div
                     key={i}
-                    className={`relative bg-white backdrop-blur-sm border rounded-2xl p-6 hover:border-gray-300 transition-all cursor-pointer ${
-                      loan.highlight ? 'border-teal-600/50' : 'border-gray-200'
+                    className={`group relative bg-white border rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer ${
+                      loan.highlight
+                        ? 'border-teal-200 shadow-md shadow-teal-500/5 ring-1 ring-teal-100'
+                        : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     {loan.highlight && (
-                      <div className="absolute -top-3 left-6 px-3 py-1 bg-teal-600 text-white text-xs font-bold rounded-full">
+                      <div className="absolute -top-3 left-6 px-3 py-1 bg-gradient-to-r from-teal-600 to-emerald-600 text-white text-xs font-bold rounded-full shadow-md shadow-teal-600/20">
                         MOST POPULAR
                       </div>
                     )}
 
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                          loan.highlight ? 'bg-teal-600/20' : 'bg-gray-100'
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
+                          loan.highlight ? 'bg-teal-50 group-hover:bg-teal-100' : 'bg-gray-50 group-hover:bg-gray-100'
                         }`}>
-                          <loan.icon className={`h-6 w-6 ${loan.highlight ? 'text-teal-600' : 'text-gray-500'}`} />
+                          <loan.icon className={`h-6 w-6 ${loan.highlight ? 'text-teal-600' : 'text-gray-500 group-hover:text-teal-600'} transition-colors`} />
                         </div>
                         <div>
                           <h3 className="font-bold text-gray-900 text-lg">{loan.name}</h3>
@@ -303,7 +323,7 @@ export default function HomePage() {
                     <div className="grid grid-cols-2 gap-2 mb-4">
                       {loan.features.map((feature, j) => (
                         <div key={j} className="flex items-center gap-2 text-sm text-gray-600">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-600 flex-shrink-0" />
+                          <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
                           {feature}
                         </div>
                       ))}
@@ -311,7 +331,7 @@ export default function HomePage() {
 
                     <Button
                       variant="outline"
-                      className="w-full border-gray-200 bg-gray-100/50 text-gray-900 hover:bg-gray-200 h-10 rounded-xl cursor-pointer"
+                      className="w-full border-gray-200 bg-gray-50 text-gray-900 hover:bg-teal-50 hover:border-teal-200 hover:text-teal-700 h-10 rounded-xl cursor-pointer transition-colors"
                       asChild
                     >
                       <Link href="/get-quote">
@@ -327,18 +347,18 @@ export default function HomePage() {
         </section>
 
         {/* ============ PRIMARY RESIDENCE LOANS ============ */}
-        <section className="relative py-16 lg:py-20 border-t border-gray-200/50 bg-gray-50/50">
+        <section className="relative py-16 lg:py-24 bg-gradient-to-b from-gray-50 to-white">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-12">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 text-sm font-medium mb-4">
+              <div className="text-center mb-14">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-sm font-medium mb-4">
                   <Home className="h-4 w-4" />
                   Primary Residence Loans
                 </div>
                 <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                   Buying Your Home? We Do That Too.
                 </h2>
-                <p className="text-gray-500 max-w-2xl mx-auto">
+                <p className="text-gray-500 max-w-2xl mx-auto text-lg">
                   Conventional, FHA, VA, and Jumbo loans for California homebuyers. First-time buyers welcome.
                 </p>
               </div>
@@ -381,11 +401,11 @@ export default function HomePage() {
                   <Link
                     key={i}
                     href={loan.href}
-                    className="group bg-white backdrop-blur-sm border border-gray-200 rounded-2xl p-5 hover:border-blue-500/40 transition-all cursor-pointer"
+                    className="group bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-lg hover:border-blue-200 transition-all duration-300 cursor-pointer"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="font-bold text-gray-900">{loan.name}</h3>
-                      <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
+                      <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
                         {loan.highlight}
                       </span>
                     </div>
@@ -396,7 +416,7 @@ export default function HomePage() {
                     <div className="space-y-1.5 mb-4">
                       {loan.features.map((f, j) => (
                         <div key={j} className="flex items-center gap-2 text-xs text-gray-500">
-                          <CheckCircle2 className="h-3 w-3 text-emerald-600 flex-shrink-0" />
+                          <CheckCircle2 className="h-3 w-3 text-emerald-500 flex-shrink-0" />
                           {f}
                         </div>
                       ))}
@@ -408,10 +428,10 @@ export default function HomePage() {
                 ))}
               </div>
 
-              <div className="mt-8 text-center">
+              <div className="mt-10 text-center">
                 <Button
                   variant="outline"
-                  className="border-gray-200 bg-gray-50 text-gray-900 hover:bg-gray-100 font-medium rounded-xl cursor-pointer"
+                  className="border-gray-200 bg-white text-gray-900 hover:bg-gray-50 font-medium rounded-xl cursor-pointer shadow-sm"
                   asChild
                 >
                   <Link href="/residential">
@@ -424,9 +444,20 @@ export default function HomePage() {
         </section>
 
         {/* ============ SPEED + CREDIBILITY STATS ============ */}
-        <section className="relative py-16 lg:py-20 border-t border-gray-200/50 bg-gray-50">
-          <div className="container mx-auto px-4">
+        <section className="relative py-16 lg:py-20 overflow-hidden">
+          {/* Dark navy background for contrast */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+          <div className="absolute top-0 right-[20%] w-[400px] h-[400px] bg-teal-500/10 rounded-full blur-[120px]" />
+
+          <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-3">
+                  Why California Investors Choose Us
+                </h2>
+                <p className="text-slate-400 text-lg">Numbers that speak for themselves.</p>
+              </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 {[
                   { value: "14", unit: "days", label: "Avg. Lender Close Time", icon: Timer },
@@ -434,12 +465,14 @@ export default function HomePage() {
                   { value: "60", unit: "sec", label: "Rate Comparison", icon: DollarSign },
                   { value: "100+", unit: "", label: "Max properties financed", icon: Building2 },
                 ].map((stat, i) => (
-                  <div key={i} className="text-center">
-                    <stat.icon className="h-8 w-8 text-teal-600 mx-auto mb-3" />
-                    <div className="text-3xl lg:text-4xl font-bold text-gray-900">
-                      {stat.value}<span className="text-lg text-gray-500">{stat.unit}</span>
+                  <div key={i} className="text-center bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                    <div className="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center mx-auto mb-4">
+                      <stat.icon className="h-6 w-6 text-teal-400" />
                     </div>
-                    <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
+                    <div className="text-3xl lg:text-4xl font-bold text-white">
+                      {stat.value}<span className="text-lg text-slate-400">{stat.unit}</span>
+                    </div>
+                    <div className="text-sm text-slate-400 mt-1">{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -448,13 +481,20 @@ export default function HomePage() {
         </section>
 
         {/* ============ INVESTOR TESTIMONIALS ============ */}
-        <section className="relative py-16 lg:py-20 border-t border-gray-200/50 bg-gray-50">
-          <div className="container mx-auto px-4">
+        <section className="relative py-16 lg:py-24 bg-gradient-to-b from-white to-gray-50">
+          <div className="absolute bottom-0 left-[10%] w-[500px] h-[500px] bg-emerald-50 rounded-full blur-[150px] opacity-60" />
+
+          <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-12">
+              <div className="text-center mb-14">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-sm font-medium mb-4">
+                  <Star className="h-4 w-4" />
+                  Testimonials
+                </div>
                 <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                   What Borrowers Say
                 </h2>
+                <p className="text-gray-500 text-lg">Real investors, real results.</p>
               </div>
 
               <div className="grid md:grid-cols-3 gap-6">
@@ -478,20 +518,23 @@ export default function HomePage() {
                     metric: "Closed in 12 days",
                   },
                 ].map((t, i) => (
-                  <div key={i} className="bg-white backdrop-blur-sm border border-gray-200 rounded-2xl p-6 hover:border-gray-300 transition-all">
+                  <div key={i} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300">
                     <div className="flex gap-1 mb-4">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-teal-600 text-teal-600" />
+                      {[...Array(5)].map((_, j) => (
+                        <Star key={j} className="h-4 w-4 fill-amber-400 text-amber-400" />
                       ))}
                     </div>
-                    <p className="text-gray-600 text-sm mb-6">&quot;{t.quote}&quot;</p>
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <p className="text-gray-600 text-sm leading-relaxed mb-6">&quot;{t.quote}&quot;</p>
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                       <div>
                         <p className="font-semibold text-gray-900 text-sm">{t.name}</p>
                         <p className="text-xs text-gray-500">{t.detail}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-emerald-600 text-sm">{t.metric}</p>
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+                          <CheckCircle2 className="h-3 w-3" />
+                          {t.metric}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -502,13 +545,17 @@ export default function HomePage() {
         </section>
 
         {/* ============ CALIFORNIA MARKETS ============ */}
-        <section className="relative py-16 lg:py-20 border-t border-gray-200/50">
+        <section className="relative py-16 lg:py-24 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-5xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200 text-teal-700 text-sm font-medium mb-4">
+                <MapPin className="h-4 w-4" />
+                Service Areas
+              </div>
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                 California Investor Markets
               </h2>
-              <p className="text-gray-500 mb-10">
+              <p className="text-gray-500 mb-10 text-lg">
                 Local expertise in every major California investment market.
               </p>
 
@@ -519,7 +566,7 @@ export default function HomePage() {
                   <Link
                     key={city}
                     href={`/california/${city.toLowerCase().replace(" ", "-")}`}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 rounded-full text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-300 transition-all cursor-pointer"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 rounded-full text-gray-900 font-medium shadow-sm hover:shadow-md hover:border-teal-200 hover:bg-teal-50 transition-all duration-200 cursor-pointer"
                   >
                     <MapPin className="h-4 w-4 text-teal-600" />
                     {city}
@@ -534,12 +581,12 @@ export default function HomePage() {
                   <Link
                     key={city}
                     href={`/california/${city.toLowerCase().replace(" ", "-")}`}
-                    className="text-gray-500 hover:text-gray-900 transition-colors cursor-pointer"
+                    className="text-gray-500 hover:text-teal-700 transition-colors cursor-pointer"
                   >
                     {city}
                   </Link>
                 ))}
-                <Link href="/california" className="text-teal-600 hover:text-teal-700 cursor-pointer">
+                <Link href="/california" className="text-teal-600 font-medium hover:text-teal-700 cursor-pointer">
                   All 29 markets →
                 </Link>
               </div>
@@ -548,20 +595,25 @@ export default function HomePage() {
         </section>
 
         {/* ============ FINAL CTA ============ */}
-        <section className="relative py-20 lg:py-28 border-t border-gray-200/50">
-          <div className="absolute inset-0 bg-gradient-to-t from-teal-600/5 via-transparent to-transparent" />
-          <div className="container mx-auto px-4 relative">
+        <section className="relative py-20 lg:py-28 overflow-hidden">
+          {/* Gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-600 via-teal-700 to-emerald-700" />
+          <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+          <div className="absolute top-[20%] left-[10%] w-[400px] h-[400px] bg-white/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-[10%] right-[10%] w-[300px] h-[300px] bg-emerald-500/20 rounded-full blur-[100px]" />
+
+          <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl lg:text-5xl font-bold text-white mb-6">
                 Stop losing deals to slow lenders.
               </h2>
-              <p className="text-xl text-gray-500 mb-10">
+              <p className="text-xl text-teal-100 mb-10">
                 Get investor rates in 60 seconds. Close in as fast as 7 days.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-700 hover:to-teal-600 text-white font-bold text-lg h-16 px-10 rounded-xl shadow-lg shadow-teal-600/20 hover:shadow-xl hover:shadow-teal-600/25 transition-all cursor-pointer"
+                  className="bg-white text-teal-700 hover:bg-gray-100 font-bold text-lg h-16 px-10 rounded-xl shadow-lg shadow-black/10 hover:shadow-xl hover:scale-[1.02] transition-all cursor-pointer"
                   asChild
                 >
                   <Link href="/get-quote">
@@ -571,7 +623,7 @@ export default function HomePage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-gray-200 bg-gray-50 text-gray-900 hover:bg-gray-100 font-medium text-lg h-16 px-10 rounded-xl cursor-pointer"
+                  className="border-white/30 bg-white/10 text-white hover:bg-white/20 font-medium text-lg h-16 px-10 rounded-xl cursor-pointer"
                   asChild
                 >
                   <Link href="/investment">
