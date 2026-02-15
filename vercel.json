@@ -4,10 +4,5 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "outputDirectory": ".next",
-  "regions": ["iad1"],
-  "env": {
-    "DATABASE_URL": "@database-url",
-    "NEXTAUTH_URL": "@nextauth-url",
-    "NEXTAUTH_SECRET": "@nextauth-secret"
-  }
+  "regions": ["iad1"]
 }
