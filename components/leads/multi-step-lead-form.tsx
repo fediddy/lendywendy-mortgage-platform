@@ -48,6 +48,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [tcpaConsent, setTcpaConsent] = useState(false);
 
   const {
     register,
@@ -95,6 +96,8 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
           ...data,
           source: window.location.href,
           userAgent: navigator.userAgent,
+          tcpaConsent: true,
+          consentTimestamp: new Date().toISOString(),
         }),
       });
 
@@ -356,6 +359,27 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
             </div>
           )}
 
+          {/* TCPA Consent - shown on final step */}
+          {step === totalSteps && (
+            <label className="flex items-start gap-3 cursor-pointer p-3 bg-gray-50 rounded-xl border border-gray-200">
+              <input
+                type="checkbox"
+                checked={tcpaConsent}
+                onChange={(e) => setTcpaConsent(e.target.checked)}
+                className="mt-0.5 h-4 w-4 accent-teal-600 flex-shrink-0"
+                required
+              />
+              <span className="text-xs text-gray-500 leading-relaxed">
+                By submitting, I agree to be contacted by phone, email, or text regarding mortgage
+                options by LendyWendy and matched lending partners. I understand this is not a loan
+                application or a condition of any purchase. Standard message and data rates may apply.{" "}
+                <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline">
+                  Privacy Policy
+                </a>
+              </span>
+            </label>
+          )}
+
           {submitError && (
             <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
               <p className="text-sm text-red-600">{submitError}</p>
@@ -377,7 +401,7 @@ export function MultiStepLeadForm({ defaultSegment, onSuccess, className }: Mult
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             ) : (
-              <Button type="submit" disabled={isSubmitting} className="ml-auto bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold rounded-xl px-8 shadow-lg shadow-teal-600/20 cursor-pointer">
+              <Button type="submit" disabled={isSubmitting || !tcpaConsent} className="ml-auto bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold rounded-xl px-8 shadow-lg shadow-teal-600/20 cursor-pointer disabled:opacity-50">
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />

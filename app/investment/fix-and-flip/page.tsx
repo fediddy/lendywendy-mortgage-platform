@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { ReadinessCTA } from '@/components/readiness/ReadinessCTA';
 
 export const metadata: Metadata = {
   title: "California Fix and Flip Loans | Close in 7-14 Days, 90% LTC | LendyWendy",
@@ -532,6 +533,8 @@ export default function FixAndFlipLoansPage() {
             </p>
           </div>
         </section>
+
+        <ReadinessCTA />
       </main>
     </>
   );

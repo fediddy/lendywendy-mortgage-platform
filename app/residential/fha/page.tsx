@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { ReadinessCTA } from '@/components/readiness/ReadinessCTA';
 
 export const metadata: Metadata = {
   title: "California FHA Loans | 3.5% Down, 580 Credit Score | LendyWendy",
@@ -526,6 +527,8 @@ export default function FHALoansPage() {
             </p>
           </div>
         </section>
+
+        <ReadinessCTA />
       </main>
     </>
   );

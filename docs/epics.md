@@ -1,1185 +1,1154 @@
-# LendyWendy.com - Epic & Story Breakdown
+# Lendywendy.com - Epic Breakdown
 
-**Date:** 2025-11-04
 **Author:** BMad
-**Source:** PRD.md
+**Date:** 2026-02-28
+**Source:** PRD-v2.md, architecture.md (v2.0)
+**Project Type:** Brownfield (enhancing existing codebase)
+**Total Epics:** 7 active + 1 deferred
+**Total Stories:** 32
 
 ---
 
-## Epic Summary
+## Overview
 
-This document decomposes the LendyWendy PRD into implementable epics and bite-sized stories. Each story is designed for completion by a single development agent in one focused session.
+This document decomposes PRD v2 requirements into implementable stories for AI dev agents. The project is **brownfield** — significant code exists (40+ pages, 15 Prisma models, working auth, loan pages, chat/readiness scaffolding). Stories account for upgrading existing code vs building new features.
 
-### Epic Overview
+**Epic Sequence:**
 
-**Epic 1: Platform Foundation & Infrastructure**
-Establish the technical foundation, development environment, and core infrastructure needed for all subsequent work. This includes project setup, hosting, CI/CD pipeline, and basic application shell.
+| Epic | Title | Stories | Depends On | Status |
+|------|-------|---------|------------|--------|
+| E1 | Foundation & Deployment | 6 | None | MVP |
+| E2 | AI Mortgage Advisor | 5 | E1 | MVP |
+| E3 | Mortgage Readiness Score | 4 | E1 | MVP |
+| E4 | Landing Pages & SEO | 4 | E2, E3 | MVP |
+| E5 | Lead Management & Admin | 4 | E2, E3 | MVP |
+| E6 | Integrations & Routing | 4 | E5 | MVP |
+| E7 | Content & SEO | -- | E6 | **POST-MVP** |
+| E8 | Polish, Compliance & Launch | 5 | E6 | MVP |
 
-**Epic 2: Content Management System**
-Build the custom CMS that powers LendyWendy's content authority strategy. Enables content creators to publish SEO-optimized articles with proper schema markup, internal linking, and editorial workflows.
-
-**Epic 3: SEO-First Architecture & Technical Optimization**
-Implement technical SEO foundation including Core Web Vitals optimization, structured data, sitemaps, crawlability, and performance infrastructure critical for search rankings.
-
-**Epic 4: Three-Segment Content Hub Architecture**
-Create the residential, investment, and commercial mortgage content hubs with pillar pages, topic clusters, navigation, and cross-hub discovery features.
-
-**Epic 5: Lead Capture & Qualification System**
-Implement multi-step forms, lead magnets (calculators), strategic placement throughout content, lead scoring, and CRM integration for capturing and qualifying mortgage leads.
-
-**Epic 6: Lender Partner Portal & Lead Distribution**
-Build the partner-facing portal for lender management, lead assignment/distribution, communication tools, and performance tracking.
-
-**Epic 7: Analytics, Reporting & Performance Tracking**
-Implement comprehensive analytics including traffic, SEO performance, content metrics, lead generation tracking, and revenue reporting dashboards.
-
-**Epic 8: Email & Communication System**
-Build transactional email system for leads and partners, deliverability infrastructure, and notification workflows.
-
-**Epic 9: Security, Compliance & Data Protection**
-Implement fintech-specific security measures, GDPR/CCPA compliance, financial advertising compliance, audit trails, and data protection frameworks.
-
-**Epic 10: User Experience & Polish**
-Finalize UX refinements, mobile optimization, accessibility (WCAG 2.1 AA), search functionality, and overall user journey optimization.
+**Parallelization:** E2 and E3 can be built simultaneously after E1 completes.
 
 ---
 
-## Epic 1: Platform Foundation & Infrastructure
+## Epic 1: Foundation & Deployment
 
-**Epic Goal:** Establish the technical foundation, development environment, CI/CD pipeline, hosting infrastructure, and basic application shell that enables all subsequent development work.
+**Goal:** Configure the existing Next.js codebase for Coolify deployment, add monitoring/analytics infrastructure, and establish development tooling so all subsequent epics can be built, tested, and deployed.
 
-**Value:** Without this foundation, no features can be built. This epic creates the bedrock for the entire platform.
+### Story 1.1: Configure Coolify Deployment
 
----
-
-### Story 1.1: Project Initialization & Repository Setup
-
-**As a** developer,
-**I want** a properly structured project repository with build tooling and dependencies configured,
-**So that** I can begin developing features in a consistent, maintainable environment.
+As a **developer**,
+I want the project configured for Coolify Docker deployment with standalone output,
+So that the application can be built and deployed on our self-hosted VPS.
 
 **Acceptance Criteria:**
 
-**Given** a new project needs to be initialized
-**When** the project setup is complete
-**Then** the following must exist:
-- Git repository initialized with .gitignore for Node.js/web projects
-- Package.json with core dependencies (Next.js/React or chosen framework)
-- TypeScript configuration with strict mode enabled
-- ESLint and Prettier configured with consistent code standards
-- Folder structure: `/src`, `/public`, `/components`, `/lib`, `/pages` or `/app`
-- Environment variable template (.env.example) with placeholder keys
-- README.md with project overview and setup instructions
+**Given** the existing Next.js 16 project
+**When** I update `next.config.ts` to use `output: 'standalone'`
+**Then** `npm run build` produces a `.next/standalone` directory with `server.js`
 
-**And** running `npm install` successfully installs all dependencies
-**And** running `npm run dev` starts a development server on port 3000 (or configured port)
-**And** a simple "Hello World" page renders successfully
+**And** a multi-stage `Dockerfile` exists that:
+- Installs dependencies
+- Runs `prisma generate`
+- Builds the Next.js app
+- Produces a minimal production image with standalone output, static files, and public assets
+
+**And** a `.dockerignore` excludes `node_modules`, `.next`, `.env*`, `.git`
+
+**And** `docker build -t lendywendy .` completes successfully
+
+**And** the container starts and serves the app on port 3000
 
 **Prerequisites:** None (first story)
 
 **Technical Notes:**
-- Use Next.js 14+ with App Router for SEO-friendly server-side rendering
-- TypeScript for type safety throughout codebase
-- Tailwind CSS for styling (enables rapid UI development)
-- Consider shadcn/ui for component library foundation
+- See `docs/architecture.md` Deployment Architecture section for Dockerfile template
+- Remove `turbopack.root` from next.config.ts (not needed for production)
+- Ensure `sharp` is available in the production image for `next/image`
 
 ---
 
-### Story 1.2: Database Setup & ORM Configuration
+### Story 1.2: Local Development Environment
 
-**As a** developer,
-**I want** a configured database with ORM tooling,
-**So that** I can persist application data (content, leads, users) reliably.
+As a **developer**,
+I want a `docker-compose.yml` for local PostgreSQL and an `.env.example` template,
+So that any developer can set up the project locally in minutes.
 
 **Acceptance Criteria:**
 
-**Given** the application needs to store persistent data
-**When** database configuration is complete
-**Then** the following must exist:
-- PostgreSQL database provisioned (recommend Vercel Postgres or Neon for production)
-- Prisma ORM installed and configured
-- Database connection string in environment variables
-- Initial Prisma schema with User model (authentication foundation)
-- Migration system functional (`npx prisma migrate dev`)
-- Prisma Client generated and importable
+**Given** the project root
+**When** I run `docker compose up -d`
+**Then** a PostgreSQL 17 container starts on port 5432
 
-**And** running `npx prisma migrate dev` successfully creates database tables
-**And** running `npx prisma studio` opens database GUI on localhost:5555
-**And** test database query executes successfully from API route
+**And** an `.env.example` file exists with all required environment variables documented (with placeholder values, not real secrets)
 
-**Prerequisites:** Story 1.1 (project must exist)
+**And** after copying `.env.example` to `.env.local` and running `npx prisma migrate dev`, the database is ready
+
+**And** `npm run dev` starts the development server successfully
+
+**Prerequisites:** None
 
 **Technical Notes:**
-- Use Prisma for type-safe database access
-- PostgreSQL preferred for JSON support (useful for flexible content fields)
-- Set up separate databases for development, staging, production
-- Connection pooling configured for production performance
+- See `docs/architecture.md` Development Environment section for docker-compose template
+- DATABASE_URL for local: `postgresql://lendywendy:localdev@localhost:5432/lendywendy`
+- Include all env vars: DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET, DEEPSEEK_API_KEY, DEEPSEEK_BASE_URL, RESEND_API_KEY, MAXBOUNTY_WEBHOOK_URL, MAXBOUNTY_AFFILIATE_ID, SENTRY_DSN, NEXT_PUBLIC_GA_MEASUREMENT_ID
 
 ---
 
-### Story 1.3: Authentication & Authorization Foundation
+### Story 1.3: Rate Limiting Middleware
 
-**As a** developer,
-**I want** a user authentication system with role-based access control,
-**So that** admin, editor, and partner users can securely access appropriate features.
+As a **site operator**,
+I want API rate limiting to prevent abuse of expensive AI endpoints and lead submission spam,
+So that costs stay controlled and the service remains available.
 
 **Acceptance Criteria:**
 
-**Given** the application requires user authentication
-**When** auth system is implemented
-**Then** the following must exist:
-- NextAuth.js configured with credentials provider
-- User model in database includes: email, hashedPassword, role (admin/editor/partner)
-- Password hashing using bcrypt
-- Login page at `/login` with email/password form
-- Protected route middleware checking authentication status
-- Role-based access control (RBAC) helper functions
-- Session management with secure httpOnly cookies
+**Given** a visitor making API requests
+**When** they exceed the rate limit for a given endpoint
+**Then** they receive a 429 status with `{ error: "Too many requests" }`
 
-**And** valid credentials successfully log user in and create session
-**And** invalid credentials return appropriate error message
-**And** protected routes redirect unauthenticated users to `/login`
-**And** role checks prevent unauthorized access (e.g., partners can't access admin panel)
+**And** the rate limits are:
+- `/api/chat`: 10 requests/minute per IP
+- `/api/leads`, `/api/readiness`: 5 requests/minute per IP
+- All other `/api/*`: 100 requests/minute per IP
 
-**Prerequisites:** Story 1.2 (database with User model required)
+**And** rate limiting uses in-memory sliding window (no external dependencies)
+
+**And** rate limit state is scoped per IP address
+
+**Prerequisites:** None
 
 **Technical Notes:**
-- NextAuth.js v5 (Auth.js) for authentication
-- Bcrypt for password hashing (10 salt rounds minimum)
-- Session stored in encrypted JWT or database
-- Future: Add OAuth providers (Google, Microsoft) for partner convenience
+- Implement in Next.js middleware (`middleware.ts`)
+- Use a `Map<string, { count: number, resetTime: number }>` with sliding window
+- Clean up expired entries periodically to prevent memory leaks
+- See ADR-003 in architecture.md
 
 ---
 
-### Story 1.4: Hosting & Deployment Infrastructure
+### Story 1.4: Sentry Error Tracking
 
-**As a** developer,
-**I want** automated deployment pipeline to production hosting,
-**So that** code changes can be deployed quickly and reliably.
+As a **site operator**,
+I want Sentry integrated for error tracking on both server and client,
+So that I'm alerted to production errors and can debug them.
 
 **Acceptance Criteria:**
 
-**Given** the application needs to be hosted and accessible
-**When** hosting and deployment are configured
-**Then** the following must exist:
-- Production hosting account (Vercel recommended for Next.js)
-- GitHub repository connected to hosting provider
-- Automatic deployments on push to `main` branch
-- Preview deployments for pull requests
-- Environment variables configured in hosting dashboard
-- Custom domain configured (lendywendy.com)
-- SSL certificate provisioned (automatic with Vercel)
-- Production database connected and accessible
+**Given** the Next.js application
+**When** an unhandled error occurs on the server or client
+**Then** it is captured and sent to Sentry with stack trace and context
 
-**And** pushing to `main` branch triggers automatic deployment
-**And** deployment completes successfully within 5 minutes
-**And** visiting https://lendywendy.com shows deployed application
-**And** environment variables are properly injected into build
+**And** `@sentry/nextjs` is installed and configured per Next.js integration guide
 
-**Prerequisites:** Story 1.1, 1.2, 1.3 (deployable application must exist)
+**And** Sentry DSN is loaded from `SENTRY_DSN` environment variable
+
+**And** source maps are uploaded during build for readable stack traces
+
+**And** the existing `error.tsx` and `global-error.tsx` boundaries report to Sentry
+
+**Prerequisites:** Story 1.1 (Dockerfile — Sentry needs build-time config)
 
 **Technical Notes:**
-- Vercel recommended for Next.js with zero-config deployment
-- Alternative: AWS Amplify, Netlify, or Railway
-- Set up production, staging, and preview environments
-- Configure build command: `npm run build`
-- Configure start command: `npm run start`
+- Run `npx @sentry/wizard@latest -i nextjs` for guided setup
+- Configure `sentry.client.config.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts`
+- Add `withSentryConfig` wrapper to `next.config.ts`
+- Set `SENTRY_AUTH_TOKEN` in Coolify for source map uploads
 
 ---
 
-### Story 1.5: Core UI Component Library & Design System
+### Story 1.5: Google Analytics 4
 
-**As a** developer,
-**I want** reusable UI components with consistent styling,
-**So that** I can build features quickly with a cohesive design.
+As a **site operator**,
+I want GA4 tracking on all pages with custom events for lead funnel tracking,
+So that I can measure visitor behavior and conversion rates.
 
 **Acceptance Criteria:**
 
-**Given** the application needs consistent UI components
-**When** component library is established
-**Then** the following must exist:
-- shadcn/ui installed and configured
-- Core components added: Button, Input, Card, Badge, Dialog, Select, Textarea
-- Tailwind CSS theme configured with brand colors
-- Typography scale defined (headings, body, captions)
-- Spacing and layout utilities configured
-- Component examples page at `/components` (dev only)
+**Given** a visitor browsing any page
+**When** the page loads
+**Then** GA4 pageview is tracked
 
-**And** all components render correctly
-**And** components are accessible (keyboard navigation, ARIA labels)
-**And** dark mode toggle works (if implementing dark mode)
-**And** components are documented with usage examples
+**And** a `GoogleAnalytics` component exists that loads the gtag.js script
 
-**Prerequisites:** Story 1.1 (project with Tailwind CSS)
+**And** it reads `NEXT_PUBLIC_GA_MEASUREMENT_ID` from environment
+
+**And** custom event helpers are available for:
+- `chat_started` (user opens chat widget)
+- `chat_lead_captured` (lead created from chat)
+- `assessment_started` (readiness score started)
+- `assessment_completed` (readiness score finished)
+- `lead_submitted` (any lead form submitted)
+
+**And** events fire correctly (verifiable in GA4 debug view)
+
+**Prerequisites:** None
 
 **Technical Notes:**
-- shadcn/ui provides accessible, customizable components
-- Radix UI primitives under the hood (excellent accessibility)
-- Tailwind CSS for utility-first styling
-- Define color palette: primary (blue), secondary (green), accent, neutral
-- Mobile-first responsive design approach
+- Add `GoogleAnalytics` component to `app/layout.tsx`
+- Create `lib/analytics.ts` with typed event functions
+- Use `'use client'` for the GA component
+- Only load in production (check `NODE_ENV`)
 
 ---
 
-### Story 1.6: Error Handling & Logging Infrastructure
+### Story 1.6: Testing Infrastructure
 
-**As a** developer,
-**I want** centralized error handling and logging,
-**So that** I can quickly identify and debug production issues.
+As a **developer**,
+I want Vitest and React Testing Library configured with example tests,
+So that subsequent stories can include tests for business-critical logic.
 
 **Acceptance Criteria:**
 
-**Given** the application needs error tracking
-**When** error handling infrastructure is implemented
-**Then** the following must exist:
-- Sentry (or similar) integrated for error tracking
-- Global error boundary in React app
-- API error handling middleware
-- Client-side error logging to Sentry
-- Server-side error logging with stack traces
-- Development console logging with appropriate log levels
-- 404 and 500 error pages with helpful messaging
+**Given** the project
+**When** I run `npm test`
+**Then** Vitest runs all `*.test.ts` and `*.test.tsx` files
 
-**And** thrown errors are captured and sent to Sentry
-**And** error alerts are sent for critical errors
-**And** error pages display user-friendly messages (no stack traces exposed)
-**And** error logs include request context (user, URL, timestamp)
+**And** `vitest.config.ts` is configured with:
+- Path aliases matching tsconfig (`@/`)
+- React Testing Library setup
+- jsdom environment for component tests
 
-**Prerequisites:** Story 1.1, 1.4 (deployed application that can generate errors)
+**And** an example unit test exists for `lib/scoring/readiness.ts` (existing code, easy to test)
+
+**And** an example unit test exists for `lib/lead-scoring.ts`
+
+**And** `npm test` passes with all example tests green
+
+**Prerequisites:** None
 
 **Technical Notes:**
-- Sentry recommended for production error tracking
-- Configure source maps for readable stack traces
-- Set up error alerts for high-severity issues
-- Log levels: debug, info, warn, error, fatal
-- Consider structured logging with pino or winston
+- Install: `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom`
+- Add `"test": "vitest"` and `"test:run": "vitest run"` to package.json scripts
+- Co-locate tests next to source: `lib/scoring/readiness.test.ts`
+- Focus tests on scoring algorithms — these are business-critical math
 
 ---
 
+## Epic 2: AI Mortgage Advisor
 
-## Epic 2: Content Management System
+**Goal:** Build a conversational AI chat experience powered by DeepSeek that qualifies visitors through natural dialogue and converts them into leads. The chat widget persists across page navigation and streams responses in real-time.
 
-**Epic Goal:** Build a custom CMS that empowers content creators to publish SEO-optimized mortgage articles with proper schema markup, internal linking, editorial workflows, and scheduling capabilities.
+### Story 2.1: Upgrade Chat API to SSE Streaming
 
-**Value:** The CMS is the engine of LendyWendy's topical authority strategy—enabling the creation of 200+ articles that drive organic search traffic and establish expertise across all three mortgage segments.
-
----
-
-### Story 2.1: Article Database Schema & Rich Text Editor
-
-**As a** content editor,
-**I want** to create and edit articles with rich formatting,
-**So that** I can publish high-quality mortgage content.
+As a **visitor**,
+I want to see the AI advisor's response appear word-by-word in real-time,
+So that the conversation feels natural and responsive.
 
 **Acceptance Criteria:**
 
-**Given** a content editor needs to write articles
-**When** the article editor is complete
-**Then** the following must exist:
-- Article model: id, title, slug, content, excerpt, author_id, status, segment, meta_title, meta_description, schema_markup, timestamps
-- Tiptap rich text editor with toolbar (bold, italic, headings H2-H6, lists, links, images)
-- Auto-save drafts every 30 seconds
-- Image upload with optimization (resize, compress, WebP)
-- Character count and reading time estimate
-- Markdown storage format
+**Given** a POST request to `/api/chat` with `messages[]` and `sessionId`
+**When** the API calls DeepSeek with `stream: true`
+**Then** the response is an SSE stream (`Content-Type: text/event-stream`)
 
-**And** articles can be created, edited, and saved successfully
-**And** images upload to cloud storage and display in editor
-**And** content persists across page refreshes
+**And** each chunk is formatted as `data: {"content": "token"}\n\n`
 
-**Prerequisites:** Story 1.2 (database), Story 1.5 (UI components)
+**And** the stream ends with `data: [DONE]\n\n`
 
-**Technical Notes:** Prisma schema for Article model, Tiptap for editing, Cloudinary/Vercel Blob for image storage
+**And** after streaming completes, the full response is persisted to the database (Conversation + Message records) via fire-and-forget
+
+**And** the GET endpoint for conversation history still works unchanged
+
+**And** if DeepSeek API fails, the response is a non-streaming JSON with a fallback message
+
+**Prerequisites:** Story 1.3 (rate limiting — chat needs 10/min limit)
+
+**Technical Notes:**
+- Existing `lib/ai/deepseek.ts` already has `streamChatMessage()` async generator — use it
+- Current `app/api/chat/route.ts` uses `stream: false` — upgrade POST handler
+- Return `new Response(readableStream, { headers: SSE headers })`
+- Pipe the async generator into a `ReadableStream` with `TextEncoder`
+- Collect full response in a buffer while streaming for DB persistence
 
 ---
 
-### Story 2.2: SEO Optimization Tools & Schema Markup
+### Story 2.2: Floating Chat Widget with Streaming
 
-**As a** content editor,
-**I want** SEO tools and automatic schema markup generation,
-**So that** articles rank well in search engines.
+As a **visitor**,
+I want a floating chat bubble on every page that opens into a conversation window,
+So that I can ask mortgage questions from anywhere on the site.
 
 **Acceptance Criteria:**
 
-**Given** a content editor is optimizing an article
-**When** SEO tools are active
-**Then** the following must exist:
-- Meta title field (50-60 char limit) with SERP preview
-- Meta description field (150-160 char limit)
-- Focus keyword input with usage tracking
-- SEO score indicator (keyword presence, headings, readability, links, length)
-- Internal linking suggestions sidebar (5-10 related articles)
-- Automatic JSON-LD schema generation (Article, HowTo, FAQPage)
-- Schema preview and validation
+**Given** any page on the site
+**When** I click the chat bubble (bottom-right)
+**Then** a chat window opens with the contextual greeting from Wendy
 
-**And** SEO score updates in real-time as content changes
-**And** clicking suggested article inserts internal link
-**And** generated schema passes Google Rich Results Test
+**And** I can type a message and see it appear in the conversation
 
-**Prerequisites:** Story 2.1 (articles exist)
+**And** Wendy's response streams in token-by-token (typing effect)
 
-**Technical Notes:** Real-time SEO analysis client-side, schema-dts for type-safe JSON-LD, full-text search for link suggestions
+**And** the chat window can be minimized back to the bubble
+
+**And** the widget works on both desktop (floating panel) and mobile (full-screen overlay)
+
+**And** the widget is mounted in `app/layout.tsx` so it persists across page navigation
+
+**Prerequisites:** Story 2.1 (streaming API)
+
+**Technical Notes:**
+- Existing `components/chat/ChatWidget.tsx` needs upgrade for streaming
+- Use `EventSource` or `fetch` with `ReadableStream` reader on client
+- Contextual greeting from `lib/ai/system-prompt.ts` `getContextualGreeting()` based on current page path
+- Client component (`'use client'`) with local state for messages, open/closed
+- Style with Tailwind + shadcn Card/Dialog primitives
+- z-index high enough to float above page content
 
 ---
 
-### Story 2.3: Editorial Workflow & Publishing
+### Story 2.3: Chat Session Persistence
 
-**As a** content editor,
-**I want** workflow states and scheduled publication,
-**So that** content goes through review before going live.
+As a **visitor**,
+I want my chat conversation to persist as I navigate between pages,
+So that I don't lose my conversation when browsing different loan types.
 
 **Acceptance Criteria:**
 
-**Given** articles need editorial oversight
-**When** workflow system is implemented
-**Then** the following must exist:
-- Status field: draft, review, published, archived
-- "Submit for Review" button (draft → review)
-- "Publish" button (review → published, admin/editor only)
-- "Schedule Publication" datetime picker
-- Cron job publishing articles when scheduled time arrives
-- Email notifications for status changes
-- Article list page with status filters
+**Given** a visitor with an active chat conversation
+**When** they navigate to a different page
+**Then** the chat widget retains all previous messages
 
-**And** only admins can publish articles (role enforced)
-**And** scheduled articles auto-publish at correct time
-**And** published articles appear on public site immediately
+**And** a `sessionId` is generated on first chat interaction and stored in `sessionStorage`
 
-**Prerequisites:** Story 2.1 (articles), Story 1.3 (RBAC)
+**And** message history is maintained in React Context that wraps the root layout
 
-**Technical Notes:** Vercel Cron for scheduled publishing, role checks on backend
+**And** if the browser tab is closed and reopened, the chat starts fresh (sessionStorage cleared)
+
+**And** the full conversation is always persisted in the database regardless of client state
+
+**Prerequisites:** Story 2.2 (chat widget)
+
+**Technical Notes:**
+- Create `ChatProvider` context component in `components/chat/ChatProvider.tsx`
+- Wrap in `app/layout.tsx`: `<ChatProvider><ChatWidget />{children}</ChatProvider>`
+- Generate sessionId with `crypto.randomUUID()` on first message
+- Store sessionId in sessionStorage, message array in context state
+- On mount, check sessionStorage for existing sessionId — if found, optionally load history from GET /api/chat
 
 ---
 
-### Story 2.4: Content Management Dashboard
+### Story 2.4: Chat-to-Lead Conversion
 
-**As a** content editor,
-**I want** a dashboard to manage all articles,
-**So that** I can find and organize content efficiently.
+As a **visitor**,
+I want the AI advisor to naturally offer to connect me with a local expert after qualifying me,
+So that I can get personalized mortgage assistance.
 
 **Acceptance Criteria:**
 
-**Given** a content editor needs to manage articles
-**When** accessing `/admin/articles`
-**Then** the following must exist:
-- Table with columns: title, author, status, segment, published date, actions
-- Filters: status, segment, author, date range
-- Search by title or content
-- Sort by date, title, author
-- Pagination (20 per page)
-- Bulk actions: delete, change status
-- Edit and delete actions per row
+**Given** a conversation where the AI has gathered sufficient qualification data (4-6 exchanges)
+**When** the AI asks for contact information and the visitor provides name, email, phone
+**Then** the chat widget shows an inline contact form (name, email, phone, TCPA checkbox)
 
-**And** filters and search work correctly
-**And** clicking article navigates to edit page
-**And** bulk operations apply to selected articles
+**And** on form submission, POST `/api/leads` is called with:
+- Contact info from form
+- `leadSource: "AI_ADVISOR"`
+- `sessionId` linking to Conversation
+- Extracted qualification data (loan type, location, timeline, credit range)
+- TCPA consent with timestamp
 
-**Prerequisites:** Story 2.1-2.3 (articles with metadata)
+**And** the lead is created and linked to the existing Conversation record
 
-**Technical Notes:** TanStack Table or shadcn/ui Table component, server-side pagination
+**And** a confirmation message appears in the chat ("Great! A local expert will reach out shortly.")
+
+**And** the `extractQualificationData()` function in `lib/ai/deepseek.ts` is used to parse qualification data from the conversation
+
+**Prerequisites:** Story 2.3 (session persistence)
+
+**Technical Notes:**
+- The AI system prompt already handles the transition to contact info request
+- Detect contact info offer via keyword matching in AI response ("name", "email", "connect you")
+- Show inline form component within chat when detected
+- Call existing `extractQualificationData()` before lead creation
+- Link lead to conversation: `prisma.conversation.update({ where: { sessionId }, data: { leadId } })`
 
 ---
 
-## Epic 3: SEO-First Architecture & Technical Optimization
+### Story 2.5: Chat Error Handling and Edge Cases
 
-**Epic Goal:** Implement technical SEO foundation including Core Web Vitals optimization, structured data, sitemaps, crawlability, and performance infrastructure critical for search rankings.
-
-**Value:** Technical SEO excellence is non-negotiable for achieving topical authority. This epic ensures Google can crawl, index, and rank LendyWendy's content effectively.
-
----
-
-### Story 3.1: Core Web Vitals Optimization
-
-**As a** developer,
-**I want** the site to meet Core Web Vitals thresholds,
-**So that** we achieve top rankings (performance is a ranking factor).
+As a **visitor**,
+I want the chat to handle errors gracefully without crashing,
+So that I always have a path to get help even if something goes wrong.
 
 **Acceptance Criteria:**
 
-**Given** performance impacts SEO rankings
-**When** Core Web Vitals optimization is complete
-**Then** the following must exist:
-- Image optimization: next/image with lazy loading, WebP format, proper sizing
-- Font optimization: preload critical fonts, font-display: swap
-- Code splitting: dynamic imports for heavy components
-- Critical CSS inlined, non-critical deferred
-- CDN configured for static assets
-- Database query optimization with indexes
+**Given** the AI advisor chat is active
+**When** the DeepSeek API returns an error or times out
+**Then** a friendly fallback message appears: "I'm having a moment! You can also get help by filling out our quick form."
 
-**And** Lighthouse scores: LCP <2.5s, FID <100ms, CLS <0.1
-**And** PageSpeed Insights shows all green metrics
-**And** Mobile performance equivalent to desktop
+**And** the fallback includes a link to `/get-quote`
 
-**Prerequisites:** Story 1.1 (Next.js project), Story 2.1 (content to optimize)
+**And** the error is logged to Sentry with conversation context
 
-**Technical Notes:** Next.js Image component, Vercel Edge Network CDN, font optimization with next/font
+**And** if rate limited (429), the message says: "I'm getting a lot of questions right now. Please try again in a minute!"
+
+**And** typing indicator shows while waiting for AI response and disappears on error
+
+**And** empty or whitespace-only messages cannot be sent
+
+**Prerequisites:** Story 2.4, Story 1.4 (Sentry)
+
+**Technical Notes:**
+- Add try/catch in ChatWidget around fetch call
+- Detect 429 vs 500 errors for different user messages
+- Add 15-second timeout on client-side fetch
+- Log failed API calls with session context to Sentry
+- Ensure widget never shows raw error messages to users
 
 ---
 
-### Story 3.2: Dynamic Sitemap Generation & Robots.txt
+## Epic 3: Mortgage Readiness Score
 
-**As a** developer,
-**I want** automatic sitemap generation and robots.txt,
-**So that** search engines can discover all content efficiently.
+**Goal:** Build a gamified 10-question assessment that calculates a mortgage readiness score, displays results with animation, captures email for detailed breakdown, and enables social sharing. Converts engaged visitors into qualified leads.
+
+### Story 3.1: Assessment Wizard UI
+
+As a **visitor**,
+I want to take a step-by-step mortgage readiness assessment with one question per screen,
+So that I can easily answer questions without feeling overwhelmed.
 
 **Acceptance Criteria:**
 
-**Given** search engines need to crawl the site
-**When** sitemap system is implemented
-**Then** the following must exist:
-- XML sitemap at /sitemap.xml listing all published articles
-- Sitemap includes: article URLs, last modified dates, priority, change frequency
-- Sitemap automatically updates when articles published/updated
-- Robots.txt at /robots.txt allowing all crawlers, linking to sitemap
-- Sitemap submitted to Google Search Console and Bing Webmaster Tools
+**Given** I navigate to `/readiness-score` or click a "Check Your Score" CTA
+**When** the page loads
+**Then** I see the first question with answer options as clickable cards
 
-**And** sitemap validates against XML schema
-**And** sitemap includes only published articles (not drafts)
-**And** Google Search Console shows sitemap successfully indexed
+**And** a progress bar shows "Step 1 of 10"
 
-**Prerequisites:** Story 2.3 (published articles exist)
+**And** selecting an answer automatically advances to the next question
 
-**Technical Notes:** next-sitemap package or custom API route generating sitemap, update on article publish
+**And** I can go back to change previous answers
+
+**And** on mobile, each question fills the screen (one question per view)
+
+**And** on desktop, the layout is centered with comfortable width
+
+**And** all 10 questions from FR-2.1 in the PRD are presented in order
+
+**Prerequisites:** Story 1.6 (testing — score algorithm tests)
+
+**Technical Notes:**
+- Upgrade existing `components/readiness/ReadinessAssessment.tsx`
+- Use React state for current step and accumulated responses (no DB writes until complete)
+- Questions and answer options defined as typed data structure (not hardcoded in JSX)
+- Match `AssessmentResponses` interface from `lib/scoring/readiness.ts`
+- Animate transitions between questions (simple fade/slide)
 
 ---
 
-### Story 3.3: Structured Data & Open Graph Meta Tags
+### Story 3.2: Score Reveal with Animation
 
-**As a** developer,
-**I want** proper meta tags and structured data on all pages,
-**So that** content displays correctly in search results and social shares.
+As a **visitor**,
+I want to see my readiness score revealed with an engaging animation and personalized breakdown,
+So that I feel rewarded for completing the assessment and understand my mortgage readiness.
 
 **Acceptance Criteria:**
 
-**Given** pages need rich snippets and social previews
-**When** meta tags and structured data are implemented
-**Then** the following must exist:
-- JSON-LD Article schema from Story 2.2 rendered in <head>
-- Open Graph tags: og:title, og:description, og:image, og:url, og:type
-- Twitter Card tags: twitter:card, twitter:title, twitter:description, twitter:image
-- Canonical URL on all pages
-- Breadcrumb schema for navigation
+**Given** I've completed all 10 questions
+**When** the score calculates
+**Then** an animated counter shows the score counting up from 0 to my total (0-100)
 
-**And** Google Rich Results Test passes for all article pages
-**And** Social media preview (Facebook/Twitter) shows correct title, description, image
-**And** Schema validation shows zero errors
+**And** the score category is displayed with appropriate color:
+- Mortgage Ready (80-100): Green
+- Almost There (60-79): Blue
+- Getting Prepared (40-59): Yellow
+- Building Foundation (0-39): Orange
 
-**Prerequisites:** Story 2.1 (articles with meta fields), Story 2.2 (schema generation)
+**And** the category description from `calculateReadinessScore()` is shown
 
-**Technical Notes:** Next.js Metadata API for head tags, schema injected server-side
+**And** a breakdown shows each scoring dimension with progress bars
+
+**And** personalized improvement tips from `getImprovementTips()` are displayed
+
+**Prerequisites:** Story 3.1 (wizard UI)
+
+**Technical Notes:**
+- Score calculation runs client-side via `lib/scoring/readiness.ts` (already complete)
+- Use CSS animation or `requestAnimationFrame` for counter animation
+- Color helpers already exist: `getScoreColor()`, `getScoreBgColor()`
+- Tip generation already exists: `getImprovementTips()`
+- No API call needed for score — deterministic client-side calculation
 
 ---
 
-## Epic 4: Three-Segment Content Hub Architecture
+### Story 3.3: Email Gate and Lead Creation
 
-**Epic Goal:** Create the residential, investment, and commercial mortgage content hubs with pillar pages, topic clusters, navigation, and cross-hub discovery features.
-
-**Value:** The hub architecture organizes content for both users and search engines, establishing topical authority in each segment and enabling effective internal linking.
-
----
-
-### Story 4.1: Hub Landing Pages & Navigation
-
-**As a** site visitor,
-**I want** dedicated hubs for each mortgage segment,
-**So that** I can easily find content relevant to my needs.
+As a **site operator**,
+I want the detailed score breakdown gated behind an email capture,
+So that completing the assessment generates a qualified lead.
 
 **Acceptance Criteria:**
 
-**Given** the site serves three mortgage segments
-**When** hub landing pages are built
-**Then** the following must exist:
-- Homepage at / with hero section and three hub cards
-- Residential hub at /residential-mortgages/ with segment overview
-- Investment hub at /investment-property-loans/ with segment overview
-- Commercial hub at /commercial-mortgages/ with segment overview
-- Top navigation showing all three hubs
-- Hub landing pages display featured articles (5-10 most recent)
-- Breadcrumb navigation on all pages
+**Given** a visitor has seen their score and category
+**When** they want to see the full detailed breakdown
+**Then** an email form appears asking for name, email, and TCPA consent
 
-**And** clicking hub card navigates to correct landing page
-**And** navigation works on mobile with hamburger menu
-**And** breadcrumbs show correct hierarchy
+**And** phone number is optional but encouraged ("for priority matching")
 
-**Prerequisites:** Story 2.3 (published articles exist), Story 3.1 (optimized pages)
+**And** on submission, POST `/api/readiness` is called with:
+- All 10 responses
+- Calculated score and category
+- Contact info
+- TCPA consent with timestamp
+- sessionId
 
-**Technical Notes:** Static generation for landing pages, dynamic article lists, mobile-first design
+**And** the API creates a `ReadinessAssessment` record and a `Lead` record (source: `READINESS_SCORE`)
+
+**And** lead scoring is applied via `calculateEnhancedLeadScore()`
+
+**And** after email capture, the full breakdown is revealed (no page reload)
+
+**Prerequisites:** Story 3.2 (score reveal)
+
+**Technical Notes:**
+- Use React Hook Form + Zod for the email form validation
+- TCPA checkbox text: "I consent to be contacted about mortgage options..."
+- Capture consent IP via request headers or client-side
+- The "teaser" shows score + category + tips; "full" adds dimensional breakdown
+- Create both ReadinessAssessment and Lead in a Prisma transaction
 
 ---
 
-### Story 4.2: Topic Cluster Organization & Internal Linking
+### Story 3.4: Social Sharing
 
-**As a** content strategist,
-**I want** articles organized in topic clusters,
-**So that** internal linking creates SEO-friendly content silos.
+As a **visitor**,
+I want to share my mortgage readiness score on social media,
+So that I can engage friends and family (and drive traffic back to the site).
 
 **Acceptance Criteria:**
 
-**Given** articles need topical organization
-**When** topic clustering is implemented
-**Then** the following must exist:
-- Category taxonomy: each hub has 5-7 categories (e.g., Residential: First-Time Buyers, Refinancing, Loan Types, etc.)
-- Articles assigned to primary category
-- Category archive pages listing all articles in category
-- Pillar content pages for each category (comprehensive guides)
-- Related articles widget showing 3-5 articles from same category/hub
-- Internal link density: 5-10 contextual links per article
+**Given** a visitor has completed the assessment (email captured or not)
+**When** they click a share button
+**Then** pre-formatted share text opens in the respective platform:
+- Twitter/X: "I scored [score]/100 on my Mortgage Readiness Score! 🏠 Check yours: [URL]"
+- Facebook: Share with OG metadata from the page
+- LinkedIn: Professional share with score
 
-**And** category pages are accessible from hub landing pages
-**And** related articles display correctly on article pages
-**And** internal linking creates cohesive topic clusters
+**And** the share URL includes a UTM parameter (`?utm_source=share&utm_medium=social`)
 
-**Prerequisites:** Story 2.1 (articles with categories), Story 4.1 (hub structure)
+**And** share buttons are prominently displayed on the results screen
 
-**Technical Notes:** Category model in database, static category pages, query for related articles by category+segment
+**And** sharing works without requiring email capture first (score is shown before gate)
 
----
+**Prerequisites:** Story 3.2 (score reveal)
 
-## Epic 5: Lead Capture & Qualification System
-
-**Epic Goal:** Implement multi-step forms, lead magnets (calculators), strategic placement throughout content, lead scoring, and CRM integration for capturing and qualifying mortgage leads.
-
-**Value:** This is the revenue engine—converting organic traffic into qualified leads worth $30-200 each. Effective lead capture directly impacts business success.
+**Technical Notes:**
+- Use `navigator.share()` for mobile (Web Share API) with fallback to direct links
+- Twitter: `https://twitter.com/intent/tweet?text=...&url=...`
+- Facebook: `https://www.facebook.com/sharer/sharer.php?u=...`
+- OG tags on `/readiness-score` page for social previews
+- Track `assessment_shared` GA4 event
 
 ---
 
-### Story 5.1: Multi-Step Lead Forms & Database Model
+## Epic 4: Landing Pages & SEO
 
-**As a** site visitor,
-**I want** to easily submit my information to get matched with lenders,
-**So that** I can get quotes for my mortgage needs.
+**Goal:** Redesign the homepage with dual CTAs (AI Advisor + Readiness Score), integrate the chat widget and assessment CTAs into loan type pages, and optimize all pages for SEO and Core Web Vitals.
+
+### Story 4.1: Homepage Redesign
+
+As a **visitor**,
+I want a compelling homepage that immediately shows me two paths to get help — chat with AI or check my score,
+So that I engage with the site instead of bouncing.
 
 **Acceptance Criteria:**
 
-**Given** visitors want to connect with lenders
-**When** lead form system is built
-**Then** the following must exist:
-- Lead model: id, segment, loan_type, property_details, name, email, phone, credit_range, down_payment, timeline, score, status, created_at
-- Multi-step form component (4 steps): 1) Loan type, 2) Property details, 3) Contact info, 4) Qualification
-- Progress indicator showing step X of 4
-- Form validation on each step
-- Back button to edit previous steps
-- Strategic placement: end of article, sidebar, exit-intent popup
-- Form submission creates lead in database
+**Given** a visitor lands on the homepage
+**When** the page loads
+**Then** a hero section displays:
+- Clear value proposition headline
+- Dual CTA buttons: "Chat with AI Advisor" and "Check Your Readiness Score"
+- Trust signals (security badges, "No commitment" messaging)
 
-**And** completing form successfully submits lead
-**And** validation prevents incomplete submissions
-**And** confirmation page displays after submission
+**And** below the hero:
+- "How it works" 3-step process (Ask Wendy → Get Your Score → Connect with Expert)
+- Loan type cards (Residential, Investment, Commercial) linking to segment hubs
+- California focus messaging
+- Footer with compliance disclaimers (Equal Housing, "Not a lender")
 
-**Prerequisites:** Story 1.2 (database), Story 1.5 (form components)
+**And** the page matches the design direction from `docs/ux-redesign-mockup.html`
 
-**Technical Notes:** React Hook Form for validation, Prisma Lead model, form state management
+**And** all text is SEO-optimized with target keywords
+
+**And** the page scores 90+ on Lighthouse performance
+
+**Prerequisites:** Story 2.2 (ChatWidget), Story 3.1 (Readiness assessment)
+
+**Technical Notes:**
+- Upgrade existing `app/page.tsx`
+- Use existing components: `TrustSignals`, `CtaSection`, segment cards
+- Hero CTA "Chat with AI Advisor" opens the ChatWidget
+- Hero CTA "Check Your Readiness Score" links to `/readiness-score`
+- Server Component for the page, interactive CTAs as small client components
 
 ---
 
-### Story 5.2: Lead Magnets - Mortgage Calculators
+### Story 4.2: Loan Type Page Integration
 
-**As a** site visitor,
-**I want** mortgage calculators to estimate costs,
-**So that** I can understand affordability before submitting lead form.
+As a **visitor on a loan type page**,
+I want the AI advisor pre-prompted for my loan type and a readiness score CTA,
+So that I get relevant help without explaining my situation from scratch.
 
 **Acceptance Criteria:**
 
-**Given** visitors want to calculate mortgage costs
-**When** calculator tools are built
-**Then** the following must exist:
-- Affordability calculator (income, debts, down payment → max home price)
-- Monthly payment calculator (loan amount, rate, term → monthly payment)
-- Refinance savings calculator (current vs new rate → savings)
-- Calculators embedded on hub landing pages
-- CTA to submit lead form after using calculator
-- Calculator usage tracked in analytics
+**Given** a visitor is on any loan type page (e.g., `/residential/fha`)
+**When** they open the chat widget
+**Then** Wendy greets them with a context-specific message (e.g., "Interested in FHA loans?")
 
-**And** calculations are accurate per standard mortgage formulas
-**And** calculators work on mobile and desktop
-**And** CTA leads to pre-filled form with calculator inputs
+**And** each loan type page includes:
+- A "Check Your Readiness Score" CTA section
+- The floating chat widget (already global via layout)
+- FAQ section with FAQ schema markup
 
-**Prerequisites:** Story 5.1 (lead forms exist)
+**And** the contextual greeting uses `getContextualGreeting()` from `lib/ai/system-prompt.ts`
 
-**Technical Notes:** Client-side calculation logic, no backend needed for calcs, track engagement events
+**And** the page passes its loan context to the ChatWidget via data attribute or prop
+
+**Prerequisites:** Story 4.1 (homepage), Story 2.2 (ChatWidget)
+
+**Technical Notes:**
+- Existing loan pages: 17+ across residential, commercial, investment
+- Add a `pageContext` prop to the ChatProvider that reads from page metadata
+- Each page already has content — add CTA sections and ensure ChatWidget integration
+- Existing `getContextualGreeting()` already handles residential/investment/commercial/refinance
+- Bulk update: create a shared `LoanPageLayout` component with built-in CTAs
 
 ---
 
-### Story 5.3: Lead Scoring & Qualification Logic
+### Story 4.3: California Metro Pages Enhancement
 
-**As a** lead operations manager,
-**I want** automatic lead scoring based on quality indicators,
-**So that** high-value leads are prioritized for lender partners.
+As a **visitor searching for local mortgage help**,
+I want California metro pages with local market context and AI advisor with location awareness,
+So that I feel confident I'm getting help specific to my area.
 
 **Acceptance Criteria:**
 
-**Given** leads have different value and urgency
-**When** scoring system is implemented
-**Then** the following must exist:
-- Scoring algorithm (0-100 points):
-  - Segment: Commercial +40, Investment +30, Residential +20
-  - Timeline: Immediate +20, <3 months +15, 3-6 months +10, 6+ months +5
-  - Credit: Excellent +15, Good +10, Fair +5
-  - Down payment: >20% +10, 10-20% +5, <10% +0
-  - Pre-approval: Yes +15, No +0
-- Score categories: Hot (80-100), Warm (60-79), Cold (0-59)
-- Score calculated on form submission
-- Score badge displayed in lead dashboard
+**Given** a visitor lands on `/california/los-angeles` (or any metro page)
+**When** the page loads
+**Then** the page shows:
+- Local market context and messaging
+- "Connect with [City] mortgage experts" messaging
+- AI Advisor pre-prompted with the location context
+- Readiness Score CTA
 
-**And** scores calculate correctly based on inputs
-**And** high-value leads (commercial, excellent credit) score 80+
-**And** scores are stored in database for filtering
+**And** the ChatWidget receives the city as page context so Wendy references it
 
-**Prerequisites:** Story 5.1 (leads with qualification data)
+**And** JSON-LD `LocalBusiness` schema is present
 
-**Technical Notes:** Scoring logic in backend API route, could use AI/ML in future for predictive scoring
+**And** meta title includes the city name (e.g., "Mortgage Lenders in Los Angeles | Lendywendy")
+
+**Prerequisites:** Story 4.2 (loan type integration pattern)
+
+**Technical Notes:**
+- Existing `app/california/[city]/page.tsx` with dynamic routing
+- Existing `components/location/CityHero.tsx` and `lib/california-cities.ts`
+- Add AI context and Readiness CTA using same pattern as Story 4.2
+- 6 metro pages: LA, SF, San Diego, Sacramento, San Jose, Orange County
 
 ---
 
-### Story 5.4: Lead CRM Integration & Management Dashboard
+### Story 4.4: SEO Optimization Pass
 
-**As a** admin,
-**I want** to view and manage all leads in a dashboard,
-**So that** I can track lead flow and distribute to partners.
+As a **site operator**,
+I want all pages optimized for search engines with proper schema markup and meta tags,
+So that the site ranks well for mortgage-related searches.
 
 **Acceptance Criteria:**
 
-**Given** leads need to be managed and distributed
-**When** lead management dashboard is built
-**Then** the following must exist:
-- Lead list at /admin/leads with table: name, segment, score, status, date, actions
-- Filters: segment, score category, status, date range
-- Search by name, email, phone
-- Lead detail modal showing all submitted information
-- Status workflow: new → contacted → qualified → closed/lost
-- Assign to lender partner dropdown
-- Export leads to CSV
+**Given** any page on the site
+**When** it is crawled by search engines
+**Then** it has:
+- Unique meta title (<60 chars) and description (<160 chars)
+- Open Graph tags for social sharing
+- Canonical URL
+- JSON-LD structured data (FAQPage for loan pages, LocalBusiness for metro pages)
 
-**And** filters and search work correctly
-**And** clicking lead opens detail modal
-**And** status changes persist to database
-**And** CSV export downloads with all lead data
+**And** the sitemap at `/sitemap.xml` includes all pages with correct priorities
 
-**Prerequisites:** Story 5.1 (leads exist), Story 1.3 (admin auth)
+**And** `robots.txt` allows crawling of all public pages, blocks admin routes
 
-**Technical Notes:** Similar to article dashboard (Story 2.4), table component, CSV export library
+**And** all pages pass Google's Rich Results Test for their schema type
 
----
+**And** no pages have duplicate titles or descriptions
 
-## Epic 6: Lender Partner Portal & Lead Distribution
+**Prerequisites:** Story 4.1, 4.2, 4.3 (all pages need to exist first)
 
-**Epic Goal:** Build the partner-facing portal for lender management, lead assignment/distribution, communication tools, and performance tracking.
-
-**Value:** Enables monetization through lender partnerships—partners pay for qualified leads, and this portal manages the entire partner experience and lead delivery workflow.
+**Technical Notes:**
+- Existing components: `StructuredData.tsx`, `breadcrumbs.tsx`, `meta-tags.tsx`
+- Existing `app/sitemap.ts` and `app/robots.ts`
+- Audit all pages for missing/duplicate meta tags
+- Validate JSON-LD with Google's testing tool
+- Use Next.js `metadata` export pattern for per-page SEO
 
 ---
 
-### Story 6.1: Partner User Management & Portal Access
+## Epic 5: Lead Management & Admin
 
-**As a** lender partner,
-**I want** to log into a partner portal,
-**So that** I can access leads assigned to me.
+**Goal:** Build an admin dashboard for viewing, filtering, managing, and exporting leads from all sources (AI Advisor, Readiness Score, forms). Give admins visibility into the full lead pipeline.
+
+### Story 5.1: Lead Dashboard with Filters
+
+As an **admin**,
+I want a dashboard showing all leads with filters and sorting,
+So that I can quickly find and prioritize leads.
 
 **Acceptance Criteria:**
 
-**Given** lender partners need portal access
-**When** partner management is implemented
-**Then** the following must exist:
-- Partner model: id, company_name, contact_name, email, phone, segments_accepted[], regions[], volume_cap, status
-- Partner registration form (admin-approved)
-- Partner login at /partner/login
-- Partner dashboard at /partner/dashboard showing assigned leads
-- Profile settings page for updating preferences
+**Given** an authenticated admin at `/admin/leads`
+**When** the page loads
+**Then** a table shows leads with columns: Name, Email, Source, Score, Status, Date
 
-**And** partners can log in with credentials
-**And** partners only see leads assigned to them (access control enforced)
-**And** profile updates save successfully
+**And** filters are available for: source (AI Advisor/Score/Form), score category (hot/warm/cold), status, segment, date range
 
-**Prerequisites:** Story 1.3 (auth system), Story 5.1 (leads exist)
+**And** text search works on name, email, phone
 
-**Technical Notes:** Extend User model with partner role, partner-specific routes with middleware
+**And** sorting works on all columns
+
+**And** pagination shows 20 leads per page
+
+**And** the dashboard loads in <2 seconds
+
+**Prerequisites:** Story 2.4 (AI leads), Story 3.3 (Score leads)
+
+**Technical Notes:**
+- Upgrade existing `app/admin/leads/page.tsx` and `app/api/admin/leads/route.ts`
+- Use existing shadcn Table, Badge, Select components
+- Server-side filtering and pagination via Prisma query
+- Lead source badge colors: AI Advisor (purple), Readiness Score (blue), Form (gray)
+- Score category badge colors: Hot (red), Warm (orange), Cold (blue)
 
 ---
 
-### Story 6.2: Lead Distribution & Assignment System
+### Story 5.2: Lead Detail View
 
-**As a** admin,
-**I want** to assign leads to lender partners automatically or manually,
-**So that** leads get to the right partners quickly.
+As an **admin**,
+I want to see full details of any lead including their AI conversation or assessment data,
+So that I can understand the lead's situation before reaching out.
 
 **Acceptance Criteria:**
 
-**Given** leads need distribution to partners
-**When** assignment system is built
-**Then** the following must exist:
-- Manual assignment: admin selects partner from dropdown in lead detail
-- Automatic distribution rules:
-  - Match lead segment to partner accepted segments
-  - Check partner region matches lead location
-  - Respect partner volume cap
-  - Round-robin among qualified partners
-- Lead exclusivity timer (48 hours)
-- Re-assignment if partner doesn't respond
-- Email notification to partner when lead assigned
+**Given** an admin clicks on a lead in the dashboard
+**When** the detail view opens
+**Then** it shows:
+- All contact info and qualification data
+- Lead score with breakdown (from `calculateEnhancedLeadScore`)
+- Source-specific data:
+  - AI Advisor leads: full conversation transcript
+  - Readiness Score leads: assessment responses and score breakdown
+  - Form leads: submitted form data
+- Status history and notes
+- TCPA consent details
 
-**And** manual assignment immediately assigns lead to partner
-**And** auto-distribution assigns to qualified partners only
-**And** partner receives email notification within 60 seconds
-**And** exclusivity timer prevents double-assignment
+**And** the detail view can be a slide-over panel or separate page
 
-**Prerequisites:** Story 6.1 (partners exist), Story 5.4 (lead management)
+**Prerequisites:** Story 5.1 (dashboard)
 
-**Technical Notes:** Distribution logic in API route, cron job for exclusivity timer expiration, email notifications
+**Technical Notes:**
+- Query lead with `include: { conversation: { include: { messages: true } }, readinessAssessment: true }`
+- Conversation transcript rendered as chat bubbles (read-only)
+- Assessment breakdown rendered with the same progress bars as user-facing results
+- Use shadcn Dialog or Sheet component for panel view
 
 ---
 
-### Story 6.3: Partner Performance Tracking
+### Story 5.3: Lead Status Workflow and Agent Assignment
 
-**As a** admin,
-**I want** to track partner performance metrics,
-**So that** I can optimize lead distribution and partner relationships.
+As an **admin**,
+I want to update lead status and assign leads to agents,
+So that I can manage the sales pipeline.
 
 **Acceptance Criteria:**
 
-**Given** partner performance needs monitoring
-**When** tracking dashboard is built
-**Then** the following must exist:
-- Partner performance page at /admin/partners showing:
-  - Leads assigned (total, this month)
-  - Response time (average time from assignment to first contact)
-  - Conversion rate (leads → applications → funded)
-  - Quality rating (average rating from partners on lead quality)
-- Partner detail page with historical performance
-- Leaderboard showing top performing partners
+**Given** an admin viewing a lead
+**When** they change the status dropdown
+**Then** the lead status updates (NEW → CONTACTED → QUALIFIED → IN_PROCESS → CONVERTED/CLOSED_LOST)
 
-**And** metrics calculate correctly from lead status data
-**And** performance trends are visible over time
-**And** low-performing partners are identifiable for coaching
+**And** an agent can be assigned from a dropdown of active agents
 
-**Prerequisites:** Story 6.2 (lead assignment), Story 5.4 (lead status tracking)
+**And** assignment is recorded with timestamp
 
-**Technical Notes:** Aggregate queries for metrics, charts using recharts or similar library
+**And** notes can be added to the lead record
 
----
+**And** status changes are saved immediately via API call
 
-## Epic 7: Analytics, Reporting & Performance Tracking
+**Prerequisites:** Story 5.2 (lead detail)
 
-**Epic Goal:** Implement comprehensive analytics including traffic, SEO performance, content metrics, lead generation tracking, and revenue reporting dashboards.
-
-**Value:** Data visibility enables optimization—understanding what's working (top content, lead sources, conversion funnels) drives continuous improvement and ROI measurement.
+**Technical Notes:**
+- Use existing Prisma enums: `LeadStatus`, `Agent` model
+- PATCH `/api/admin/leads/[id]` for status/assignment updates
+- Agent dropdown populated from `prisma.agent.findMany({ where: { status: 'ACTIVE' } })`
+- Notes saved as text field on Lead model
 
 ---
 
-### Story 7.1: Google Analytics & Search Console Integration
+### Story 5.4: CSV Export
 
-**As a** admin,
-**I want** traffic and SEO data integrated into the platform,
-**So that** I can monitor performance without leaving the application.
+As an **admin**,
+I want to export filtered leads to CSV,
+So that I can share lead data with partners or analyze in spreadsheets.
 
 **Acceptance Criteria:**
 
-**Given** traffic and SEO data is critical
-**When** analytics integration is complete
-**Then** the following must exist:
-- Google Analytics 4 installed with gtag.js
-- Custom events tracked: article_view, form_start, form_submit, calculator_use
-- Google Search Console verified and API connected
-- Analytics dashboard at /admin/analytics showing:
-  - Total visitors, page views, sessions (last 7/30/90 days)
-  - Traffic sources (organic, direct, referral, social)
-  - Top pages by views
-  - Search Console: impressions, clicks, CTR, average position
-  - Top keywords by impressions and clicks
+**Given** an admin on the leads dashboard with active filters
+**When** they click "Export CSV"
+**Then** a CSV file downloads containing all leads matching the current filters
 
-**And** GA4 captures all page views and events
-**And** Search Console data updates daily
-**And** dashboard loads in <3 seconds
+**And** the CSV includes: Name, Email, Phone, Source, Segment, Loan Type, Score, Status, Location, Date, Agent
 
-**Prerequisites:** Story 1.4 (deployed site generating traffic), Story 5.1 (events to track)
+**And** the export works for up to 10,000 leads
 
-**Technical Notes:** GA4 via next/script, Search Console API for data, caching for dashboard performance
+**And** PII fields are included (admin is authenticated, authorized)
+
+**Prerequisites:** Story 5.1 (dashboard with filters)
+
+**Technical Notes:**
+- GET `/api/admin/leads/export?format=csv` with same filter params as list endpoint
+- Stream CSV response for large exports (don't load all into memory)
+- Use `Content-Disposition: attachment; filename="leads-export-{date}.csv"`
+- Reuse the same Prisma query builder from the list endpoint
 
 ---
 
-### Story 7.2: Content Performance Metrics
+## Epic 6: Integrations & Routing
 
-**As a** content strategist,
-**I want** article-level analytics,
-**So that** I can identify top performers and optimize low performers.
+**Goal:** Connect the lead pipeline to external services — email notifications via Resend, MaxBounty affiliate webhook with retry logic, and automatic agent matching/routing for qualified leads.
+
+### Story 6.1: Resend Email Integration
+
+As a **site operator**,
+I want email notifications sent automatically when leads are created,
+So that admins and agents are alerted and borrowers get confirmation.
 
 **Acceptance Criteria:**
 
-**Given** content performance drives optimization
-**When** content analytics are built
-**Then** the following must exist:
-- Article analytics page at /admin/content-analytics showing table:
-  - Article title, views, avg time on page, bounce rate, form submissions, leads generated
-- Sort by any metric
-- Date range filter
-- Traffic source breakdown per article
-- Top 10 articles dashboard widget
-- Bottom 10 articles (low performance) dashboard widget
+**Given** a new lead is created (from any source)
+**When** the lead is saved to the database
+**Then** three emails are triggered:
+1. **Borrower confirmation:** "Thanks for reaching out! A local expert will contact you soon."
+2. **Admin alert:** "New [hot/warm/cold] lead from [source]: [name] — [loan type] in [location]"
+3. **Agent alert** (if auto-assigned): "New lead assigned to you: [name] — [loan type]"
 
-**And** metrics accurately reflect GA4 data
-**And** lead attribution correctly links leads to source articles
-**And** insights actionable for content optimization
+**And** emails are sent via Resend API
 
-**Prerequisites:** Story 7.1 (GA4 integration), Story 5.1 (lead source tracking)
+**And** email templates are clean, mobile-responsive HTML
 
-**Technical Notes:** Join analytics data with article data, track lead source via UTM or referrer
+**And** email sending failures are logged but never block lead creation
+
+**Prerequisites:** Story 2.4 (AI leads), Story 3.3 (Score leads)
+
+**Technical Notes:**
+- Replace existing `lib/integrations/email.ts` with Resend implementation
+- Install `resend` package
+- Create email templates in `lib/integrations/email-templates.ts` (HTML strings or react-email)
+- Fire-and-forget pattern (don't await email before responding to user)
+- Log email send results to console (structured)
 
 ---
 
-### Story 7.3: Lead Generation & Revenue Reporting
+### Story 6.2: Webhook Retry Cron Endpoint
 
-**As a** business owner,
-**I want** lead and revenue dashboards,
-**So that** I can track business performance and ROI.
+As a **site operator**,
+I want failed MaxBounty webhook submissions to be automatically retried,
+So that no leads are lost due to transient failures.
 
 **Acceptance Criteria:**
 
-**Given** lead volume and revenue are key business metrics
-**When** reporting dashboards are built
-**Then** the following must exist:
-- Lead dashboard showing:
-  - Total leads (today, this week, this month)
-  - Lead trends (chart over time)
-  - Lead breakdown by segment
-  - Lead score distribution
-  - Conversion funnel (visitors → form starts → submissions)
-- Revenue dashboard showing:
-  - Revenue by segment (commercial, investment, residential)
-  - Revenue per partner
-  - Revenue trends over time
-  - Cost per lead calculation
-  - ROI projection
+**Given** a lead where `maxBountySubmitted = false` and `createdAt` within last 7 days
+**When** the cron endpoint `POST /api/webhooks/retry` is called
+**Then** the lead is re-submitted to MaxBounty using existing `sendToMaxBounty()`
 
-**And** metrics update daily (or real-time for lead counts)
-**And** charts visualize trends clearly
-**And** export to PDF for reporting
+**And** the endpoint processes up to 100 failed leads per run
 
-**Prerequisites:** Story 5.4 (lead data), Story 6.2 (partner assignments), Story 7.1 (traffic data)
+**And** there's a 100ms delay between submissions (avoid overwhelming MaxBounty)
 
-**Technical Notes:** Aggregate queries with date grouping, recharts for visualizations, PDF export
+**And** the response reports: `{ processed, successful, failed }`
+
+**And** the endpoint is protected (only callable from Coolify cron or with auth token)
+
+**Prerequisites:** None (existing `lib/integrations/maxbounty.ts` has `retryFailedSubmissions()`)
+
+**Technical Notes:**
+- Existing `retryFailedSubmissions()` in `lib/integrations/maxbounty.ts` already implements this logic
+- Create `app/api/webhooks/retry/route.ts` that calls the existing function
+- Protect with a `CRON_SECRET` header check
+- Configure Coolify cron to POST every 5 minutes with the secret header
 
 ---
 
-## Epic 8: Email & Communication System
+### Story 6.3: Agent Routing Algorithm
 
-**Epic Goal:** Build transactional email system for leads and partners, deliverability infrastructure, and notification workflows.
-
-**Value:** Email is critical for lead confirmation, partner notifications, and engagement—reliable delivery ensures leads don't slip through cracks and partners respond quickly.
-
----
-
-### Story 8.1: Transactional Email Infrastructure
-
-**As a** developer,
-**I want** reliable email sending infrastructure,
-**So that** all transactional emails are delivered successfully.
+As a **site operator**,
+I want leads automatically matched with the best available local agent,
+So that leads get quick, relevant responses.
 
 **Acceptance Criteria:**
 
-**Given** the application sends transactional emails
-**When** email infrastructure is configured
-**Then** the following must exist:
-- Email service provider integrated (SendGrid, Mailgun, or AWS SES)
-- Dedicated sending domain configured (email.lendywendy.com)
-- SPF, DKIM, DMARC records configured for deliverability
-- Email template system using React Email or similar
-- Unsubscribe management and suppression lists
-- Email analytics (sent, delivered, opened, clicked, bounced)
+**Given** a new qualified lead (score >= 60, hot or warm)
+**When** lead scoring is complete
+**Then** the system finds matching agents based on:
+1. Location match (agent serves the lead's state/metro) — **required**
+2. Loan type match (agent handles the lead's loan type) — **required**
+3. Capacity available (agent hasn't exceeded weekly cap) — **required**
+4. Round-robin within qualified agents (distribute evenly)
 
-**And** test email sends successfully and arrives in inbox (not spam)
-**And** email deliverability rate >95%
-**And** unsubscribe link present in all marketing emails (CAN-SPAM compliance)
+**And** if a match is found, the lead is auto-assigned (`assignedAgentId`, `assignedAt`)
 
-**Prerequisites:** Story 1.1 (application exists), Story 1.4 (domain configured)
+**And** if no match is found, the lead remains unassigned for manual admin assignment
 
-**Technical Notes:** SendGrid recommended for reliability, React Email for type-safe templates, DNS records for domain auth
+**And** the matching runs as part of lead creation (not async)
+
+**Prerequisites:** Story 5.3 (agent assignment field)
+
+**Technical Notes:**
+- Create `lib/agent-routing.ts` with `findBestAgent(lead: Lead): Promise<Agent | null>`
+- Query: `prisma.agent.findMany({ where: { status: 'ACTIVE', states: { has: lead.state }, loanTypes: { has: lead.loanType }, currentWeekLeads: { lt: weeklyCapacity } } })`
+- Round-robin: pick agent with lowest `currentWeekLeads`
+- Increment `currentWeekLeads` on assignment
+- Call from lead creation flow (both AI and Readiness sources)
 
 ---
 
-### Story 8.2: Lead & Partner Email Notifications
+### Story 6.4: Agent Notification on Assignment
 
-**As a** lead or partner,
-**I want** timely email notifications,
-**So that** I know the status of my inquiry or assigned leads.
+As a **matched agent**,
+I want to be notified immediately when a lead is assigned to me,
+So that I can respond quickly and close the deal.
 
 **Acceptance Criteria:**
 
-**Given** emails notify leads and partners of status changes
-**When** notification system is implemented
-**Then** the following must exist:
-- Lead confirmation email (sent immediately after form submission)
-- Partner notification email (when lead assigned)
-- Lead status update emails (when status changes)
-- Partner reminder emails (if no response within 24 hours)
-- Email templates mobile-responsive and branded
-- Personalization (recipient name, lead details)
+**Given** a lead is auto-assigned to an agent via the routing algorithm
+**When** the assignment is saved
+**Then** the agent receives an email with:
+- Lead name and contact info
+- Loan type and property location
+- Lead score and category
+- Key qualification data (credit range, timeline, down payment)
+- Source (AI conversation summary or readiness score)
 
-**And** emails send within 60 seconds of trigger event
-**And** email open rates >40% (industry benchmark)
-**And** templates render correctly in Gmail, Outlook, Apple Mail
+**And** the email is sent via Resend (same as Story 6.1)
 
-**Prerequisites:** Story 8.1 (email infrastructure), Story 5.1 (leads), Story 6.2 (partner assignments)
+**And** the email includes a link to the admin lead detail view
 
-**Technical Notes:** Queue emails for reliability (could use BullMQ or similar), track events triggering emails
+**Prerequisites:** Story 6.1 (Resend), Story 6.3 (agent routing)
 
----
-
-## Epic 9: Security, Compliance & Data Protection
-
-**Epic Goal:** Implement fintech-specific security measures, GDPR/CCPA compliance, financial advertising compliance, audit trails, and data protection frameworks.
-
-**Value:** Compliance is mandatory in fintech—violations lead to fines and business shutdown. Security protects sensitive borrower data and maintains trust with partners and users.
+**Technical Notes:**
+- Reuse Resend integration from Story 6.1
+- Create agent-specific email template with lead summary
+- Include "Respond within 4 hours for best conversion" messaging
+- Track agent response time for future performance metrics
 
 ---
 
-### Story 9.1: HTTPS, Data Encryption & Security Hardening
+## Epic 7: Content & SEO (POST-MVP)
 
-**As a** user,
-**I want** my data protected with industry-standard security,
-**So that** my personal information remains private and secure.
+**Goal:** Build out the content hub with blog, educational guides, and FAQ content to drive organic search traffic. Uses the existing CMS infrastructure (Tiptap, Article/Guide models).
+
+**Status: DEFERRED to Phase 4.** All CMS models and components are preserved in the codebase but no new development until post-MVP.
+
+---
+
+## Epic 8: Polish, Compliance & Launch
+
+**Goal:** Final optimization pass covering mobile experience, accessibility, legal compliance, performance, and monitoring setup. Ensures the site is production-ready and legally compliant before launch.
+
+### Story 8.1: Mobile Optimization
+
+As a **mobile visitor**,
+I want every page and feature to work flawlessly on my phone,
+So that I can engage with the site on any device.
 
 **Acceptance Criteria:**
 
-**Given** the application handles sensitive financial data
-**When** security measures are implemented
-**Then** the following must exist:
-- HTTPS enforced site-wide (TLS 1.3)
-- Lead PII encrypted at rest in database
-- Password hashing with bcrypt (10+ rounds)
-- Input validation and sanitization on all forms
-- SQL injection prevention via parameterized queries
-- XSS protection via Content Security Policy headers
-- CSRF tokens on all state-changing forms
-- Rate limiting on API endpoints (100 req/min per IP)
-- Session timeout after 30 minutes inactivity
+**Given** any page viewed on a mobile device (375px width)
+**When** the page renders
+**Then** all content is readable without horizontal scrolling
 
-**And** security headers present (CSP, X-Frame-Options, etc.)
-**And** no sensitive data logged or exposed in errors
-**And** penetration test shows no critical vulnerabilities
+**And** the chat widget opens as a full-screen overlay on mobile
 
-**Prerequisites:** Story 1.4 (HTTPS via hosting), Story 5.1 (lead data to protect)
+**And** the readiness assessment shows one question per screen
 
-**Technical Notes:** Vercel provides HTTPS automatically, CSP headers in next.config.js, rate limiting middleware
+**And** all tap targets are at least 44x44px
+
+**And** the mobile CTA bar (`components/layout/mobile-cta.tsx`) is visible and functional
+
+**And** all pages pass Google's Mobile-Friendly Test
+
+**Prerequisites:** All E2, E3, E4 stories complete
+
+**Technical Notes:**
+- Audit all pages at 375px and 768px breakpoints
+- Test ChatWidget mobile overlay mode
+- Verify Readiness Assessment step-by-step UX on small screens
+- Check all forms are usable with mobile keyboards (input types, autofill)
 
 ---
 
-### Story 9.2: GDPR/CCPA Compliance & Privacy Controls
+### Story 8.2: Accessibility Audit
 
-**As a** site visitor,
-**I want** control over my personal data,
-**So that** my privacy rights are respected per regulations.
+As a **visitor with disabilities**,
+I want the site to be accessible with screen readers and keyboard navigation,
+So that I can use the site regardless of ability.
 
 **Acceptance Criteria:**
 
-**Given** GDPR/CCPA compliance is required
-**When** privacy features are implemented
-**Then** the following must exist:
-- Cookie consent banner on first visit
-- Privacy policy page at /privacy with data collection disclosure
-- Terms of service page at /terms
-- TCPA consent checkbox on lead forms ("I agree to be contacted")
-- Lead data deletion request workflow (admin can delete)
-- Data export capability (download lead data as JSON/PDF)
-- Opt-out from marketing communications link in emails
+**Given** the complete site
+**When** audited for WCAG 2.1 Level AA compliance
+**Then** all pages score 90+ on Lighthouse accessibility
 
-**And** cookie consent persists across sessions
-**And** privacy policy clearly describes data usage
-**And** deletion requests remove all PII within 30 days
-**And** opt-outs are honored immediately
+**And** all images have descriptive alt text
 
-**Prerequisites:** Story 5.1 (lead data), Story 8.1 (marketing emails)
+**And** all form inputs have associated labels
 
-**Technical Notes:** Cookie consent library (e.g., cookie-consent), data deletion soft-delete with PII redaction
+**And** the chat widget is keyboard-navigable (Tab, Enter, Escape to close)
+
+**And** color contrast meets 4.5:1 minimum ratio
+
+**And** focus indicators are visible on all interactive elements
+
+**And** ARIA labels are present on the chat widget and assessment
+
+**Prerequisites:** Story 8.1 (mobile optimization)
+
+**Technical Notes:**
+- Run Lighthouse accessibility audit on all key pages
+- Test with keyboard-only navigation
+- Add `aria-label` to ChatWidget toggle button
+- Ensure score reveal animation respects `prefers-reduced-motion`
+- Form error messages linked to inputs with `aria-describedby`
 
 ---
 
-### Story 9.3: Financial Advertising Compliance & Disclaimers
+### Story 8.3: Compliance Pages and Disclaimers
 
-**As a** business owner,
-**I want** proper disclaimers and compliance with mortgage advertising laws,
-**So that** we avoid regulatory violations.
+As a **site operator**,
+I want all legal compliance requirements met before launch,
+So that the site operates within regulatory guidelines.
 
 **Acceptance Criteria:**
 
-**Given** mortgage advertising is regulated
-**When** compliance disclaimers are implemented
-**Then** the following must exist:
-- Equal Housing Opportunity logo and disclaimer on all pages
-- "Not a lender" disclaimer in footer (if applicable)
-- APR disclosure requirements when rates mentioned
-- NMLS license numbers displayed (if required)
-- Educational content disclaimer (not financial advice)
-- Lead consent language ("I agree to share info with lender partners")
-- State-specific disclosures where required
+**Given** the site is ready for public traffic
+**When** reviewed for compliance
+**Then** the following pages exist:
+- `/privacy-policy` — Privacy policy page
+- `/terms` — Terms of service page
 
-**And** disclaimers present and visible on all relevant pages
-**And** legal review confirms compliance with TILA, RESPA, state laws
-**And** audit trail logs lead consent timestamp and IP address
+**And** the footer on every page includes:
+- Equal Housing Opportunity logo and text
+- "LendyWendy is not a lender" disclaimer
+- Links to Privacy Policy and Terms
+- Copyright notice
 
-**Prerequisites:** Story 5.1 (lead forms with consent)
+**And** TCPA consent language is present on every lead capture point (chat form, readiness email gate, get-quote form)
 
-**Technical Notes:** Consult legal counsel for specific disclaimer requirements, compliance varies by state
+**And** consent timestamp and IP are logged with every lead
 
----
+**Prerequisites:** None (can be done anytime)
 
-## Epic 10: User Experience & Polish
-
-**Epic Goal:** Finalize UX refinements, mobile optimization, accessibility (WCAG 2.1 AA), search functionality, and overall user journey optimization.
-
-**Value:** Superior UX reduces bounce rates, increases engagement, and improves conversion—the difference between a visitor reading one article vs exploring the hub and submitting a lead.
+**Technical Notes:**
+- Create `app/privacy-policy/page.tsx` and `app/terms/page.tsx`
+- Update `components/layout/footer.tsx` with required disclaimers
+- TCPA checkbox text: "By submitting, I agree to be contacted by phone, email, or text regarding mortgage options. I understand this is not a loan application. [Privacy Policy]"
+- Verify all lead creation paths capture consentTimestamp and consentIp
 
 ---
 
-### Story 10.1: Site-Wide Search Functionality
+### Story 8.4: Performance Optimization
 
-**As a** site visitor,
-**I want** to search for mortgage topics,
-**So that** I can quickly find relevant articles.
+As a **site operator**,
+I want all pages to meet Core Web Vitals targets,
+So that the site ranks well in search engines and provides fast user experience.
 
 **Acceptance Criteria:**
 
-**Given** users need to find content quickly
-**When** search functionality is built
-**Then** the following must exist:
-- Search bar in header (desktop and mobile)
-- Autocomplete suggestions as user types
-- Search results page showing matching articles
-- Filters: segment (residential/investment/commercial)
-- Results ranked by relevance (title match > content match)
-- "No results" state with suggestions
-- Search analytics (popular queries tracked)
+**Given** any page on the site
+**When** measured with Lighthouse (or PageSpeed Insights)
+**Then** LCP < 2.5 seconds, FID < 100ms, CLS < 0.1
 
-**And** search returns relevant results in <500ms
-**And** autocomplete shows 5-10 suggestions
-**And** clicking result navigates to article
-**And** search works on mobile
+**And** all images use `next/image` with proper sizing and lazy loading
 
-**Prerequisites:** Story 2.3 (published articles), Story 4.1 (hub structure)
+**And** only necessary JavaScript is loaded per page (check bundle size)
 
-**Technical Notes:** PostgreSQL full-text search or Algolia for hosted search, index on article title and content
+**And** the homepage scores 90+ on Lighthouse Performance
+
+**And** no render-blocking resources in the critical path
+
+**Prerequisites:** All other E8 stories (final pass)
+
+**Technical Notes:**
+- Run Lighthouse on: homepage, loan type pages, readiness score, admin dashboard
+- Check that Server Components are used where possible (minimize client JS)
+- Verify `sharp` is working for image optimization in the Docker container
+- Consider adding `loading="lazy"` to below-fold images
+- Check GA4 and Sentry scripts don't block rendering
 
 ---
 
-### Story 10.2: Mobile Optimization & Responsive Design
+### Story 8.5: Launch Monitoring Setup
 
-**As a** mobile user,
-**I want** the site to work perfectly on my phone,
-**So that** I can research mortgages on the go.
+As a **site operator**,
+I want monitoring and alerting configured before launch,
+So that I'm immediately aware of any production issues.
 
 **Acceptance Criteria:**
 
-**Given** 60%+ traffic is mobile
-**When** mobile optimization is complete
-**Then** the following must exist:
-- Mobile-first responsive design (320px to 4K screens)
-- Touch targets minimum 44x44 pixels
-- Hamburger navigation on mobile
-- Readable text without zooming (16px minimum)
-- Forms optimized for mobile (proper keyboard types)
-- No horizontal scrolling required
-- Sticky CTA button on mobile article pages
+**Given** the site is deployed to Coolify
+**When** production traffic starts flowing
+**Then** Sentry is capturing errors with proper source maps
 
-**And** all pages render correctly on iPhone and Android
-**And** mobile conversion rates within 80% of desktop
-**And** no mobile usability errors in Search Console
+**And** Sentry alerts are configured for: error spike, new error type
 
-**Prerequisites:** Story 1.5 (responsive components), Story 4.1 (pages exist)
+**And** Coolify health checks are configured (HTTP check on `/`)
 
-**Technical Notes:** Tailwind CSS breakpoints for responsive design, test on real devices
+**And** Database backup schedule is confirmed in Coolify
 
----
+**And** a simple uptime monitoring is configured (Coolify built-in or external like UptimeRobot)
 
-### Story 10.3: Accessibility (WCAG 2.1 AA) Compliance
+**And** basic runbook exists documenting: how to deploy, how to rollback, how to check logs
 
-**As a** user with disabilities,
-**I want** the site to be accessible with assistive technology,
-**So that** I can access mortgage information regardless of ability.
+**Prerequisites:** Story 1.4 (Sentry), Story 1.1 (Coolify deployment)
 
-**Acceptance Criteria:**
-
-**Given** accessibility is legally required and expands audience
-**When** WCAG 2.1 AA compliance is achieved
-**Then** the following must exist:
-- Keyboard navigation for all interactive elements
-- Focus indicators visible on all focusable elements
-- Screen reader compatibility (tested with NVDA/JAWS)
-- Alt text on all meaningful images
-- Form labels properly associated with inputs
-- Color contrast ratios ≥4.5:1 for text
-- ARIA labels where needed
-- Skip to main content link
-
-**And** WAVE accessibility checker shows zero critical errors
-**And** keyboard-only navigation completes all user flows
-**And** screen reader announces page content correctly
-
-**Prerequisites:** Story 1.5 (accessible components), Story 4.1 (pages to test)
-
-**Technical Notes:** shadcn/ui components are accessible by default, test with axe DevTools, manual testing required
+**Technical Notes:**
+- Verify Sentry source maps work in production build
+- Configure Sentry alert rules in Sentry dashboard
+- Test Coolify deployment pipeline: push → build → deploy
+- Document rollback procedure (Coolify supports one-click rollback)
+- Verify database backups are scheduled and test a restore
 
 ---
 
-### Story 10.4: Performance Monitoring & Continuous Optimization
+## Validation Summary
 
-**As a** developer,
-**I want** ongoing performance monitoring,
-**So that** we maintain fast load times as content grows.
+### FR Coverage
 
-**Acceptance Criteria:**
+| Functional Requirement | Stories Covering |
+|------------------------|------------------|
+| FR-1: AI Mortgage Advisor | E2 (Stories 2.1-2.5) |
+| FR-2: Mortgage Readiness Score | E3 (Stories 3.1-3.4) |
+| FR-3: Landing Pages | E4 (Stories 4.1-4.4) |
+| FR-4: Lead Management | E5 (Stories 5.1-5.4) |
+| FR-5: Integrations | E6 (Stories 6.1-6.4) |
 
-**Given** performance degrades over time without monitoring
-**When** monitoring system is implemented
-**Then** the following must exist:
-- Real User Monitoring (RUM) via Vercel Analytics or similar
-- Lighthouse CI in deployment pipeline
-- Performance budget alerts (fail build if LCP >3s)
-- Database query performance monitoring
-- Core Web Vitals dashboard showing trends
-- Automated performance reports weekly
+### NFR Coverage
 
-**And** performance regressions trigger alerts
-**And** deployment blocked if performance budget exceeded
-**And** 95th percentile page load stays <3 seconds
+| Non-Functional Requirement | Stories Covering |
+|---------------------------|------------------|
+| NFR-1: Performance | E8 Story 8.4, E1 Story 1.1 |
+| NFR-2: Security | E1 Story 1.3 (rate limiting), E8 Story 8.3 (compliance) |
+| NFR-3: Compliance | E8 Story 8.3, All lead stories (TCPA) |
+| NFR-4: Scalability | E1 Story 1.1 (Coolify), Architecture decisions |
+| NFR-5: Monitoring | E1 Stories 1.4-1.5, E8 Story 8.5 |
 
-**Prerequisites:** Story 3.1 (performance optimized), Story 1.4 (deployment pipeline)
+### Story Count by Epic
 
-**Technical Notes:** Vercel Analytics for RUM, Lighthouse CI GitHub Action, query monitoring with Prisma metrics
-
----
-
-## Epic Breakdown Summary
-
-**Total Stories:** ~40 actionable stories across 10 epics
-
-**Estimated Timeline:**
-- Epic 1 (Foundation): 1-2 weeks
-- Epic 2 (CMS): 2-3 weeks
-- Epic 3 (SEO): 1-2 weeks
-- Epic 4 (Hubs): 1-2 weeks
-- Epic 5 (Lead Capture): 2-3 weeks
-- Epic 6 (Partner Portal): 2-3 weeks
-- Epic 7 (Analytics): 1-2 weeks
-- Epic 8 (Email): 1 week
-- Epic 9 (Compliance): 1-2 weeks
-- Epic 10 (UX Polish): 1-2 weeks
-
-**Total: 14-24 weeks (3.5-6 months) for MVP completion**
+| Epic | Stories | Estimated Complexity |
+|------|---------|---------------------|
+| E1: Foundation | 6 | Low-Medium (config/setup) |
+| E2: AI Advisor | 5 | High (streaming, state management) |
+| E3: Readiness Score | 4 | Medium (UI + scoring already exists) |
+| E4: Landing Pages | 4 | Medium (upgrade existing pages) |
+| E5: Lead Management | 4 | Medium (admin CRUD) |
+| E6: Integrations | 4 | Medium (external services) |
+| E7: Content (deferred) | -- | Deferred |
+| E8: Polish & Launch | 5 | Low-Medium (audit/optimize) |
+| **Total** | **32** | |
 
 ---
 
-## Next Steps
-
-This epic breakdown provides the roadmap for implementing LendyWendy.com. Each story is:
-- **Vertically sliced** - Delivers complete functionality
-- **Independently valuable** - Provides incremental progress
-- **Sized for single-session completion** - Can be implemented by one developer in focused time
-- **Clearly defined with BDD acceptance criteria** - Testable and verifiable
-
-**Recommended Next Actions:**
-
-1. **Architecture Design** - Run `/bmad:bmm:workflows:architecture` to define technical stack, infrastructure, and architectural decisions
-2. **Story Prioritization** - Determine exact sequence based on dependencies and business priorities
-3. **Sprint Planning** - Group stories into 2-week sprints for iterative development
-4. **Begin Implementation** - Start with Epic 1, Story 1.1 (Project Initialization)
-
-The LendyWendy magic—topical authority that compounds—starts with this first commit.
-
+_For implementation: Use the `create-story` workflow to generate individual story implementation plans from this epic breakdown._

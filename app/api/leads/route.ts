@@ -13,6 +13,7 @@ import {
   CreditRange,
   Timeline,
   EmploymentStatus,
+  LeadSource,
 } from "@prisma/client";
 
 // Validation schema
@@ -38,6 +39,11 @@ const leadSchema = z.object({
   utmMedium: z.string().optional(),
   utmCampaign: z.string().optional(),
   userAgent: z.string().optional(),
+  // Chat-to-lead fields (Story 2.4)
+  sessionId: z.string().optional(),
+  leadSource: z.nativeEnum(LeadSource).optional(),
+  tcpaConsent: z.boolean().optional(),
+  consentTimestamp: z.string().datetime().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -67,15 +73,31 @@ export async function POST(request: NextRequest) {
                      request.headers.get("x-real-ip") ||
                      "unknown";
 
+    // Separate sessionId from lead data (not a Lead model field)
+    const { sessionId, consentTimestamp, ...leadFields } = validatedData;
+
     // Create lead in database
     const lead = await prisma.lead.create({
       data: {
-        ...validatedData,
+        ...leadFields,
         score: scoringResult.score,
         ipAddress,
         status: "NEW",
+        tcpaConsent: leadFields.tcpaConsent ?? false,
+        consentTimestamp: consentTimestamp ? new Date(consentTimestamp) : undefined,
+        consentIp: leadFields.tcpaConsent ? ipAddress : undefined,
       },
     });
+
+    // Link lead to conversation if sessionId provided (chat-to-lead flow)
+    if (sessionId) {
+      linkLeadToConversation(sessionId, lead.id, leadFields).catch((err) => {
+        logger.error("Failed to link lead to conversation", err as Error, {
+          component: "leads-api",
+          metadata: { leadId: lead.id, sessionId },
+        });
+      });
+    }
 
     logger.info("Lead created", {
       component: "leads-api",
@@ -204,6 +226,34 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Note: Lead scoring has been moved to lib/lead-scoring.ts for enhanced functionality
-// The enhanced scoring includes detailed breakdown, tier assignment, qualification level,
-// and personalized recommendations for each lead.
+// Link a newly created Lead to its Conversation record via sessionId
+async function linkLeadToConversation(
+  sessionId: string,
+  leadId: string,
+  leadData: { loanType?: LoanType; propertyType?: PropertyType; propertyLocation?: string; timeline?: Timeline; creditRange?: CreditRange }
+) {
+  const conversation = await prisma.conversation.findUnique({
+    where: { sessionId },
+  });
+
+  if (!conversation) {
+    logger.warn("Conversation not found for sessionId", {
+      component: "leads-api",
+      metadata: { sessionId, leadId },
+    });
+    return;
+  }
+
+  await prisma.conversation.update({
+    where: { id: conversation.id },
+    data: {
+      leadId,
+      leadCaptured: true,
+      loanType: leadData.loanType,
+      propertyType: leadData.propertyType,
+      location: leadData.propertyLocation,
+      timeline: leadData.timeline,
+      creditRange: leadData.creditRange,
+    },
+  });
+}

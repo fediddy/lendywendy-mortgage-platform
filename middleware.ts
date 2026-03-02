@@ -1,11 +1,36 @@
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { checkRateLimit, getRateLimitTier, getClientIp } from "@/lib/rate-limit";
 
 export default auth((req) => {
+  const pathname = req.nextUrl.pathname;
+
+  // Rate limiting for API routes
+  if (pathname.startsWith("/api/")) {
+    const ip = getClientIp(req);
+    const tier = getRateLimitTier(pathname);
+    const result = checkRateLimit(`${ip}:${pathname.split("/").slice(0, 3).join("/")}`, tier);
+
+    if (!result.allowed) {
+      return NextResponse.json(
+        { error: "Too many requests" },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(Math.ceil((result.resetAt - Date.now()) / 1000)),
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(result.resetAt),
+          },
+        }
+      );
+    }
+  }
+
+  // Auth checks for protected routes
   const isLoggedIn = !!req.auth;
-  const isAdminRoute = req.nextUrl.pathname.startsWith("/admin");
-  const isPartnerRoute = req.nextUrl.pathname.startsWith("/partner");
-  const isLoginPage = req.nextUrl.pathname === "/login";
+  const isAdminRoute = pathname.startsWith("/admin");
+  const isPartnerRoute = pathname.startsWith("/partner");
+  const isLoginPage = pathname === "/login";
 
   // Redirect to login if accessing protected routes without auth
   if (!isLoggedIn && (isAdminRoute || isPartnerRoute)) {
@@ -41,5 +66,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/admin/:path*", "/partner/:path*", "/login"],
+  matcher: ["/api/:path*", "/admin/:path*", "/partner/:path*", "/login"],
 };

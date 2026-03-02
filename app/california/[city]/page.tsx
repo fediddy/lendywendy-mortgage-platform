@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { ReadinessCTA } from "@/components/readiness/ReadinessCTA";
 import {
   getCityBySlug,
   getAllCitySlugs,
@@ -357,6 +358,8 @@ export default async function CityPage({
             </div>
           </div>
         </section>
+
+        <ReadinessCTA />
 
         {/* Final CTA */}
         <section className="py-20 border-t border-gray-200 bg-gradient-to-b from-gray-50 to-white">

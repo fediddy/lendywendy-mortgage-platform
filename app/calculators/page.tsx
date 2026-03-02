@@ -23,6 +23,14 @@ export const metadata: Metadata = {
     "refinance calculator",
     "rental property calculator",
   ],
+  openGraph: {
+    title: "Investment Property Calculators | LendyWendy",
+    description: "Free California investment property calculators. Calculate DSCR, cash flow, ROI, and refinance savings.",
+    url: "https://lendywendy.com/calculators",
+  },
+  alternates: {
+    canonical: "https://lendywendy.com/calculators",
+  },
 };
 
 export default function CalculatorsPage() {

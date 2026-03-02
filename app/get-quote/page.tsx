@@ -15,6 +15,14 @@ export const metadata: Metadata = {
     "no income verification mortgage",
     "rental property financing",
   ],
+  openGraph: {
+    title: "Get Matched with Investment Lenders | LendyWendy",
+    description: "Connect with California's top investment property lenders. DSCR loans, fix-and-flip, bridge financing. No tax returns, close in 14 days.",
+    url: "https://lendywendy.com/get-quote",
+  },
+  alternates: {
+    canonical: "https://lendywendy.com/get-quote",
+  },
 };
 
 export default function GetQuotePage() {
@@ -171,7 +179,7 @@ export default function GetQuotePage() {
             LendyWendy is a free service that connects borrowers with mortgage lenders. We are not a lender and do not make loans.
             We may receive compensation from lender partners when you are matched. Rates, terms, and availability vary by lender.
             All loan applications are subject to lender approval and underwriting. Equal Housing Opportunity.{" "}
-            <Link href="/privacy" className="text-teal-600 hover:underline">Privacy Policy</Link>.
+            <Link href="/privacy-policy" className="text-teal-600 hover:underline">Privacy Policy</Link>.
           </p>
         </div>
       </div>

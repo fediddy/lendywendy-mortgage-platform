@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { ReadinessCTA } from '@/components/readiness/ReadinessCTA';
 
 export const metadata: Metadata = {
   title: "California Conventional Loans | 3% Down, No PMI at 80% LTV | LendyWendy",
@@ -458,6 +459,8 @@ export default function ConventionalLoansPage() {
             </p>
           </div>
         </section>
+
+        <ReadinessCTA />
       </main>
     </>
   );

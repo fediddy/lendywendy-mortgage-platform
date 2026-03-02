@@ -19,6 +19,9 @@ export const metadata: Metadata = {
     description: 'Are you ready for investment property financing in California? Take our free 2-minute assessment and find out!',
     url: 'https://lendywendy.com/readiness-score',
   },
+  alternates: {
+    canonical: 'https://lendywendy.com/readiness-score',
+  },
 };
 
 export default function ReadinessScorePage() {

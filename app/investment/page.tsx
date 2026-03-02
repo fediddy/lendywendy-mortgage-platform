@@ -49,6 +49,9 @@ export const metadata: Metadata = {
     url: "https://lendywendy.com/investment",
     images: [{ url: "https://lendywendy.com/api/og?title=California+Investment+Property+Loans&subtitle=DSCR%2C+Fix+%26+Flip%2C+Portfolio%2C+and+Hard+Money+Lending.&badge=Investor+Specialists", width: 1200, height: 630, alt: "California Investment Property Loans" }],
   },
+  alternates: {
+    canonical: "https://lendywendy.com/investment",
+  },
 };
 
 const loanProducts = [

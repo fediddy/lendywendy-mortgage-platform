@@ -1,1052 +1,958 @@
-# LendyWendy.com - Technical Architecture
+# Lendywendy.com — Architecture Document
 
+**Date:** 2026-02-28
+**Version:** 2.0 (aligned with PRD v2)
 **Author:** BMad
-**Date:** 2025-11-04
-**Version:** 1.0
-**Project:** Mortgage Lead Generation Platform with Topical Authority Strategy
+**Strategy:** AI-First Lead Engagement
+**Project Type:** Brownfield (enhancing existing codebase)
 
 ---
 
 ## Executive Summary
 
-This architecture defines the technical decisions and implementation patterns for LendyWendy.com—a custom-built, SEO-first mortgage lead generation platform targeting residential, investment property, and commercial real estate financing segments.
-
-**Core Architectural Principles:**
-1. **SEO-First:** Every technical decision optimized for search engine visibility and Core Web Vitals
-2. **Custom-Built:** Full control over lead capture optimization, not constrained by WordPress limitations
-3. **Fintech Compliance:** Security and regulatory compliance baked into architecture from day one
-4. **AI-Agent Consistency:** Clear patterns and conventions to prevent development agent conflicts
+Lendywendy.com is an AI-powered mortgage lead generation platform deployed as a self-hosted Next.js application on Coolify. The architecture prioritizes two core differentiators — a conversational AI Mortgage Advisor (DeepSeek-powered) and a gamified Mortgage Readiness Score — that convert visitors into qualified leads through engagement rather than traditional forms. The existing brownfield codebase provides a solid foundation with 40+ pages, a comprehensive Prisma schema, and working integrations that this architecture formalizes and extends.
 
 ---
 
-## Technology Stack Decision
+## Decision Summary
 
-### Recommended Starter: **create-next-app** (Official Next.js)
+| Category | Decision | Version | Affects Epics | Rationale |
+|----------|----------|---------|---------------|-----------|
+| Framework | Next.js (App Router) | 16.1.6 | All | Already deployed, SSR + API routes in one project |
+| Language | TypeScript | 5.x | All | Type safety across full stack |
+| Database | PostgreSQL (Coolify-managed) | 17.x | All | Relational data, ACID compliance, Prisma support |
+| ORM | Prisma | 6.19.0 | All | Type-safe queries, migrations, schema-first |
+| Auth | NextAuth.js | 5.0.0-beta.30 | E1, E5 | Admin-only auth, Prisma adapter, credentials provider |
+| Styling | Tailwind CSS + shadcn/ui | 4.x | All frontend | Utility-first CSS, Radix UI primitives |
+| AI Provider | DeepSeek API (OpenAI-compatible) | deepseek-chat | E2 | Cost-effective, streaming support, direct fetch |
+| AI Streaming | Direct fetch + SSE (ReadableStream) | -- | E2 | No vendor SDK dependency, full control |
+| Email | Resend | latest | E6 | Modern API, react-email templates, free tier |
+| Deployment | Coolify (Docker standalone) | Self-hosted VPS | All | Self-hosted PaaS, no vendor lock-in |
+| Image Optimization | sharp (self-hosted) | latest | E4, E8 | next/image default for non-Vercel |
+| Forms | React Hook Form + Zod | 7.66 / 4.1 | E2, E3, E5 | Validation + type inference |
+| Dates | date-fns | 4.1.0 | All | Tree-shakeable, immutable |
+| Icons | lucide-react | 0.552 | All frontend | Consistent icon set |
+| Error Tracking | Sentry (cloud) | latest | E8 | Industry standard, Next.js integration |
+| Analytics | Google Analytics 4 | -- | E8 | Free, sufficient for lead-gen |
+| Rate Limiting | In-memory sliding window | Custom | E2, E8 | Simple, no Redis needed at scale |
+| Rich Text Editor | Tiptap | 3.10.2 | E7 (post-MVP) | Already integrated for CMS |
+| Background Jobs | DB-based retry queue + cron | Custom | E6 | No external queue service needed |
+| Testing | Vitest + React Testing Library | latest | All | Fast, ESM-native, Jest-compatible |
 
-**Command:**
-```bash
-npx create-next-app@latest lendywendy --typescript --tailwind --app --eslint
-cd lendywendy
-npm install
+---
+
+## Project Structure
+
+```
+lendywendy.com/
+├── app/                              # Next.js App Router (pages + API)
+│   ├── layout.tsx                    # Root layout — ChatWidget mounted here
+│   ├── page.tsx                      # Homepage
+│   ├── error.tsx                     # Error boundary
+│   ├── global-error.tsx              # Global error boundary
+│   ├── not-found.tsx                 # 404 page
+│   ├── robots.ts                     # Dynamic robots.txt
+│   ├── sitemap.ts                    # Dynamic XML sitemap
+│   ├── admin/
+│   │   ├── content/                  # CMS admin (post-MVP Phase 4)
+│   │   │   ├── page.tsx              # Content list
+│   │   │   ├── new/page.tsx          # Create content
+│   │   │   └── edit/page.tsx         # Edit content
+│   │   └── leads/
+│   │       └── page.tsx              # Lead management dashboard
+│   ├── api/
+│   │   ├── auth/[...nextauth]/
+│   │   │   └── route.ts             # NextAuth endpoints
+│   │   ├── chat/
+│   │   │   └── route.ts             # AI Advisor — POST (stream SSE), GET (history)
+│   │   ├── leads/
+│   │   │   └── route.ts             # Lead CRUD — POST (create), GET (list)
+│   │   ├── readiness/
+│   │   │   └── route.ts             # Readiness Score submission
+│   │   ├── admin/
+│   │   │   ├── content/route.ts      # Admin content API (post-MVP)
+│   │   │   ├── categories/route.ts   # Admin categories API (post-MVP)
+│   │   │   └── leads/route.ts        # Admin leads API
+│   │   ├── og/
+│   │   │   └── route.tsx             # Dynamic OG image generation
+│   │   └── webhooks/
+│   │       └── retry/route.ts        # Cron endpoint for webhook retries
+│   ├── california/
+│   │   ├── page.tsx                  # California hub page
+│   │   └── [city]/page.tsx           # Dynamic metro pages
+│   ├── commercial/
+│   │   ├── page.tsx                  # Commercial hub
+│   │   ├── construction-loans/page.tsx
+│   │   ├── conventional-cre/page.tsx
+│   │   ├── sba-504-loans/page.tsx
+│   │   └── sba-7a-loans/page.tsx
+│   ├── investment/
+│   │   ├── page.tsx                  # Investment hub
+│   │   ├── bridge-loans/page.tsx
+│   │   ├── dscr-loans/page.tsx
+│   │   ├── fix-and-flip/page.tsx
+│   │   ├── hard-money/page.tsx
+│   │   └── portfolio-loans/page.tsx
+│   ├── residential/
+│   │   ├── page.tsx                  # Residential hub
+│   │   ├── conventional/page.tsx
+│   │   ├── fha/page.tsx
+│   │   ├── jumbo/page.tsx
+│   │   └── va/page.tsx
+│   ├── calculators/page.tsx          # Calculator hub (post-MVP)
+│   ├── get-quote/page.tsx            # Lead capture form (fallback)
+│   ├── readiness-score/page.tsx      # Mortgage Readiness Score assessment
+│   ├── lead-submitted/page.tsx       # Confirmation page
+│   └── login/page.tsx                # Admin login
+├── components/
+│   ├── ui/                           # shadcn/ui primitives (13 components)
+│   │   ├── alert.tsx
+│   │   ├── badge.tsx
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── dialog.tsx
+│   │   ├── input.tsx
+│   │   ├── label.tsx
+│   │   ├── progress.tsx
+│   │   ├── select.tsx
+│   │   ├── slider.tsx
+│   │   ├── table.tsx
+│   │   ├── tabs.tsx
+│   │   └── textarea.tsx
+│   ├── chat/                         # AI Advisor components
+│   │   └── ChatWidget.tsx            # Floating chat widget
+│   ├── readiness/                    # Readiness Score components
+│   │   └── ReadinessAssessment.tsx   # Assessment wizard
+│   ├── leads/                        # Lead capture components
+│   │   └── multi-step-lead-form.tsx  # Multi-step form (get-quote fallback)
+│   ├── layout/                       # Site-wide layout components
+│   │   ├── header.tsx
+│   │   ├── footer.tsx
+│   │   └── mobile-cta.tsx
+│   ├── shared/                       # Reusable cross-page components
+│   │   ├── CtaSection.tsx
+│   │   └── TrustSignals.tsx
+│   ├── seo/                          # SEO components
+│   │   ├── StructuredData.tsx        # JSON-LD schema
+│   │   ├── breadcrumbs.tsx
+│   │   └── meta-tags.tsx
+│   ├── segments/                     # Loan segment components
+│   │   ├── content-card.tsx
+│   │   ├── segment-hub-hero.tsx
+│   │   └── segment-navigation.tsx
+│   ├── location/                     # Location-specific components
+│   │   └── CityHero.tsx
+│   ├── calculators/                  # Calculator components (post-MVP)
+│   ├── editor/                       # Tiptap editor (post-MVP)
+│   ├── forms/                        # CMS forms (post-MVP)
+│   └── workflow/                     # Publishing workflow (post-MVP)
+├── lib/
+│   ├── ai/
+│   │   ├── deepseek.ts              # DeepSeek API client + streaming helpers
+│   │   └── system-prompt.ts          # AI persona, conversation config, contextual greetings
+│   ├── integrations/
+│   │   ├── email.ts                  # Resend email service
+│   │   ├── maxbounty.ts             # MaxBounty webhook + retry logic
+│   │   └── index.ts                  # Integration barrel export
+│   ├── scoring/
+│   │   └── readiness.ts             # Readiness Score algorithm (weighted, 0-100)
+│   ├── auth.ts                       # NextAuth configuration
+│   ├── db.ts                         # Prisma client singleton
+│   ├── lead-scoring.ts              # Lead quality scoring (weighted, 0-100)
+│   ├── logger.ts                     # Structured JSON logging
+│   ├── webhooks.ts                   # Webhook queue/retry utilities
+│   ├── california-cities.ts          # California metro data
+│   ├── content-service.ts            # CMS content service (post-MVP)
+│   ├── content-utils.ts              # CMS utilities (post-MVP)
+│   ├── og.ts                         # OG image generation helpers
+│   ├── url-utils.ts                  # URL formatting utilities
+│   └── utils.ts                      # General utilities (cn helper, etc.)
+├── prisma/
+│   └── schema.prisma                 # Database schema (15 models)
+├── public/                           # Static assets
+├── docs/                             # Project documentation
+├── Dockerfile                        # Multi-stage build for Coolify
+├── .dockerignore                     # Docker ignore patterns
+├── next.config.ts                    # output: 'standalone', sharp config
+├── tailwind.config.ts                # Tailwind configuration
+├── tsconfig.json                     # TypeScript configuration
+├── package.json                      # Dependencies and scripts
+└── .env.example                      # Environment variable template
 ```
 
-**Why This Choice:**
-- **Official Next.js CLI** - Latest Next.js 15 with App Router (optimal for SEO with SSR/SSG)
-- **Zero boilerplate complexity** - Start clean and add exactly what you need
-- **TypeScript** - Type safety prevents bugs at scale
-- **Tailwind CSS** - Rapid UI development with utility-first approach
-- **App Router** - Server Components for better performance and SEO
+---
 
-**Alternative Considered:** SaaS boilerplates (SaaSBold, ChadNext) were considered but **rejected** because:
-- Include features you don't need (billing, teams, multi-tenancy beyond what's required)
-- Opinionated structure may conflict with custom CMS needs
-- Learning curve for boilerplate conventions vs standard Next.js
-- **Decision: Start lean, add features as needed per epic stories**
+## Epic to Architecture Mapping
+
+| Epic | Primary Locations | Key Dependencies |
+|------|-------------------|------------------|
+| **E1: Foundation & Infrastructure** | `Dockerfile`, `next.config.ts`, `lib/db.ts`, `lib/auth.ts`, `prisma/schema.prisma`, `app/layout.tsx`, `components/ui/` | PostgreSQL, Coolify, NextAuth |
+| **E2: AI Mortgage Advisor** | `app/api/chat/route.ts`, `components/chat/ChatWidget.tsx`, `lib/ai/deepseek.ts`, `lib/ai/system-prompt.ts` | DeepSeek API, Prisma (Conversation, Message) |
+| **E3: Mortgage Readiness Score** | `app/readiness-score/page.tsx`, `app/api/readiness/route.ts`, `components/readiness/ReadinessAssessment.tsx`, `lib/scoring/readiness.ts` | Prisma (ReadinessAssessment, Lead) |
+| **E4: Landing Pages & SEO** | `app/page.tsx`, `app/residential/`, `app/commercial/`, `app/investment/`, `app/california/`, `components/seo/`, `components/segments/` | JSON-LD schema, sitemap.ts |
+| **E5: Lead Management & Admin** | `app/admin/leads/page.tsx`, `app/api/admin/leads/route.ts`, `lib/lead-scoring.ts` | NextAuth (admin auth), Prisma (Lead, Agent) |
+| **E6: Integrations & Routing** | `lib/integrations/maxbounty.ts`, `lib/integrations/email.ts`, `app/api/webhooks/retry/route.ts`, `lib/webhooks.ts` | Resend, MaxBounty API, Coolify cron |
+| **E7: Content & SEO** (post-MVP) | `app/admin/content/`, `components/editor/`, `lib/content-service.ts` | Tiptap, Prisma (Article, Guide, Calculator) |
+| **E8: Polish, Compliance & Launch** | Cross-cutting: all `app/` pages, `components/layout/`, Sentry config, GA4 script | Sentry, GA4 |
 
 ---
 
-## Core Technology Decisions
+## Technology Stack Details
 
-### Frontend Framework
-**Decision:** Next.js 15 with App Router
-**Rationale:**
-- Server-side rendering critical for SEO (search engines see full HTML)
-- Static generation for hub landing pages (maximum performance)
-- Dynamic rendering for article pages (fresh content, personalized CTAs)
-- Built-in image optimization (Core Web Vitals LCP optimization)
-- API routes for backend logic (no separate backend needed for MVP)
+### Core Technologies
 
-**Alternatives Considered:**
-- Remix: Strong SSR but smaller ecosystem
-- Gatsby: Pure static site generator, less flexible for dynamic lead forms
-- **Decision: Next.js dominates SEO-focused web apps with best DX**
+**Next.js 16.1.6 (App Router)**
+- `output: 'standalone'` for Docker/Coolify deployment
+- Server Components by default, `'use client'` only for interactive components
+- API routes for all backend endpoints
+- Dynamic routes for California metros (`[city]`)
+- Static generation for loan type pages
+- `next/image` with `sharp` for self-hosted image optimization
+
+**TypeScript 5.x**
+- Strict mode enabled
+- Path aliases: `@/` maps to project root
+- Prisma generates types from schema
+
+**PostgreSQL 17 (Coolify-managed)**
+- Managed as a Coolify service on the same VPS
+- Accessed via Prisma ORM
+- Connection pooling via Prisma's built-in connection manager
+- Backups managed via Coolify's database backup feature
+
+**Prisma 6.19.0**
+- Schema-first approach with 15 models
+- Migrations via `prisma migrate deploy` in Docker build
+- Client singleton in `lib/db.ts`
+- Generated types used throughout the application
+
+### Integration Points
+
+**DeepSeek API (AI Mortgage Advisor)**
+- OpenAI-compatible REST API at `https://api.deepseek.com/v1/chat/completions`
+- Model: `deepseek-chat`
+- Direct `fetch` with streaming (`stream: true`) returning SSE
+- System prompt defines "Wendy" persona with conversation goals and boundaries
+- Contextual greetings based on page context (loan type)
+- Qualification data extraction via secondary AI call
+- Temperature: 0.7, max_tokens: 500
+- Existing implementation: `lib/ai/deepseek.ts`
+
+**Resend (Email Notifications)**
+- Lead confirmation emails to borrowers
+- New lead alerts to admin
+- Agent notification on lead assignment
+- React-email templates for consistent HTML emails
+- Replace current `lib/integrations/email.ts` implementation
+
+**MaxBounty (Affiliate Webhook)**
+- POST webhook on lead creation with mapped payload
+- Retry logic for failed submissions (7-day window, batch retries)
+- Submission status tracked per lead (`maxBountySubmitted`, `maxBountyResponse`)
+- Existing implementation: `lib/integrations/maxbounty.ts`
+
+**Sentry (Error Tracking)**
+- Next.js SDK with automatic error boundary integration
+- Server-side and client-side error capture
+- Performance monitoring (optional)
+
+**Google Analytics 4**
+- Client-side gtag.js script
+- Custom events: `chat_started`, `chat_lead_captured`, `assessment_started`, `assessment_completed`, `lead_submitted`
 
 ---
 
-### Database & ORM
-**Decision:** PostgreSQL + Prisma ORM
-**Hosting:** Vercel Postgres (seamless integration) or Neon (generous free tier)
+## Novel Pattern Designs
 
-**Rationale:**
-- PostgreSQL: Industry-standard RDBMS, JSON support for flexible content fields
-- Prisma: Type-safe database access, excellent DX with auto-completion
-- Migration system for schema evolution
-- Prisma Studio for database GUI during development
+### Pattern 1: Conversational Lead Qualification (AI Advisor)
 
-**Schema Design Principles:**
-- Normalize data (separate tables for Articles, Users, Leads, Partners, Categories, Tags)
-- Indexes on frequently queried fields (slug, status, segment, published_at)
-- JSONB fields for flexible content (article schema_markup, lead metadata)
-- Soft deletes for compliance (deleted_at instead of hard delete)
+**Purpose:** Convert visitors into qualified leads through natural AI conversation rather than forms.
 
-**Alternatives Considered:**
-- Drizzle ORM: Lighter weight but less mature tooling
-- MongoDB: Document model attractive but PostgreSQL relational model better for lead/partner relationships
-- **Decision: PostgreSQL + Prisma is industry standard with best TypeScript integration**
+**Components:**
+- `ChatWidget` (client component) — Floating bottom-right widget in root `layout.tsx`, persists across page navigation
+- `/api/chat` (API route) — Streams DeepSeek responses via SSE, persists messages to DB
+- `lib/ai/deepseek.ts` — DeepSeek client with streaming support and qualification extraction
+- `lib/ai/system-prompt.ts` — Wendy persona, conversation goals, contextual greetings
+
+**Data Flow:**
+```
+1. User opens chat → ChatWidget generates sessionId (stored in sessionStorage)
+2. User sends message → POST /api/chat with messages[] + sessionId
+3. API route calls DeepSeek with system prompt + message history
+4. DeepSeek streams response → API pipes SSE to client via ReadableStream
+5. Client renders tokens as they arrive (typing effect)
+6. API stores user message + assistant response in Conversation/Message tables
+7. After 4-6 exchanges → AI naturally asks for contact info
+8. User provides contact info → Client calls POST /api/leads
+9. Lead created → linked to Conversation → triggers MaxBounty webhook + email
+```
+
+**State Management:**
+- `sessionId` in browser `sessionStorage` (survives page navigation, lost on tab close)
+- Message history maintained in React Context wrapping the ChatWidget
+- Full conversation persisted in DB (Conversation + Message models)
+- Widget state (open/closed/minimized) in React state within root layout
+
+**Upgrade Needed:** Current `/api/chat` uses non-streaming responses (`stream: false`). Must upgrade to SSE streaming for real-time token delivery.
+
+**Edge Cases:**
+- DeepSeek API failure → fallback message directing to `/get-quote` form
+- Session lost (tab close) → user starts fresh, previous conversation retained in DB for admin
+- Rate limited → polite message, suggest trying again shortly
+- Off-topic → system prompt handles redirection to mortgage topics
 
 ---
+
+### Pattern 2: Gamified Assessment Engine (Readiness Score)
+
+**Purpose:** Engage visitors with a gamified 10-question assessment that qualifies leads and captures emails.
+
+**Components:**
+- `ReadinessAssessment` (client component) — Step-by-step wizard in `/readiness-score`
+- `/api/readiness` (API route) — Receives completed assessment, creates ReadinessAssessment + Lead records
+- `lib/scoring/readiness.ts` — Weighted scoring algorithm (deterministic, no API call)
+
+**Data Flow:**
+```
+1. User clicks "Check Your Readiness Score" CTA
+2. ReadinessAssessment renders question 1 of 10 (one per screen on mobile)
+3. Progress bar updates with each answer (client-side state only)
+4. All 10 answers collected → lib/scoring/readiness.ts calculates score client-side
+5. Animated score reveal with category (Mortgage Ready / Almost There / etc.)
+6. Score visible immediately, detailed breakdown requires email
+7. User enters email → POST /api/readiness with responses + score + email
+8. API creates ReadinessAssessment record + Lead record (source: READINESS_SCORE)
+9. Lead scoring applied → MaxBounty webhook + confirmation email triggered
+10. Social share buttons offered with pre-formatted text
+```
+
+**Score Algorithm (existing, validated):**
+- Credit score: 0-25 points
+- Employment stability: 0-15 points
+- Income adequacy: 0-15 points
+- Debt-to-income: 0-15 points
+- Down payment: 0-15 points
+- Pre-approval status: 0-10 points
+- No negative credit events: 0-5 points
+- Total: 0-100 → categories: Mortgage Ready (80+), Almost There (60-79), Getting Prepared (40-59), Building Foundation (0-39)
+
+**Implementation:** `lib/scoring/readiness.ts` is already complete with `calculateReadinessScore()`, `getImprovementTips()`, and display helpers.
+
+---
+
+## Implementation Patterns
+
+These patterns ensure consistent implementation across all AI agents:
+
+### Naming Conventions
+
+| Entity | Convention | Example |
+|--------|-----------|---------|
+| React components | PascalCase files | `ChatWidget.tsx`, `ReadinessAssessment.tsx` |
+| Utility/lib files | kebab-case | `lead-scoring.ts`, `california-cities.ts` |
+| API route dirs | kebab-case (Next.js convention) | `app/api/chat/route.ts` |
+| DB models | PascalCase (Prisma) | `Lead`, `Conversation`, `ReadinessAssessment` |
+| DB columns | camelCase (Prisma) | `leadSource`, `scoreCategory`, `createdAt` |
+| DB enums | SCREAMING_SNAKE | `MORTGAGE_READY`, `AI_ADVISOR` |
+| CSS | Tailwind utilities only | No custom CSS files |
+| IDs | cuid | Prisma `@default(cuid())` |
+| Environment vars | SCREAMING_SNAKE | `DEEPSEEK_API_KEY`, `DATABASE_URL` |
+| Component props | `{Name}Props` interface | `ChatWidgetProps`, `ReadinessAssessmentProps` |
+
+### Component Pattern
+
+```typescript
+// Server Component (default)
+export default function LoanTypePage() {
+  return <div>...</div>
+}
+
+// Client Component (only when needed)
+'use client'
+interface ChatWidgetProps {
+  pageContext?: string
+}
+export function ChatWidget({ pageContext }: ChatWidgetProps) {
+  // hooks, interactivity
+}
+```
+
+### API Route Pattern
+
+```typescript
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+    // Validate with Zod schema
+    const validated = schema.parse(body)
+    // Business logic
+    const result = await doWork(validated)
+    return Response.json({ data: result })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return Response.json({ error: 'Validation failed' }, { status: 400 })
+    }
+    logger.error('POST /api/resource', error)
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+```
+
+### Import Order
+
+```typescript
+// 1. React/Next.js
+import { useState } from 'react'
+import { NextResponse } from 'next/server'
+
+// 2. Third-party packages
+import { z } from 'zod'
+
+// 3. lib/ utilities
+import { prisma } from '@/lib/db'
+import { logger } from '@/lib/logger'
+
+// 4. components/
+import { Button } from '@/components/ui/button'
+
+// 5. Types (if separate)
+import type { Lead } from '@prisma/client'
+
+// 6. Relative imports
+import { helper } from './utils'
+```
+
+### API Response Format
+
+```typescript
+// Success
+Response.json({ data: result })
+Response.json({ data: items, total: 100, page: 1, pageSize: 20 })
+
+// Error
+Response.json({ error: 'Human-readable message' }, { status: 400 })
+Response.json({ error: 'Internal server error' }, { status: 500 })
+
+// Streaming (AI chat)
+new Response(readableStream, {
+  headers: {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+  },
+})
+```
+
+---
+
+## Consistency Rules
+
+### Code Organization
+
+- **Server Components by default.** Only add `'use client'` when the component needs hooks, event handlers, or browser APIs.
+- **Components organized by domain** (`chat/`, `readiness/`, `leads/`), not by type.
+- **Shared UI primitives** in `components/ui/` (shadcn/ui).
+- **Business logic** in `lib/`, never in components or API routes directly.
+- **One export per API route file** (Next.js convention: `GET`, `POST`, `PUT`, `DELETE`).
+
+### Error Handling
+
+- API routes: `try/catch` at the top level, return `{ error }` with appropriate HTTP status.
+- AI chat failures: return graceful fallback message, log to Sentry, never expose API errors to user.
+- Webhook failures: queue for retry, never block lead creation.
+- Client errors: React Error Boundaries (`error.tsx`, `global-error.tsx`).
+- Validation errors: Zod `.parse()` with `ZodError` catch returning 400.
+
+### Logging Strategy
+
+- Use `lib/logger.ts` for all server-side logging.
+- Structured JSON to stdout (Coolify captures container logs).
+- Log levels: `error` (failures), `warn` (degraded), `info` (business events), `debug` (development).
+- Always log: lead creation, webhook attempts/results, AI API errors, auth events.
+- Never log: PII in plain text at info/debug level, API keys, full conversation content at info level.
+
+### Date/Time Handling
+
+- Store as UTC in PostgreSQL (`DateTime` in Prisma = UTC).
+- API responses: ISO 8601 strings (`2026-02-28T12:00:00.000Z`).
+- Client display: format with `date-fns` in user's locale.
+- Prisma: `@default(now())` for `createdAt`, `@updatedAt` for `updatedAt`.
+
+---
+
+## Data Architecture
+
+### Core Models (PRD v2 — MVP)
+
+```
+Lead (central entity)
+├── id, name, email, phone
+├── leadSource (AI_ADVISOR | READINESS_SCORE | FORM | CALCULATOR)
+├── segment (RESIDENTIAL | INVESTMENT | COMMERCIAL)
+├── loanType (20 enum values)
+├── qualification fields (creditRange, timeline, downPayment, etc.)
+├── score (0-100), scoreCategory (hot/warm/cold), status
+├── TCPA consent fields (consent, timestamp, IP)
+├── UTM tracking fields
+├── MaxBounty submission fields
+├── → Conversation (1:1, optional — AI Advisor leads)
+├── → ReadinessAssessment (1:1, optional — Score leads)
+└── → Agent (M:1, optional — assigned agent)
+
+Conversation
+├── sessionId (unique, browser-generated)
+├── status (ACTIVE | COMPLETED | ABANDONED)
+├── extracted qualification data
+├── → Messages[] (ordered by createdAt)
+└── → Lead (1:1, created when contact info captured)
+
+ReadinessAssessment
+├── sessionId (unique, browser-generated)
+├── responses (JSON — 10 question answers)
+├── score breakdown (7 individual scores + total)
+├── category (MORTGAGE_READY | ALMOST_THERE | GETTING_PREPARED | BUILDING_FOUNDATION)
+├── completion/sharing status
+└── → Lead (1:1, created when email captured)
+
+Agent
+├── name, email, phone, company
+├── locations[], states[], loanTypes[], segments[]
+├── weeklyCapacity, currentWeekLeads
+├── status, performance metrics
+└── → Lead[] (assigned leads)
+
+Message
+├── conversationId → Conversation
+├── role (USER | ASSISTANT | SYSTEM)
+└── content
+```
+
+### Post-MVP Models (CMS — Phase 4)
+
+```
+Article, Guide, Calculator
+├── Standard content fields (title, slug, content, status)
+├── → User (author)
+├── → Category
+├── → Tag[] (many-to-many)
+├── → SeoMetadata (1:1)
+└── → ContentVersion[]
+
+Category (hierarchical)
+├── segment (RESIDENTIAL | INVESTMENT | COMMERCIAL)
+└── → parent/children (self-referential)
+
+SeoMetadata, ContentVersion, GuideStep, Tag, User
+```
+
+### Schema Migration Strategy
+
+The Prisma schema already contains both MVP models (Lead, Conversation, Message, ReadinessAssessment, Agent) and post-MVP CMS models (Article, Guide, Calculator, Category, Tag, SeoMetadata, ContentVersion). **Keep all models in schema.** CMS models are frozen until Phase 4 — no new development against them, but they don't hurt to have defined.
+
+---
+
+## API Contracts
+
+### POST /api/chat — AI Advisor Message
+
+**Request:**
+```json
+{
+  "messages": [
+    { "role": "user", "content": "I'm looking to buy my first home" }
+  ],
+  "sessionId": "clx1abc...",
+  "pageUrl": "/residential"
+}
+```
+
+**Response (SSE stream):**
+```
+data: {"content": "Hi! "}
+data: {"content": "That's exciting! "}
+data: {"content": "Tell me more about what you're looking for..."}
+data: [DONE]
+```
+
+### GET /api/chat?sessionId=xxx — Conversation History
+
+**Response:**
+```json
+{
+  "messages": [
+    { "role": "user", "content": "...", "createdAt": "2026-02-28T..." },
+    { "role": "assistant", "content": "...", "createdAt": "2026-02-28T..." }
+  ]
+}
+```
+
+### POST /api/leads — Create Lead
+
+**Request:**
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "555-0123",
+  "segment": "RESIDENTIAL",
+  "loanType": "PURCHASE",
+  "leadSource": "AI_ADVISOR",
+  "sessionId": "clx1abc...",
+  "creditRange": "GOOD_670_739",
+  "timeline": "ONE_TO_THREE_MONTHS",
+  "propertyLocation": "Los Angeles, CA",
+  "tcpaConsent": true,
+  "consentTimestamp": "2026-02-28T12:00:00Z",
+  "consentIp": "1.2.3.4",
+  "utmSource": "google",
+  "utmMedium": "cpc",
+  "utmCampaign": "ca-mortgage"
+}
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "id": "clx2def...",
+    "score": 78,
+    "scoreCategory": "warm",
+    "status": "NEW"
+  }
+}
+```
+
+### POST /api/readiness — Submit Readiness Assessment
+
+**Request:**
+```json
+{
+  "sessionId": "clx3ghi...",
+  "email": "jane@example.com",
+  "name": "Jane Smith",
+  "responses": {
+    "creditScore": "good",
+    "employmentLength": "2_to_5",
+    "annualIncome": "75k_100k",
+    "monthlyDebt": "500_1000",
+    "downPayment": "10_to_20",
+    "preApproved": "no",
+    "creditEvents": "none",
+    "loanType": "conventional",
+    "timeline": "1_to_3_months",
+    "location": "San Diego, CA"
+  },
+  "totalScore": 72,
+  "category": "ALMOST_THERE",
+  "tcpaConsent": true,
+  "consentTimestamp": "2026-02-28T12:00:00Z"
+}
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "assessmentId": "clx4jkl...",
+    "leadId": "clx5mno...",
+    "score": 72,
+    "category": "ALMOST_THERE"
+  }
+}
+```
+
+### GET /api/admin/leads — Admin Lead List (authenticated)
+
+**Query params:** `page`, `pageSize`, `status`, `source`, `scoreCategory`, `segment`, `search`, `dateFrom`, `dateTo`
+
+**Response:**
+```json
+{
+  "data": [ ],
+  "total": 150,
+  "page": 1,
+  "pageSize": 20
+}
+```
+
+### POST /api/webhooks/retry — Retry Failed Webhooks (cron)
+
+**Response:**
+```json
+{
+  "data": {
+    "processed": 5,
+    "successful": 3,
+    "failed": 2
+  }
+}
+```
+
+---
+
+## Security Architecture
 
 ### Authentication & Authorization
-**Decision:** NextAuth.js v5 (Auth.js)
-**Strategy:** Credentials provider (email/password) + future OAuth
 
-**Rationale:**
-- Industry-standard auth for Next.js
-- Role-based access control (RBAC) built-in
-- Secure session management (encrypted JWT or database sessions)
-- Easy OAuth provider addition later (Google, Microsoft for partners)
+- **Admin-only authentication** via NextAuth.js credentials provider
+- Session stored in HTTP-only cookies (JWT strategy)
+- All `/admin/*` pages and `/api/admin/*` routes require authenticated session
+- Role-based: ADMIN (full access), EDITOR (content only), PARTNER (future)
+- Public routes: all visitor-facing pages, `/api/chat`, `/api/leads`, `/api/readiness`
 
-**Security Requirements:**
-- Bcrypt password hashing (10+ salt rounds)
-- httpOnly cookies for session tokens (prevent XSS)
-- CSRF protection on all forms
-- MFA for admin accounts (future enhancement)
+### Input Validation
 
-**Roles:**
-- **Admin**: Full access (manage content, leads, partners, settings)
-- **Editor**: Content creation and management only
-- **Partner**: Access to assigned leads via partner portal
+- All API inputs validated with Zod schemas before processing
+- Prisma parameterized queries prevent SQL injection
+- React escaping prevents XSS in rendered content
+- File uploads disabled (text-only chat)
 
----
+### Rate Limiting
 
-### UI Component Library
-**Decision:** shadcn/ui + Radix UI + Tailwind CSS
+- Global: 100 requests/minute per IP on all API routes
+- AI chat: 10 requests/minute per IP (expensive DeepSeek calls)
+- Lead submission: 5 requests/minute per IP (prevent spam)
+- Implementation: in-memory sliding window in Next.js middleware
+- When outgrown: swap to Redis-backed (Coolify can host Redis)
 
-**Rationale:**
-- **shadcn/ui**: Copy-paste components (no package dependencies, full control)
-- **Radix UI**: Accessible primitives (WCAG 2.1 AA compliance out of the box)
-- **Tailwind CSS**: Utility-first styling (rapid development, consistent design)
-- Components are customizable (not locked into opinionated design)
+### Data Protection
 
-**Design System:**
-- Color Palette: Primary (blue for trust), Secondary (green for action), Neutral (grays)
-- Typography: System font stack for performance (Segoe UI, Roboto, Helvetica, Arial)
-- Spacing: Tailwind's 4px base unit scale
-- Breakpoints: Mobile-first (sm: 640px, md: 768px, lg: 1024px, xl: 1280px)
+- HTTPS everywhere via Coolify's Traefik proxy (auto-SSL with Let's Encrypt)
+- Database encrypted at rest (PostgreSQL default with Coolify)
+- API keys in environment variables (Coolify secrets management)
+- TCPA consent logged with timestamp and IP address on every lead capture
+- Lead PII accessible only through admin dashboard (authenticated)
 
-**Component Architecture:**
-```
-/components
-  /ui           # shadcn/ui primitives (Button, Input, Card, Dialog, etc.)
-  /forms        # Form components (LeadForm, LoginForm, etc.)
-  /content      # Content-specific (ArticleCard, RelatedArticles, etc.)
-  /dashboard    # Admin dashboard components
-  /partner      # Partner portal components
-```
+### Compliance
+
+- Equal Housing Opportunity disclaimer in footer
+- "Not a lender" disclaimer on all pages
+- Privacy policy page (required)
+- Terms of service page (required)
+- TCPA consent checkbox on all lead capture forms
+- Cookie consent banner (if using tracking cookies beyond GA4)
 
 ---
 
-### Content Management System (CMS)
-**Decision:** Custom-built CMS (not headless CMS like Sanity or Contentful)
+## Performance Considerations
 
-**Rationale:**
-- **Full control** over SEO optimization tools integrated into editor
-- **No vendor lock-in** or monthly SaaS fees
-- **Performance** - no external API calls for content rendering
-- **Customization** - internal linking suggestions, schema markup generation tailored to mortgage content
+### Targets (from PRD NFRs)
 
-**CMS Architecture:**
-- Rich text editor: **Tiptap** (headless, extensible, React-friendly)
-- Content storage: Markdown in PostgreSQL TEXT field (portable, git-friendly)
-- Image storage: **Vercel Blob** or **Cloudinary** (CDN, optimization, transformations)
-- SEO tools: Real-time analysis as editor types (keyword density, readability, meta preview)
-- Schema markup: Auto-generated JSON-LD based on article type (Article, HowTo, FAQPage)
+| Metric | Target |
+|--------|--------|
+| LCP (Largest Contentful Paint) | < 2.5 seconds |
+| AI response (streaming start) | < 2 seconds |
+| Form submission response | < 1 second |
+| Admin dashboard load | < 2 seconds |
+| Core Web Vitals | All green |
 
-**Content Model:**
-```prisma
-model Article {
-  id                String    @id @default(cuid())
-  title             String
-  slug              String    @unique
-  content           String    @db.Text // Markdown
-  excerpt           String?
-  authorId          String
-  author            User      @relation(fields: [authorId], references: [id])
-  status            ArticleStatus // DRAFT, REVIEW, PUBLISHED, ARCHIVED
-  segment           Segment   // RESIDENTIAL, INVESTMENT, COMMERCIAL
-  featuredImage     String?
-  metaTitle         String?
-  metaDescription   String?
-  schemaMarkup      Json?     // JSON-LD structured data
-  publishedAt       DateTime?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  tags              Tag[]     @relation("ArticleTags")
-  category          Category? @relation(fields: [categoryId], references: [id])
-  categoryId        String?
+### Strategies
+
+- **Static generation** for loan type pages and California metro pages (build-time render)
+- **Server Components** by default (zero client-side JS for static content)
+- **Streaming SSE** for AI chat (perceived instant response)
+- **Image optimization** via `next/image` + `sharp` (auto WebP/AVIF, lazy loading)
+- **Code splitting** automatic via Next.js App Router
+- **Database indexing** — Prisma schema includes indexes on: `email`, `status`, `score`, `segment`, `leadSource`, `createdAt`, `sessionId`
+- **Connection pooling** — Prisma's built-in connection manager (sufficient for single-VPS)
+
+---
+
+## Deployment Architecture
+
+### Coolify Setup
+
+```
+VPS (self-hosted)
+├── Coolify (PaaS management)
+│   ├── lendywendy-app (Next.js standalone container)
+│   │   ├── Dockerfile (multi-stage build)
+│   │   ├── Port: 3000 (internal)
+│   │   └── Traefik proxy → lendywendy.com (HTTPS)
+│   ├── lendywendy-db (PostgreSQL 17)
+│   │   ├── Port: 5432 (internal only)
+│   │   └── Automated backups via Coolify
+│   └── (future: Redis, if needed for rate limiting/caching)
+```
+
+### Dockerfile (multi-stage)
+
+```dockerfile
+# Stage 1: Dependencies
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Stage 2: Build
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npx prisma generate
+RUN npm run build
+
+# Stage 3: Production
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
+EXPOSE 3000
+CMD ["node", "server.js"]
+```
+
+### next.config.ts Changes Required
+
+```typescript
+const nextConfig: NextConfig = {
+  output: 'standalone',
 }
 ```
 
----
+### Environment Variables
 
-### SEO Infrastructure
-**Decision:** Next.js Metadata API + Custom SEO Components
+```env
+# Database (Coolify internal connection)
+DATABASE_URL="postgresql://user:pass@lendywendy-db:5432/lendywendy"
 
-**Technical SEO Checklist:**
-1. **Metadata:**
-   - Dynamic meta tags per page (title, description, OG tags, Twitter Cards)
-   - Canonical URLs on all pages
-   - robots meta tags (index/noindex, follow/nofollow)
+# NextAuth
+NEXTAUTH_URL="https://lendywendy.com"
+NEXTAUTH_SECRET="<generated-secret>"
 
-2. **Structured Data:**
-   - JSON-LD schema in `<head>` (Article, BreadcrumbList, Organization)
-   - Auto-generated from article metadata
-   - Validated against schema.org
+# DeepSeek AI
+DEEPSEEK_API_KEY="<api-key>"
+DEEPSEEK_BASE_URL="https://api.deepseek.com"
 
-3. **Sitemaps:**
-   - Dynamic XML sitemap at `/sitemap.xml`
-   - Auto-updates when articles published
-   - Submitted to Google Search Console, Bing Webmaster
+# Resend Email
+RESEND_API_KEY="<api-key>"
 
-4. **Performance (Core Web Vitals):**
-   - next/image for automatic image optimization
-   - Font optimization with next/font (preload, font-display: swap)
-   - Code splitting (dynamic imports for heavy components)
-   - Edge caching for static assets (Vercel Edge Network)
+# MaxBounty
+MAXBOUNTY_WEBHOOK_URL="<webhook-url>"
+MAXBOUNTY_AFFILIATE_ID="<affiliate-id>"
 
-5. **Crawlability:**
-   - Clean semantic HTML
-   - Proper heading hierarchy (single H1, logical H2-H6)
-   - Breadcrumb navigation
-   - Internal linking strategy (5-10 links per article)
+# Sentry
+SENTRY_DSN="<dsn>"
 
-**SEO Component Pattern:**
-```typescript
-// app/[segment]/[slug]/page.tsx
-export async function generateMetadata({ params }): Promise<Metadata> {
-  const article = await getArticle(params.slug);
-  return {
-    title: article.metaTitle || article.title,
-    description: article.metaDescription || article.excerpt,
-    openGraph: {
-      title: article.metaTitle,
-      description: article.metaDescription,
-      images: [article.featuredImage],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: article.metaTitle,
-      description: article.metaDescription,
-      images: [article.featuredImage],
-    },
-  };
-}
+# Google Analytics
+NEXT_PUBLIC_GA_MEASUREMENT_ID="G-XXXXXXXXXX"
 ```
+
+### Coolify Cron Jobs
+
+| Job | Schedule | Endpoint | Purpose |
+|-----|----------|----------|---------|
+| Webhook retry | Every 5 minutes | `POST /api/webhooks/retry` | Retry failed MaxBounty submissions |
+| Agent capacity reset | Weekly (Monday 00:00) | Custom script | Reset `currentWeekLeads` to 0 |
 
 ---
 
-## Application Architecture
+## Development Environment
 
-### Project Structure
+### Prerequisites
 
+- Node.js 20.x (LTS)
+- Docker + Docker Compose (for local PostgreSQL)
+- npm (package manager)
+
+### Setup Commands
+
+```bash
+# Clone and install
+git clone <repo>
+cd lendywendy.com
+npm install
+
+# Start local PostgreSQL
+docker compose up -d
+
+# Set up environment
+cp .env.example .env.local
+# Edit .env.local with your values
+
+# Run database migrations
+npx prisma migrate dev
+
+# Start development server
+npm run dev
 ```
-lendywendy/
-├── app/                          # Next.js App Router
-│   ├── (public)/                 # Public-facing pages
-│   │   ├── page.tsx              # Homepage
-│   │   ├── residential-mortgages/
-│   │   │   ├── page.tsx          # Residential hub landing
-│   │   │   └── [slug]/
-│   │   │       └── page.tsx      # Article page
-│   │   ├── investment-property-loans/
-│   │   │   ├── page.tsx          # Investment hub landing
-│   │   │   └── [slug]/page.tsx
-│   │   └── commercial-mortgages/
-│   │       ├── page.tsx          # Commercial hub landing
-│   │       └── [slug]/page.tsx
-│   ├── admin/                    # Admin dashboard
-│   │   ├── layout.tsx            # Admin layout with auth check
-│   │   ├── articles/
-│   │   │   ├── page.tsx          # Article list
-│   │   │   ├── new/page.tsx      # Create article
-│   │   │   └── [id]/edit/page.tsx # Edit article
-│   │   ├── leads/page.tsx        # Lead management
-│   │   ├── partners/page.tsx     # Partner management
-│   │   └── analytics/page.tsx    # Analytics dashboard
-│   ├── partner/                  # Partner portal
-│   │   ├── layout.tsx            # Partner layout
-│   │   ├── dashboard/page.tsx    # Partner dashboard
-│   │   └── leads/page.tsx        # Assigned leads
-│   ├── api/                      # API routes
-│   │   ├── auth/[...nextauth]/   # NextAuth endpoints
-│   │   ├── leads/route.ts        # Lead CRUD operations
-│   │   ├── articles/route.ts     # Article operations
-│   │   └── analytics/route.ts    # Analytics data
-│   ├── login/page.tsx            # Login page
-│   ├── sitemap.ts                # Dynamic sitemap generation
-│   └── layout.tsx                # Root layout
-├── components/
-│   ├── ui/                       # shadcn/ui components
-│   ├── forms/                    # Form components
-│   ├── content/                  # Content display components
-│   ├── dashboard/                # Dashboard widgets
-│   └── seo/                      # SEO components (SchemaMarkup, etc.)
-├── lib/
-│   ├── db.ts                     # Prisma client singleton
-│   ├── auth.ts                   # Auth configuration
-│   ├── utils.ts                  # Utility functions
-│   ├── seo/                      # SEO utilities
-│   │   ├── schema.ts             # Schema generation
-│   │   ├── metadata.ts           # Metadata helpers
-│   │   └── scoring.ts            # SEO score calculation
-│   └── email/                    # Email utilities
-│       ├── templates/            # React Email templates
-│       └── send.ts               # Email sending logic
-├── prisma/
-│   ├── schema.prisma             # Database schema
-│   └── migrations/               # Database migrations
-├── public/
-│   ├── images/                   # Static images
-│   └── robots.txt                # Robots.txt
-└── package.json
+
+### Local docker-compose.yml
+
+```yaml
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: lendywendy
+      POSTGRES_PASSWORD: localdev
+      POSTGRES_DB: lendywendy
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
 ```
 
 ---
 
-### Hosting & Deployment
-**Decision:** Vercel (Platform for Next.js)
+## Architecture Decision Records (ADRs)
 
-**Rationale:**
-- **Zero-config deployment** for Next.js (built by same team)
-- **Edge Network CDN** globally distributed (fast page loads worldwide)
-- **Preview deployments** for every pull request (QA before production)
-- **Environment variables** managed in dashboard (secure secret storage)
-- **Automatic HTTPS** with SSL certificates
-- **Serverless Functions** for API routes (scales automatically)
-- **Vercel Postgres** seamless database integration
+### ADR-001: Self-Hosted Coolify over Vercel
 
-**Deployment Workflow:**
-1. Push to `main` branch → automatic production deployment
-2. Push to `develop` branch → staging environment
-3. Pull request → preview deployment with unique URL
-4. Rollback capability within seconds if issues detected
+**Decision:** Deploy on self-hosted Coolify instead of Vercel.
+**Rationale:** Full control over infrastructure, no vendor lock-in, predictable costs at scale, ability to co-locate database on same VPS.
+**Trade-offs:** Manual infrastructure management, no edge network (single region), need Docker expertise.
+**Mitigations:** Coolify automates most DevOps tasks, Traefik handles SSL, Cloudflare CDN can be added for edge caching if needed.
 
-**Alternatives Considered:**
-- AWS Amplify: More complex setup, overkill for this project
-- Netlify: Good but Vercel optimized specifically for Next.js
-- Railway/Render: Excellent alternatives but Vercel ecosystem integration unmatched
+### ADR-002: Direct DeepSeek Fetch over Vercel AI SDK
 
----
+**Decision:** Use direct `fetch` to DeepSeek's OpenAI-compatible API with manual SSE parsing.
+**Rationale:** No dependency on Vercel's `ai` package, DeepSeek API is OpenAI-compatible so direct fetch is straightforward, full control over streaming behavior.
+**Trade-offs:** Manual SSE parsing code, no built-in React hooks for streaming.
+**Mitigations:** Existing `lib/ai/deepseek.ts` already implements streaming with `streamChatMessage()` async generator.
 
-## Lead Generation Architecture
+### ADR-003: In-Memory Rate Limiting over Redis
 
-### Lead Capture Flow
+**Decision:** Use in-memory sliding window for rate limiting instead of Redis or Upstash.
+**Rationale:** Single-instance deployment on Coolify means in-memory state is consistent. No need for external service at projected 10K daily visitors.
+**Trade-offs:** Rate limit state lost on restart, doesn't scale to multi-instance.
+**Mitigations:** Restart impact is negligible (rate limits reset). If multi-instance needed later, swap to Redis (Coolify can host it).
 
-```
-User lands on article (organic search)
-    ↓
-Reads content, scrolls down
-    ↓
-Lead magnets appear (calculator, exit-intent popup)
-    ↓
-User interacts with calculator
-    ↓
-CTA: "Get Matched with Lenders"
-    ↓
-Multi-step form (4 steps)
-    ↓
-Form submission → Lead created in database
-    ↓
-Lead scoring algorithm runs (0-100 points)
-    ↓
-Lead assigned to lender partner (auto-distribution)
-    ↓
-Email notifications:
-  - Lead: Confirmation email
-  - Partner: New lead assignment
-    ↓
-Partner contacts lead → Status updated
-```
+### ADR-004: DB-Based Webhook Retry over Message Queue
 
-### Lead Scoring Algorithm
+**Decision:** Use the existing Lead table's `maxBountySubmitted` field as a retry queue, with a cron endpoint to process failures.
+**Rationale:** Already implemented in `lib/integrations/maxbounty.ts` with `retryFailedSubmissions()`. Simple, debuggable, no additional infrastructure.
+**Trade-offs:** Polling-based (every 5 min) not event-driven, limited to webhook retries.
+**Mitigations:** 5-minute delay acceptable for webhook retries. If real-time processing needed later, add BullMQ with Redis.
 
-**Scoring Factors (0-100 points):**
-```typescript
-// lib/leads/scoring.ts
-export function calculateLeadScore(lead: Lead): number {
-  let score = 0;
+### ADR-005: Resend over SendGrid for Email
 
-  // Segment value (40 points max)
-  if (lead.segment === 'COMMERCIAL') score += 40;
-  else if (lead.segment === 'INVESTMENT') score += 30;
-  else if (lead.segment === 'RESIDENTIAL') score += 20;
+**Decision:** Use Resend for transactional email.
+**Rationale:** Modern API, react-email for type-safe templates that match the React codebase, generous free tier (100/day, scaling to 50K/month on paid).
+**Trade-offs:** Newer service with smaller ecosystem than SendGrid.
+**Mitigations:** Simple SMTP fallback possible, email volume is low for lead-gen site.
 
-  // Timeline urgency (20 points max)
-  if (lead.timeline === 'IMMEDIATE') score += 20;
-  else if (lead.timeline === 'WITHIN_3_MONTHS') score += 15;
-  else if (lead.timeline === 'WITHIN_6_MONTHS') score += 10;
-  else score += 5;
+### ADR-006: Keep CMS Models in Schema (Frozen)
 
-  // Credit quality (15 points max)
-  if (lead.creditRange === 'EXCELLENT') score += 15;
-  else if (lead.creditRange === 'GOOD') score += 10;
-  else if (lead.creditRange === 'FAIR') score += 5;
+**Decision:** Retain Article, Guide, Calculator, Category, Tag, SeoMetadata, and ContentVersion models in Prisma schema but defer all development to Phase 4.
+**Rationale:** Models are already defined and deployed. Removing them requires a destructive migration. They cause no harm sitting unused.
+**Trade-offs:** Schema is larger than needed for MVP, could confuse agents.
+**Mitigations:** Architecture document clearly labels post-MVP components. Epic mapping shows E7 as post-MVP.
 
-  // Down payment (10 points max)
-  if (lead.downPaymentPercent >= 20) score += 10;
-  else if (lead.downPaymentPercent >= 10) score += 5;
+### ADR-007: Vitest over Jest for Testing
 
-  // Pre-approval status (15 points max)
-  if (lead.preApproved) score += 15;
-
-  return score;
-}
-
-// Score categories
-// Hot: 80-100 (immediate follow-up required)
-// Warm: 60-79 (follow-up within 24 hours)
-// Cold: 0-59 (nurture sequence)
-```
-
-### Lead Distribution Logic
-
-**Auto-assignment Rules:**
-```typescript
-// lib/leads/distribution.ts
-async function assignLead(lead: Lead) {
-  // 1. Find partners accepting this segment
-  const qualifiedPartners = await prisma.partner.findMany({
-    where: {
-      status: 'ACTIVE',
-      segmentsAccepted: { has: lead.segment },
-      // Check volume cap not exceeded
-      _count: {
-        leadsAssigned: {
-          where: {
-            createdAt: { gte: startOfMonth() }
-          }
-        }
-      }
-    }
-  });
-
-  // 2. Filter by region if lead has location
-  const regionMatched = lead.location
-    ? qualifiedPartners.filter(p => p.regions.includes(lead.location))
-    : qualifiedPartners;
-
-  // 3. Round-robin among remaining partners
-  const partner = await getNextPartnerRoundRobin(regionMatched);
-
-  // 4. Assign with exclusivity timer
-  await prisma.lead.update({
-    where: { id: lead.id },
-    data: {
-      assignedToId: partner.id,
-      assignedAt: new Date(),
-      exclusivityExpiresAt: addHours(new Date(), 48)
-    }
-  });
-
-  // 5. Send email notification to partner
-  await sendPartnerLeadNotification(partner, lead);
-}
-```
+**Decision:** Use Vitest with React Testing Library for tests.
+**Rationale:** ESM-native (matches Next.js), faster than Jest, compatible Jest API (low learning curve), built-in TypeScript support.
+**Trade-offs:** Smaller ecosystem than Jest, though rapidly growing.
+**Mitigations:** Jest-compatible API means most resources/examples still apply.
 
 ---
 
-## Security & Compliance Architecture
-
-### Security Layers
-
-**1. Application Security:**
-- Input validation and sanitization (Zod schemas on all forms)
-- SQL injection prevention (Prisma parameterized queries)
-- XSS protection (Content Security Policy headers, React automatic escaping)
-- CSRF protection (NextAuth CSRF tokens)
-- Rate limiting (100 requests/min per IP on API routes)
-
-**2. Data Protection:**
-- HTTPS enforced site-wide (TLS 1.3 via Vercel)
-- Lead PII encrypted at rest (database-level encryption)
-- Password hashing (bcrypt with 10+ salt rounds)
-- Secure session management (httpOnly cookies, 30-min timeout)
-
-**3. Access Control:**
-- Role-based access control (RBAC) enforced on all protected routes
-- Middleware checks authentication and role before page render
-- API routes validate auth token on every request
-
-**Security Headers (next.config.js):**
-```javascript
-const securityHeaders = [
-  {
-    key: 'X-Frame-Options',
-    value: 'DENY',
-  },
-  {
-    key: 'X-Content-Type-Options',
-    value: 'nosniff',
-  },
-  {
-    key: 'Referrer-Policy',
-    value: 'strict-origin-when-cross-origin',
-  },
-  {
-    key: 'Content-Security-Policy',
-    value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline';",
-  },
-];
-```
-
-### Compliance Requirements
-
-**GDPR/CCPA:**
-- Cookie consent banner on first visit
-- Privacy policy page with data collection disclosure
-- Lead data deletion capability (soft delete with PII redaction after 90 days)
-- Data export capability (download personal data as JSON)
-- Opt-out from marketing communications
-
-**Financial Advertising (TILA, RESPA, TCPA):**
-- Equal Housing Opportunity disclaimer on all pages
-- "Not a lender" disclaimer in footer
-- APR disclosure when rates mentioned
-- TCPA consent checkbox on lead forms ("I agree to be contacted via phone/SMS")
-- Lead consent timestamp and IP address logged (audit trail)
-
-**Audit Trail:**
-```prisma
-model AuditLog {
-  id        String   @id @default(cuid())
-  userId    String?
-  action    String   // "LEAD_CREATED", "LEAD_ASSIGNED", "ARTICLE_PUBLISHED"
-  resource  String   // "Lead", "Article", "User"
-  resourceId String
-  metadata  Json?    // Additional context
-  ipAddress String?
-  createdAt DateTime @default(now())
-}
-```
-
----
-
-## Analytics & Monitoring Architecture
-
-### Analytics Stack
-
-**1. Google Analytics 4:**
-- Page views, sessions, user demographics
-- Custom events: `article_view`, `form_start`, `form_submit`, `calculator_use`, `lead_created`
-- Conversion tracking (form submissions = conversions)
-- Traffic source attribution
-
-**2. Google Search Console:**
-- Keyword rankings and impressions
-- Click-through rates from search results
-- Core Web Vitals monitoring
-- Index coverage and sitemap status
-
-**3. Application Analytics (Custom):**
-- Content performance (article views, time on page, leads generated per article)
-- Lead metrics (volume, score distribution, conversion funnel)
-- Partner performance (response time, conversion rates)
-- Revenue tracking (leads by segment, partner revenue)
-
-**Implementation:**
-```typescript
-// lib/analytics/track.ts
-export function trackEvent(
-  eventName: string,
-  params?: Record<string, any>
-) {
-  // GA4
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', eventName, params);
-  }
-
-  // Internal analytics (store in DB)
-  fetch('/api/analytics/events', {
-    method: 'POST',
-    body: JSON.stringify({ eventName, params, timestamp: Date.now() })
-  });
-}
-
-// Usage in components
-trackEvent('form_submit', {
-  segment: 'RESIDENTIAL',
-  lead_score: 85,
-  source: 'article_cta'
-});
-```
-
-### Monitoring & Observability
-
-**Error Tracking:** Sentry
-- Real-time error alerts
-- Stack traces with source maps
-- User context (logged in user, page, action)
-- Performance monitoring (transaction traces)
-
-**Uptime Monitoring:** Vercel Analytics + BetterStack (or UptimeRobot)
-- 5-minute interval health checks
-- Alert via email/SMS if downtime detected
-- 99.9% uptime SLA target
-
-**Performance Monitoring:**
-- Real User Monitoring (RUM) via Vercel Analytics
-- Core Web Vitals tracking (LCP, FID, CLS)
-- API route response time tracking
-- Database query performance (Prisma metrics)
-
----
-
-## Email Infrastructure
-
-**Email Service:** SendGrid (or Mailgun, AWS SES)
-
-**Why SendGrid:**
-- 99.99% deliverability rate
-- Email analytics (opens, clicks, bounces)
-- Template management
-- Suppression list handling (unsubscribes, bounces)
-- Generous free tier (100 emails/day)
-
-**Email Architecture:**
-```
-/lib/email
-  /templates          # React Email templates
-    lead-confirmation.tsx
-    partner-notification.tsx
-    lead-status-update.tsx
-  send.ts            # SendGrid API wrapper
-  queue.ts           # Email queue (optional: BullMQ for reliability)
-```
-
-**Template System:** React Email
-- Write email templates in React/TypeScript
-- Preview emails in development
-- Compile to production-ready HTML
-- Type-safe template props
-
-**Deliverability Setup:**
-- Dedicated sending domain: `email.lendywendy.com`
-- SPF record: Authorize SendGrid to send from domain
-- DKIM signature: Email authentication
-- DMARC policy: Prevent spoofing
-
-**Email Triggers:**
-- Lead form submission → Lead confirmation email (immediate)
-- Lead assigned to partner → Partner notification email (immediate)
-- Partner no response in 24 hours → Partner reminder email
-- Lead status change → Lead update email
-- Weekly digest → Partner performance summary email
-
----
-
-## Development Workflow & CI/CD
-
-### Git Branching Strategy
-
-```
-main         # Production (auto-deploys to lendywendy.com)
-  ↓
-develop      # Staging (auto-deploys to staging.lendywendy.com)
-  ↓
-feature/     # Feature branches (create preview deployments)
-```
-
-### Development Process
-
-1. **Local Development:**
-   ```bash
-   npm run dev              # Start dev server on localhost:3000
-   npx prisma studio        # Open database GUI
-   npm run lint             # Check code quality
-   npm run test             # Run tests (once implemented)
-   ```
-
-2. **Create Feature:**
-   ```bash
-   git checkout -b feature/lead-scoring-enhancement
-   # Make changes
-   git commit -m "Implement advanced lead scoring algorithm"
-   git push origin feature/lead-scoring-enhancement
-   ```
-
-3. **Pull Request:**
-   - Open PR on GitHub
-   - Vercel automatically creates preview deployment
-   - Code review required before merge
-   - Automated checks: lint, type-check, tests
-
-4. **Merge to Develop:**
-   - Auto-deploys to staging environment
-   - QA testing on staging
-
-5. **Deploy to Production:**
-   - Merge develop → main
-   - Auto-deploys to production (lendywendy.com)
-   - Rollback capability if issues detected
-
-### Testing Strategy
-
-**Unit Tests (Future):**
-- Jest for utility functions (scoring algorithm, SEO helpers)
-- React Testing Library for component tests
-
-**Integration Tests (Future):**
-- API route testing
-- Database operations testing
-
-**E2E Tests (Future):**
-- Playwright for critical user flows
-- Lead form submission end-to-end
-- Article publishing workflow
-
-**MVP Focus:** Manual testing initially, automate tests in Epic iterations
-
----
-
-## Performance Optimization Strategy
-
-### Core Web Vitals Targets
-
-**Largest Contentful Paint (LCP):** <2.5 seconds
-- Optimize hero images with next/image
-- Preload critical fonts
-- Server-side render above-the-fold content
-
-**First Input Delay (FID):** <100 milliseconds
-- Code splitting to reduce JavaScript bundle size
-- Defer non-critical JavaScript
-- Use React Server Components (no client-side hydration for static content)
-
-**Cumulative Layout Shift (CLS):** <0.1
-- Specify image dimensions (width/height attributes)
-- Reserve space for ads/dynamic content
-- Avoid inserting content above existing content
-
-### Optimization Techniques
-
-**1. Image Optimization:**
-```typescript
-import Image from 'next/image';
-
-<Image
-  src="/hero.jpg"
-  alt="Mortgage calculator"
-  width={1200}
-  height={600}
-  priority // Preload above-the-fold images
-  placeholder="blur" // Blur-up effect while loading
-/>
-```
-
-**2. Font Optimization:**
-```typescript
-import { Inter } from 'next/font/google';
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap', // Prevent FOIT (flash of invisible text)
-});
-```
-
-**3. Code Splitting:**
-```typescript
-// Dynamic import for heavy components
-const Calculator = dynamic(() => import('@/components/Calculator'), {
-  loading: () => <CalculatorSkeleton />,
-  ssr: false, // Client-side only component
-});
-```
-
-**4. Database Query Optimization:**
-```typescript
-// Use indexes on frequently queried fields
-@@index([slug])
-@@index([status, segment])
-@@index([publishedAt])
-
-// Limit results and paginate
-const articles = await prisma.article.findMany({
-  where: { status: 'PUBLISHED' },
-  take: 20, // Pagination
-  skip: page * 20,
-  orderBy: { publishedAt: 'desc' },
-  select: { // Only select needed fields
-    id: true,
-    title: true,
-    slug: true,
-    excerpt: true,
-    featuredImage: true,
-    publishedAt: true,
-  }
-});
-```
-
-**5. Caching Strategy:**
-- Static pages: Cached indefinitely until revalidated
-- Dynamic pages: Revalidate every 60 seconds (ISR)
-- API routes: Cache responses where appropriate
-- CDN edge caching for assets
-
----
-
-## Implementation Patterns for AI Agent Consistency
-
-### File Naming Conventions
-
-```
-Components:    PascalCase      ArticleCard.tsx, LeadForm.tsx
-Utilities:     camelCase       calculateScore.ts, formatDate.ts
-Pages:         kebab-case      residential-mortgages/page.tsx
-API Routes:    kebab-case      api/leads/route.ts
-```
-
-### Code Organization Patterns
-
-**1. Server Components (Default):**
-```typescript
-// app/residential-mortgages/page.tsx
-export default async function ResidentialMortgagesPage() {
-  // Fetch data directly in server component
-  const articles = await prisma.article.findMany({
-    where: { segment: 'RESIDENTIAL', status: 'PUBLISHED' }
-  });
-
-  return <ArticleList articles={articles} />;
-}
-```
-
-**2. Client Components (Interactive UI):**
-```typescript
-// components/forms/LeadForm.tsx
-'use client'; // Declare as client component
-
-import { useState } from 'react';
-
-export function LeadForm() {
-  const [step, setStep] = useState(1);
-  // Interactive form logic
-}
-```
-
-**3. API Routes Pattern:**
-```typescript
-// app/api/leads/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
-import { getServerSession } from 'next-auth';
-
-export async function POST(request: NextRequest) {
-  try {
-    // Parse request body
-    const body = await request.json();
-
-    // Validate input (Zod schema)
-    const validatedData = leadSchema.parse(body);
-
-    // Create lead
-    const lead = await prisma.lead.create({
-      data: {
-        ...validatedData,
-        score: calculateLeadScore(validatedData),
-      }
-    });
-
-    // Return success response
-    return NextResponse.json({ success: true, lead }, { status: 201 });
-
-  } catch (error) {
-    // Error handling
-    console.error('Lead creation failed:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to create lead' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function GET(request: NextRequest) {
-  // Require authentication
-  const session = await getServerSession();
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  // Fetch leads (admin) or user-specific leads (partner)
-  const leads = await prisma.lead.findMany({
-    where: session.user.role === 'PARTNER'
-      ? { assignedToId: session.user.id }
-      : {}, // Admin sees all
-    orderBy: { createdAt: 'desc' },
-    take: 50,
-  });
-
-  return NextResponse.json({ leads });
-}
-```
-
-**4. Database Access Pattern:**
-```typescript
-// lib/db.ts - Prisma client singleton
-import { PrismaClient } from '@prisma/client';
-
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
-
-export const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  });
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
-```
-
-**5. Form Validation Pattern:**
-```typescript
-// lib/validations/lead.ts
-import { z } from 'zod';
-
-export const leadSchema = z.object({
-  segment: z.enum(['RESIDENTIAL', 'INVESTMENT', 'COMMERCIAL']),
-  loanType: z.string().min(1),
-  propertyLocation: z.string().min(1),
-  propertyPrice: z.number().positive(),
-  name: z.string().min(2),
-  email: z.string().email(),
-  phone: z.string().regex(/^\d{10}$/),
-  creditRange: z.enum(['EXCELLENT', 'GOOD', 'FAIR', 'POOR']),
-  downPaymentPercent: z.number().min(0).max(100),
-  timeline: z.enum(['IMMEDIATE', 'WITHIN_3_MONTHS', 'WITHIN_6_MONTHS', '6_PLUS_MONTHS']),
-  preApproved: z.boolean(),
-  consent: z.literal(true), // TCPA consent required
-});
-
-export type LeadFormData = z.infer<typeof leadSchema>;
-```
-
----
-
-## Scalability Considerations
-
-### Current Scale (MVP):
-- 100,000 page views/month
-- 500-1,000 leads/month
-- 10-20 lender partners
-- 200 published articles
-
-### Future Scale (Year 2):
-- 1,000,000+ page views/month
-- 5,000-10,000 leads/month
-- 50+ lender partners
-- 500+ published articles
-
-### Scalability Strategy:
-
-**Database:**
-- Vercel Postgres scales automatically (connection pooling)
-- Add read replicas if query performance degrades
-- Implement caching layer (Redis) for frequently accessed data
-- Archive old leads (>1 year) to separate table
-
-**Application:**
-- Next.js API routes are serverless (auto-scale)
-- Static generation for content (no server load)
-- Edge caching via Vercel CDN (global distribution)
-- Incremental Static Regeneration (ISR) for article pages
-
-**Email:**
-- SendGrid scales to millions of emails
-- Implement email queue (BullMQ + Redis) for reliability at high volume
-
-**Lead Distribution:**
-- Current: Synchronous assignment on form submission
-- Future: Queue-based system (assign leads asynchronously)
-- Partner capacity management (real-time volume tracking)
-
----
-
-## Risk Mitigation & Contingency Plans
-
-### Technical Risks
-
-**Risk 1: Vercel Vendor Lock-in**
-- **Mitigation:** Next.js is open-source, can deploy to any Node.js host
-- **Contingency:** Document migration path to AWS Amplify or self-hosted (Docker)
-
-**Risk 2: Database Performance Degradation**
-- **Mitigation:** Proper indexing, query optimization from day one
-- **Contingency:** Migrate to managed PostgreSQL (AWS RDS, Neon with higher tier)
-
-**Risk 3: Email Deliverability Issues**
-- **Mitigation:** Dedicated sending domain, SPF/DKIM/DMARC setup, monitor bounce rates
-- **Contingency:** Switch email provider (Mailgun, AWS SES) if SendGrid issues
-
-**Risk 4: SEO Algorithm Changes**
-- **Mitigation:** Focus on fundamentals (quality content, technical SEO), not tricks
-- **Contingency:** Diversify traffic (social, paid, email list) don't rely 100% on organic
-
-### Compliance Risks
-
-**Risk 1: Regulatory Violation (TILA, RESPA, TCPA)**
-- **Mitigation:** Legal review of all disclaimers and consent language
-- **Contingency:** Legal counsel on retainer for rapid response
-
-**Risk 2: Data Breach**
-- **Mitigation:** Security best practices, encryption, access controls
-- **Contingency:** Incident response plan, cyber insurance, breach notification procedures
-
----
-
-## Summary: Architecture Decision Records (ADRs)
-
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| **Frontend Framework** | Next.js 15 App Router | SEO-first SSR, best-in-class DX, Vercel integration |
-| **Language** | TypeScript | Type safety prevents bugs, better IDE support |
-| **Database** | PostgreSQL + Prisma | Industry standard, type-safe ORM, excellent migrations |
-| **Hosting** | Vercel | Zero-config Next.js deployment, global CDN, serverless |
-| **UI Framework** | shadcn/ui + Tailwind | Accessible components, rapid development, full control |
-| **CMS** | Custom-built (Tiptap) | Full SEO control, no vendor lock-in, tailored to mortgage content |
-| **Authentication** | NextAuth.js | Industry standard for Next.js, OAuth-ready, secure |
-| **Email** | SendGrid + React Email | High deliverability, template management, analytics |
-| **Monitoring** | Sentry + Vercel Analytics | Error tracking, performance monitoring, uptime |
-| **Analytics** | GA4 + Search Console | Industry standard, SEO insights, conversion tracking |
-
----
-
-## Next Steps: Implementation Roadmap
-
-**Immediate (Week 1):**
-1. Run `npx create-next-app@latest` to initialize project
-2. Set up Vercel Postgres database and Prisma
-3. Implement authentication (NextAuth.js)
-4. Deploy to Vercel (establish CI/CD pipeline)
-
-**Sprint 1 (Weeks 2-3): Epic 1 - Foundation**
-- Complete all 6 foundation stories
-- Deployable application with auth and basic UI
-
-**Sprint 2-3 (Weeks 4-7): Epic 2 - CMS**
-- Build custom CMS with rich text editor
-- SEO tools and schema markup generation
-- Article management dashboard
-
-**Sprint 4-5 (Weeks 8-11): Epic 3-4 - SEO & Content Hubs**
-- Core Web Vitals optimization
-- Three-segment hub architecture
-- Initial content seeding (first 50 articles)
-
-**Sprint 6-8 (Weeks 12-17): Epic 5-6 - Lead Generation**
-- Multi-step forms and lead capture
-- Lead scoring and CRM integration
-- Partner portal and distribution system
-
-**Sprint 9-10 (Weeks 18-21): Epic 7-10 - Analytics, Email, Compliance, Polish**
-- Analytics dashboards
-- Email system
-- Security hardening and compliance
-- UX refinements and accessibility
-
-**Target: MVP launch in 21 weeks (5 months)**
-
----
-
-**This architecture provides the foundation for building LendyWendy's compounding topical authority—optimized for SEO, secure for fintech compliance, and designed for AI agent implementation consistency.**
-
----
-
-_Architecture Document v1.0 - Ready for Epic 1 Implementation_
+_Generated by BMAD Decision Architecture Workflow v2.0_
+_Date: 2026-02-28_
+_For: BMad_

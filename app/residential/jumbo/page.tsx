@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { ReadinessCTA } from '@/components/readiness/ReadinessCTA';
 
 export const metadata: Metadata = {
   title: "California Jumbo Loans | High-Value Home Financing Above $832K | LendyWendy",
@@ -521,6 +522,8 @@ export default function JumboLoansPage() {
             </p>
           </div>
         </section>
+
+        <ReadinessCTA />
       </main>
     </>
   );

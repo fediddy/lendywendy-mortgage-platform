@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { ReadinessCTA } from '@/components/readiness/ReadinessCTA';
 
 export const metadata: Metadata = {
   title: "California SBA 504 Loans | Below-Market Fixed Rates, 10% Down | LendyWendy",
@@ -508,6 +509,8 @@ export default function SBA504LoansPage() {
             </p>
           </div>
         </section>
+
+        <ReadinessCTA />
       </main>
     </>
   );

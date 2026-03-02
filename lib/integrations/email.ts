@@ -6,6 +6,8 @@
 
 import { Lead, Agent } from '@prisma/client';
 import { prisma } from '@/lib/db';
+import { logger } from '@/lib/logger';
+import { Resend } from 'resend';
 
 interface EmailData {
   to: string;
@@ -14,48 +16,45 @@ interface EmailData {
   text?: string;
 }
 
-const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@lendywendy.com';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'leads@lendywendy.com';
 
 /**
- * Send email using SendGrid
+ * Send email using Resend
  */
 async function sendEmail(data: EmailData): Promise<boolean> {
-  if (!SENDGRID_API_KEY) {
-    console.warn('SendGrid not configured - email not sent');
+  if (!resend) {
+    logger.warn('Resend not configured - email not sent', { component: 'email' });
     return false;
   }
 
   try {
-    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SENDGRID_API_KEY}`,
-      },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: data.to }] }],
-        from: { email: EMAIL_FROM, name: 'LendyWendy' },
-        subject: data.subject,
-        content: [
-          { type: 'text/plain', value: data.text || stripHtml(data.html) },
-          { type: 'text/html', value: data.html },
-        ],
-      }),
+    const { error } = await resend.emails.send({
+      from: `LendyWendy <${EMAIL_FROM}>`,
+      to: data.to,
+      subject: data.subject,
+      html: data.html,
+      text: data.text || stripHtml(data.html),
     });
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('SendGrid error:', error);
+    if (error) {
+      logger.error('Resend email error', new Error(error.message), { component: 'email' });
       return false;
     }
 
     return true;
   } catch (error) {
-    console.error('Email send error:', error);
+    logger.error('Email send error', error as Error, { component: 'email' });
     return false;
   }
+}
+
+/**
+ * Fire-and-forget email sending — never blocks the caller
+ */
+export function sendEmailAsync(data: EmailData): void {
+  sendEmail(data).catch(() => {});
 }
 
 /**
@@ -274,53 +273,14 @@ export async function sendLeadConfirmation(lead: Lead): Promise<boolean> {
  * Match lead to appropriate agent and send notifications
  */
 export async function matchAndNotifyAgent(lead: Lead): Promise<Agent | null> {
-  // Parse location to get state/city
-  const locationParts = lead.propertyLocation?.split(',') || [];
-  const state = locationParts[locationParts.length - 1]?.trim().toUpperCase() || 'CA';
-  const city = locationParts[0]?.trim() || '';
+  const { assignLeadToAgent } = await import('@/lib/agent-routing');
 
-  // Find matching agents
-  const matchingAgents = await prisma.agent.findMany({
-    where: {
-      status: 'ACTIVE',
-      states: { has: state },
-      loanTypes: { has: lead.loanType },
-      // Check capacity
-      currentWeekLeads: { lt: prisma.agent.fields.weeklyCapacity },
-    },
-    orderBy: [
-      { currentWeekLeads: 'asc' }, // Prefer agents with fewer leads
-      { rating: 'desc' },          // Then by rating
-    ],
-    take: 1,
-  });
+  const agent = await assignLeadToAgent(lead);
 
-  if (matchingAgents.length === 0) {
-    console.warn('No matching agent found for lead:', lead.id);
-    return null;
+  if (agent) {
+    // Send notification to agent (fire-and-forget)
+    notifyAgentOfNewLead(lead, agent).catch(() => {});
   }
-
-  const agent = matchingAgents[0];
-
-  // Assign lead to agent
-  await prisma.lead.update({
-    where: { id: lead.id },
-    data: {
-      assignedAgentId: agent.id,
-      assignedAt: new Date(),
-    },
-  });
-
-  // Increment agent's weekly lead count
-  await prisma.agent.update({
-    where: { id: agent.id },
-    data: {
-      currentWeekLeads: { increment: 1 },
-    },
-  });
-
-  // Send notification to agent
-  await notifyAgentOfNewLead(lead, agent);
 
   return agent;
 }

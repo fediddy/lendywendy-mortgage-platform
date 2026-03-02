@@ -48,6 +48,9 @@ export const metadata: Metadata = {
     url: "https://lendywendy.com/commercial",
     images: [{ url: "https://lendywendy.com/api/og?title=California+Commercial+Loans&subtitle=SBA%2C+CRE%2C+and+Construction+Financing.&badge=Commercial+Lending", width: 1200, height: 630, alt: "California Commercial Loans" }],
   },
+  alternates: {
+    canonical: "https://lendywendy.com/commercial",
+  },
 };
 
 const loanTypes = [

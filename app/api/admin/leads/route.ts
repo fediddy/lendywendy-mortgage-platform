@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
-import { LeadStatus } from "@prisma/client";
+import { LeadStatus, LeadSource } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,14 +9,22 @@ export async function GET(request: NextRequest) {
 
     // Pagination
     const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "50");
+    const limit = parseInt(searchParams.get("limit") || "20");
     const skip = (page - 1) * limit;
 
     // Filters
     const status = searchParams.get("status") as LeadStatus | null;
     const segment = searchParams.get("segment");
+    const source = searchParams.get("source") as LeadSource | null;
+    const tier = searchParams.get("tier"); // hot, warm, cold
     const minScore = searchParams.get("minScore");
     const search = searchParams.get("search");
+    const dateFrom = searchParams.get("dateFrom");
+    const dateTo = searchParams.get("dateTo");
+
+    // Sorting
+    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const sortOrder = (searchParams.get("sortOrder") || "desc") as "asc" | "desc";
 
     // Build where clause
     const where: any = {};
@@ -29,8 +37,24 @@ export async function GET(request: NextRequest) {
       where.segment = segment;
     }
 
-    if (minScore) {
+    if (source) {
+      where.leadSource = source;
+    }
+
+    if (tier === "hot") {
+      where.score = { gte: 80 };
+    } else if (tier === "warm") {
+      where.score = { gte: 60, lt: 80 };
+    } else if (tier === "cold") {
+      where.score = { lt: 60 };
+    } else if (minScore) {
       where.score = { gte: parseInt(minScore) };
+    }
+
+    if (dateFrom || dateTo) {
+      where.createdAt = {};
+      if (dateFrom) where.createdAt.gte = new Date(dateFrom);
+      if (dateTo) where.createdAt.lte = new Date(dateTo + "T23:59:59.999Z");
     }
 
     if (search) {
@@ -41,13 +65,34 @@ export async function GET(request: NextRequest) {
       ];
     }
 
+    // Build orderBy — validate sortBy to prevent injection
+    const allowedSortFields = ["name", "email", "score", "status", "createdAt", "leadSource", "segment"];
+    const orderByField = allowedSortFields.includes(sortBy) ? sortBy : "createdAt";
+    const orderBy = { [orderByField]: sortOrder };
+
     // Fetch leads with pagination
     const [leads, total] = await Promise.all([
       prisma.lead.findMany({
         where,
         skip,
         take: limit,
-        orderBy: { createdAt: "desc" },
+        orderBy,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          segment: true,
+          score: true,
+          status: true,
+          loanType: true,
+          leadSource: true,
+          timeline: true,
+          propertyValue: true,
+          createdAt: true,
+          assignedAgentId: true,
+          notes: true,
+        },
       }),
       prisma.lead.count({ where }),
     ]);
@@ -125,7 +170,7 @@ export async function GET(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     const body = await request.json();
-    const { leadId, status, notes, assignedTo } = body;
+    const { leadId, status, notes, assignedAgentId } = body;
 
     if (!leadId) {
       return NextResponse.json(
@@ -137,7 +182,12 @@ export async function PATCH(request: NextRequest) {
     const updateData: any = {};
     if (status) updateData.status = status;
     if (notes !== undefined) updateData.notes = notes;
-    if (assignedTo !== undefined) updateData.assignedTo = assignedTo;
+    if (assignedAgentId !== undefined) {
+      updateData.assignedAgentId = assignedAgentId || null;
+      if (assignedAgentId) {
+        updateData.assignedAt = new Date();
+      }
+    }
 
     // Update timestamps based on status
     if (status === "CONTACTED") {

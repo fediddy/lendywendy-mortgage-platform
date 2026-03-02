@@ -2,8 +2,14 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { StructuredData } from "@/components/seo/StructuredData";
+
+const OpenChatButton = dynamic(
+  () => import("@/components/chat/OpenChatButton").then((m) => m.OpenChatButton),
+  { ssr: false }
+);
 import {
   Building2,
   TrendingUp,
@@ -29,6 +35,9 @@ import {
   ArrowUpRight,
   Users,
   ChevronRight,
+  MessageCircle,
+  ClipboardCheck,
+  Handshake,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -181,6 +190,18 @@ export default function HomePage() {
                       </Link>
                     </Button>
                   </div>
+
+                  {/* Dual engagement CTAs */}
+                  <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                    <OpenChatButton />
+                    <Link
+                      href="/readiness-score"
+                      className="flex items-center gap-2 text-sm text-slate-300 hover:text-teal-300 transition-colors"
+                    >
+                      <ClipboardCheck className="h-4 w-4" />
+                      Check Your Readiness Score
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Right - Quick Rate Calculator */}
@@ -263,6 +284,46 @@ export default function HomePage() {
             <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full" preserveAspectRatio="none">
               <path d="M0 60V30C240 5 480 0 720 10C960 20 1200 40 1440 30V60H0Z" fill="white" />
             </svg>
+          </div>
+        </section>
+
+        {/* ============ HOW IT WORKS ============ */}
+        <section className="relative py-16 lg:py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                  How It Works
+                </h2>
+                <p className="text-gray-500 text-lg">Three steps to your perfect mortgage match.</p>
+              </div>
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-teal-50 border border-teal-200 flex items-center justify-center mx-auto mb-4">
+                    <MessageCircle className="h-8 w-8 text-teal-600" />
+                  </div>
+                  <div className="text-sm font-bold text-teal-600 mb-2">Step 1</div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Ask Wendy</h3>
+                  <p className="text-gray-500">Chat with our AI mortgage advisor. She&apos;ll answer your questions and help you understand your options — no commitment needed.</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center mx-auto mb-4">
+                    <ClipboardCheck className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <div className="text-sm font-bold text-teal-600 mb-2">Step 2</div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Get Your Score</h3>
+                  <p className="text-gray-500">Take the 2-minute Mortgage Readiness Assessment. See exactly where you stand and what to improve before applying.</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto mb-4">
+                    <Handshake className="h-8 w-8 text-emerald-600" />
+                  </div>
+                  <div className="text-sm font-bold text-teal-600 mb-2">Step 3</div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Connect with Experts</h3>
+                  <p className="text-gray-500">Get matched with California lenders who specialize in your loan type. Compare rates and close on your timeline.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 

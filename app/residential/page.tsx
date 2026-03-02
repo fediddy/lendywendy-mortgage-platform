@@ -46,6 +46,9 @@ export const metadata: Metadata = {
     url: "https://lendywendy.com/residential",
     images: [{ url: "https://lendywendy.com/api/og?title=California+Residential+Mortgages&subtitle=Conventional%2C+FHA%2C+VA%2C+and+Jumbo+Loans.&badge=Home+Lending", width: 1200, height: 630, alt: "California Residential Mortgages" }],
   },
+  alternates: {
+    canonical: "https://lendywendy.com/residential",
+  },
 };
 
 const loanTypes = [

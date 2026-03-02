@@ -8,8 +8,10 @@ import { notifyAdminOfNewLead, sendLeadConfirmation, matchAndNotifyAgent } from 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, responses, score, sessionId } = body as {
+    const { name, email, phone, responses, score, sessionId } = body as {
+      name?: string;
       email: string;
+      phone?: string;
       responses: AssessmentResponses;
       score: ScoreBreakdown;
       sessionId: string;
@@ -50,7 +52,8 @@ export async function POST(request: NextRequest) {
       data: {
         leadSource: 'READINESS_SCORE',
         email,
-        name: '', // Will be captured later
+        name: name || '',
+        phone: phone || undefined,
         segment: getSegmentFromLoanType(responses.loanType),
         loanType: getLoanTypeEnum(responses.loanType),
         propertyLocation: responses.location,

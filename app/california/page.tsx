@@ -35,6 +35,9 @@ export const metadata: Metadata = {
       "Find DSCR and investment property lenders in your California city. Compare rates from local lenders statewide.",
     url: "https://lendywendy.com/california",
   },
+  alternates: {
+    canonical: "https://lendywendy.com/california",
+  },
 };
 
 export default function CaliforniaPage() {

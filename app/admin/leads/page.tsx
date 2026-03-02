@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { LeadStatus } from "@prisma/client";
+import { LeadStatus, LeadSource } from "@prisma/client";
 
 interface Lead {
   id: string;
@@ -21,11 +21,37 @@ interface Lead {
   score: number;
   status: LeadStatus;
   loanType: string;
+  leadSource: LeadSource;
   timeline: string | null;
   propertyValue: number | null;
   createdAt: string;
-  assignedTo: string | null;
+  assignedAgentId: string | null;
   notes: string | null;
+}
+
+interface LeadDetail extends Lead {
+  tcpaConsent: boolean;
+  consentTimestamp: string | null;
+  propertyLocation: string | null;
+  creditRange: string | null;
+  conversation: {
+    id: string;
+    messages: { id: string; role: "USER" | "ASSISTANT" | "SYSTEM"; content: string; createdAt: string }[];
+  } | null;
+  readinessAssessment: {
+    id: string;
+    responses: string;
+    totalScore: number;
+    creditScore: number;
+    employmentScore: number;
+    incomeScore: number;
+    debtScore: number;
+    downPaymentScore: number;
+    preApprovalScore: number;
+    noNegativeEventsScore: number;
+    category: string;
+  } | null;
+  assignedAgent: { id: string; name: string; email: string } | null;
 }
 
 interface LeadsResponse {
@@ -53,19 +79,29 @@ interface LeadsResponse {
 export default function AdminLeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [selectedLead, setSelectedLead] = useState<LeadDetail | null>(null);
+  const [loadingDetail, setLoadingDetail] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [agents, setAgents] = useState<{ id: string; name: string; email: string }[]>([]);
 
   // Filters
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [segmentFilter, setSegmentFilter] = useState<string>("all");
+  const [sourceFilter, setSourceFilter] = useState<string>("all");
+  const [tierFilter, setTierFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [minScore, setMinScore] = useState<string>("");
+  const [dateFrom, setDateFrom] = useState<string>("");
+  const [dateTo, setDateTo] = useState<string>("");
+
+  // Sorting
+  const [sortBy, setSortBy] = useState<string>("createdAt");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   // Pagination and stats
-  const [pagination, setPagination] = useState({ page: 1, limit: 50, total: 0, totalPages: 0 });
+  const [pagination, setPagination] = useState({ page: 1, limit: 20, total: 0, totalPages: 0 });
   const [stats, setStats] = useState({
     total: 0,
     byStatus: {} as Record<string, number>,
@@ -85,13 +121,19 @@ export default function AdminLeadsPage() {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: "50",
+        limit: "20",
+        sortBy,
+        sortOrder,
       });
 
       if (statusFilter !== "all") params.append("status", statusFilter);
       if (segmentFilter !== "all") params.append("segment", segmentFilter);
+      if (sourceFilter !== "all") params.append("source", sourceFilter);
+      if (tierFilter !== "all") params.append("tier", tierFilter);
       if (searchQuery) params.append("search", searchQuery);
       if (minScore) params.append("minScore", minScore);
+      if (dateFrom) params.append("dateFrom", dateFrom);
+      if (dateTo) params.append("dateTo", dateTo);
 
       const response = await fetch(`/api/admin/leads?${params.toString()}`);
       const data: LeadsResponse = await response.json();
@@ -110,17 +152,57 @@ export default function AdminLeadsPage() {
 
   useEffect(() => {
     fetchLeads();
-  }, [page, statusFilter, segmentFilter, searchQuery, minScore]);
+  }, [page, statusFilter, segmentFilter, sourceFilter, tierFilter, searchQuery, minScore, dateFrom, dateTo, sortBy, sortOrder]);
 
-  // Open lead detail dialog
-  const openLeadDetail = (lead: Lead) => {
-    setSelectedLead(lead);
-    setUpdateForm({
-      status: lead.status,
-      notes: lead.notes || "",
-      assignedTo: lead.assignedTo || "",
-    });
+  // Fetch active agents for assignment dropdown
+  useEffect(() => {
+    fetch("/api/admin/agents")
+      .then((res) => res.json())
+      .then((data) => { if (data.success) setAgents(data.data); })
+      .catch(() => {});
+  }, []);
+
+  // Toggle sorting on column click
+  const handleSort = (field: string) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(field);
+      setSortOrder("asc");
+    }
+    setPage(1);
+  };
+
+  // Sort indicator
+  const SortIcon = ({ field }: { field: string }) => {
+    if (sortBy !== field) return <span className="text-muted-foreground/30 ml-1">↕</span>;
+    return <span className="ml-1">{sortOrder === "asc" ? "↑" : "↓"}</span>;
+  };
+
+  // Open lead detail dialog — fetch full details
+  const openLeadDetail = async (lead: Lead) => {
     setIsDialogOpen(true);
+    setLoadingDetail(true);
+    setSelectedLead(null);
+
+    try {
+      const response = await fetch(`/api/admin/leads/${lead.id}`);
+      const data = await response.json();
+
+      if (data.success) {
+        const detail: LeadDetail = data.data;
+        setSelectedLead(detail);
+        setUpdateForm({
+          status: detail.status,
+          notes: detail.notes || "",
+          assignedTo: detail.assignedAgentId || "",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch lead detail:", error);
+    } finally {
+      setLoadingDetail(false);
+    }
   };
 
   // Update lead
@@ -136,7 +218,7 @@ export default function AdminLeadsPage() {
           leadId: selectedLead.id,
           status: updateForm.status,
           notes: updateForm.notes,
-          assignedTo: updateForm.assignedTo,
+          assignedAgentId: updateForm.assignedTo || null,
         }),
       });
 
@@ -174,6 +256,18 @@ export default function AdminLeadsPage() {
     };
 
     return <Badge className={statusColors[status]}>{status}</Badge>;
+  };
+
+  // Get source badge
+  const getSourceBadge = (source: LeadSource) => {
+    const sourceConfig: Record<LeadSource, { color: string; label: string }> = {
+      AI_ADVISOR: { color: "bg-purple-500", label: "AI Advisor" },
+      READINESS_SCORE: { color: "bg-blue-500", label: "Readiness Score" },
+      FORM: { color: "bg-gray-500", label: "Form" },
+      CALCULATOR: { color: "bg-teal-500", label: "Calculator" },
+    };
+    const config = sourceConfig[source] || { color: "bg-gray-500", label: source };
+    return <Badge className={config.color}>{config.label}</Badge>;
   };
 
   // Format currency
@@ -270,7 +364,7 @@ export default function AdminLeadsPage() {
           <CardTitle>Filters</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <Label>Search</Label>
               <Input
@@ -281,8 +375,39 @@ export default function AdminLeadsPage() {
             </div>
 
             <div>
+              <Label>Source</Label>
+              <Select value={sourceFilter} onValueChange={(v) => { setSourceFilter(v); setPage(1); }}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sources</SelectItem>
+                  <SelectItem value="AI_ADVISOR">AI Advisor</SelectItem>
+                  <SelectItem value="READINESS_SCORE">Readiness Score</SelectItem>
+                  <SelectItem value="FORM">Form</SelectItem>
+                  <SelectItem value="CALCULATOR">Calculator</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label>Score Tier</Label>
+              <Select value={tierFilter} onValueChange={(v) => { setTierFilter(v); setPage(1); }}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Tiers</SelectItem>
+                  <SelectItem value="hot">Hot (80+)</SelectItem>
+                  <SelectItem value="warm">Warm (60-79)</SelectItem>
+                  <SelectItem value="cold">Cold (&lt;60)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
               <Label>Status</Label>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -294,15 +419,17 @@ export default function AdminLeadsPage() {
                   <SelectItem value="QUOTE_SENT">Quote Sent</SelectItem>
                   <SelectItem value="IN_PROCESS">In Process</SelectItem>
                   <SelectItem value="CONVERTED">Converted</SelectItem>
-                  <SelectItem value="LOST">Lost</SelectItem>
+                  <SelectItem value="CLOSED_LOST">Closed Lost</SelectItem>
                   <SelectItem value="NURTURE">Nurture</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
             <div>
               <Label>Segment</Label>
-              <Select value={segmentFilter} onValueChange={setSegmentFilter}>
+              <Select value={segmentFilter} onValueChange={(v) => { setSegmentFilter(v); setPage(1); }}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -316,12 +443,20 @@ export default function AdminLeadsPage() {
             </div>
 
             <div>
-              <Label>Min Score</Label>
+              <Label>From Date</Label>
               <Input
-                type="number"
-                placeholder="0-100"
-                value={minScore}
-                onChange={(e) => setMinScore(e.target.value)}
+                type="date"
+                value={dateFrom}
+                onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
+              />
+            </div>
+
+            <div>
+              <Label>To Date</Label>
+              <Input
+                type="date"
+                value={dateTo}
+                onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
               />
             </div>
 
@@ -331,8 +466,14 @@ export default function AdminLeadsPage() {
                 onClick={() => {
                   setStatusFilter("all");
                   setSegmentFilter("all");
+                  setSourceFilter("all");
+                  setTierFilter("all");
                   setSearchQuery("");
                   setMinScore("");
+                  setDateFrom("");
+                  setDateTo("");
+                  setSortBy("createdAt");
+                  setSortOrder("desc");
                   setPage(1);
                 }}
               >
@@ -345,9 +486,28 @@ export default function AdminLeadsPage() {
 
       {/* Leads Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Leads ({pagination.total})</CardTitle>
-          <CardDescription>Click on a lead to view details and update status</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Leads ({pagination.total})</CardTitle>
+            <CardDescription>Click on a lead to view details and update status</CardDescription>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const params = new URLSearchParams();
+              if (statusFilter !== "all") params.append("status", statusFilter);
+              if (segmentFilter !== "all") params.append("segment", segmentFilter);
+              if (sourceFilter !== "all") params.append("source", sourceFilter);
+              if (tierFilter !== "all") params.append("tier", tierFilter);
+              if (searchQuery) params.append("search", searchQuery);
+              if (dateFrom) params.append("dateFrom", dateFrom);
+              if (dateTo) params.append("dateTo", dateTo);
+              window.open(`/api/admin/leads/export?${params.toString()}`, "_blank");
+            }}
+          >
+            Export CSV
+          </Button>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -360,29 +520,36 @@ export default function AdminLeadsPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Contact</TableHead>
-                      <TableHead>Segment</TableHead>
-                      <TableHead>Loan Type</TableHead>
-                      <TableHead>Score</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Property Value</TableHead>
-                      <TableHead>Created</TableHead>
+                      <TableHead className="cursor-pointer select-none" onClick={() => handleSort("name")}>
+                        Name<SortIcon field="name" />
+                      </TableHead>
+                      <TableHead className="cursor-pointer select-none" onClick={() => handleSort("email")}>
+                        Email<SortIcon field="email" />
+                      </TableHead>
+                      <TableHead className="cursor-pointer select-none" onClick={() => handleSort("leadSource")}>
+                        Source<SortIcon field="leadSource" />
+                      </TableHead>
+                      <TableHead className="cursor-pointer select-none" onClick={() => handleSort("score")}>
+                        Score<SortIcon field="score" />
+                      </TableHead>
+                      <TableHead className="cursor-pointer select-none" onClick={() => handleSort("status")}>
+                        Status<SortIcon field="status" />
+                      </TableHead>
+                      <TableHead className="cursor-pointer select-none" onClick={() => handleSort("createdAt")}>
+                        Date<SortIcon field="createdAt" />
+                      </TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {leads.map((lead) => (
-                      <TableRow key={lead.id} className="cursor-pointer hover:bg-muted/50">
-                        <TableCell className="font-medium">{lead.name}</TableCell>
-                        <TableCell>
-                          <div className="text-sm">
-                            <div>{lead.email}</div>
-                            {lead.phone && <div className="text-muted-foreground">{lead.phone}</div>}
-                          </div>
+                      <TableRow key={lead.id} className="cursor-pointer hover:bg-muted/50" onClick={() => openLeadDetail(lead)}>
+                        <TableCell className="font-medium">
+                          {lead.name}
+                          {lead.phone && <div className="text-xs text-muted-foreground">{lead.phone}</div>}
                         </TableCell>
-                        <TableCell>{lead.segment}</TableCell>
-                        <TableCell className="text-sm">{lead.loanType.replace(/_/g, " ")}</TableCell>
+                        <TableCell className="text-sm">{lead.email}</TableCell>
+                        <TableCell>{getSourceBadge(lead.leadSource)}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <span className="font-semibold">{lead.score}</span>
@@ -390,12 +557,11 @@ export default function AdminLeadsPage() {
                           </div>
                         </TableCell>
                         <TableCell>{getStatusBadge(lead.status)}</TableCell>
-                        <TableCell>{formatCurrency(lead.propertyValue)}</TableCell>
                         <TableCell className="text-sm text-muted-foreground">
                           {formatDate(lead.createdAt)}
                         </TableCell>
                         <TableCell>
-                          <Button variant="outline" size="sm" onClick={() => openLeadDetail(lead)}>
+                          <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); openLeadDetail(lead); }}>
                             View
                           </Button>
                         </TableCell>
@@ -442,15 +608,19 @@ export default function AdminLeadsPage() {
 
       {/* Lead Detail Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Lead Details</DialogTitle>
             <DialogDescription>View and update lead information</DialogDescription>
           </DialogHeader>
 
+          {loadingDetail && (
+            <div className="text-center py-8">Loading lead details...</div>
+          )}
+
           {selectedLead && (
             <div className="space-y-6">
-              {/* Lead Info */}
+              {/* Contact Info */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-muted-foreground">Name</Label>
@@ -465,6 +635,10 @@ export default function AdminLeadsPage() {
                   <div className="font-medium">{selectedLead.phone || "N/A"}</div>
                 </div>
                 <div>
+                  <Label className="text-muted-foreground">Source</Label>
+                  <div>{getSourceBadge(selectedLead.leadSource)}</div>
+                </div>
+                <div>
                   <Label className="text-muted-foreground">Score</Label>
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-lg">{selectedLead.score}</span>
@@ -472,28 +646,105 @@ export default function AdminLeadsPage() {
                   </div>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">Segment</Label>
-                  <div className="font-medium">{selectedLead.segment}</div>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Loan Type</Label>
-                  <div className="font-medium">{selectedLead.loanType.replace(/_/g, " ")}</div>
+                  <Label className="text-muted-foreground">Segment / Loan Type</Label>
+                  <div className="font-medium">{selectedLead.segment} — {selectedLead.loanType.replace(/_/g, " ")}</div>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Property Value</Label>
                   <div className="font-medium">{formatCurrency(selectedLead.propertyValue)}</div>
                 </div>
                 <div>
+                  <Label className="text-muted-foreground">Location</Label>
+                  <div className="font-medium">{selectedLead.propertyLocation || "N/A"}</div>
+                </div>
+                <div>
                   <Label className="text-muted-foreground">Timeline</Label>
-                  <div className="font-medium">
-                    {selectedLead.timeline?.replace(/_/g, " ") || "N/A"}
-                  </div>
+                  <div className="font-medium">{selectedLead.timeline?.replace(/_/g, " ") || "N/A"}</div>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Created</Label>
                   <div className="font-medium">{formatDate(selectedLead.createdAt)}</div>
                 </div>
               </div>
+
+              {/* TCPA Consent */}
+              <div className="border-t pt-4">
+                <h3 className="font-semibold mb-2">TCPA Consent</h3>
+                <div className="flex items-center gap-4 text-sm">
+                  <Badge variant={selectedLead.tcpaConsent ? "default" : "destructive"}>
+                    {selectedLead.tcpaConsent ? "Consented" : "No Consent"}
+                  </Badge>
+                  {selectedLead.consentTimestamp && (
+                    <span className="text-muted-foreground">
+                      {formatDate(selectedLead.consentTimestamp)}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Assessment Score Breakdown */}
+              {selectedLead.readinessAssessment && (
+                <div className="border-t pt-4">
+                  <h3 className="font-semibold mb-3">Readiness Score Breakdown</h3>
+                  <div className="space-y-2">
+                    {[
+                      { label: "Credit Score", value: selectedLead.readinessAssessment.creditScore, max: 25 },
+                      { label: "Employment", value: selectedLead.readinessAssessment.employmentScore, max: 15 },
+                      { label: "Income", value: selectedLead.readinessAssessment.incomeScore, max: 15 },
+                      { label: "Debt", value: selectedLead.readinessAssessment.debtScore, max: 15 },
+                      { label: "Down Payment", value: selectedLead.readinessAssessment.downPaymentScore, max: 15 },
+                      { label: "Pre-Approval", value: selectedLead.readinessAssessment.preApprovalScore, max: 10 },
+                      { label: "No Negatives", value: selectedLead.readinessAssessment.noNegativeEventsScore, max: 5 },
+                    ].map((dim) => (
+                      <div key={dim.label} className="flex items-center gap-3">
+                        <span className="text-sm w-28 text-muted-foreground">{dim.label}</span>
+                        <div className="flex-1 bg-muted rounded-full h-2">
+                          <div
+                            className="bg-primary rounded-full h-2"
+                            style={{ width: `${(dim.value / dim.max) * 100}%` }}
+                          />
+                        </div>
+                        <span className="text-sm font-medium w-12 text-right">{dim.value}/{dim.max}</span>
+                      </div>
+                    ))}
+                    <div className="flex items-center gap-3 pt-1 border-t">
+                      <span className="text-sm w-28 font-semibold">Total</span>
+                      <div className="flex-1" />
+                      <span className="text-sm font-bold w-12 text-right">{selectedLead.readinessAssessment.totalScore}/100</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* AI Conversation Transcript */}
+              {selectedLead.conversation && selectedLead.conversation.messages.length > 0 && (
+                <div className="border-t pt-4">
+                  <h3 className="font-semibold mb-3">AI Conversation ({selectedLead.conversation.messages.length} messages)</h3>
+                  <div className="space-y-3 max-h-80 overflow-y-auto bg-muted/30 rounded-lg p-4">
+                    {selectedLead.conversation.messages
+                      .filter((m) => m.role !== "SYSTEM")
+                      .map((msg) => (
+                        <div
+                          key={msg.id}
+                          className={`flex ${msg.role === "USER" ? "justify-end" : "justify-start"}`}
+                        >
+                          <div
+                            className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
+                              msg.role === "USER"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-muted"
+                            }`}
+                          >
+                            <p className="whitespace-pre-wrap">{msg.content}</p>
+                            <p className="text-xs opacity-60 mt-1">
+                              {new Date(msg.createdAt).toLocaleTimeString()}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
 
               {/* Update Form */}
               <div className="border-t pt-4 space-y-4">
@@ -515,20 +766,30 @@ export default function AdminLeadsPage() {
                       <SelectItem value="QUOTE_SENT">Quote Sent</SelectItem>
                       <SelectItem value="IN_PROCESS">In Process</SelectItem>
                       <SelectItem value="CONVERTED">Converted</SelectItem>
-                      <SelectItem value="LOST">Lost</SelectItem>
+                      <SelectItem value="CLOSED_LOST">Closed Lost</SelectItem>
                       <SelectItem value="NURTURE">Nurture</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <Label htmlFor="assignedTo">Assigned To</Label>
-                  <Input
-                    id="assignedTo"
-                    placeholder="Agent name or email"
-                    value={updateForm.assignedTo}
-                    onChange={(e) => setUpdateForm({ ...updateForm, assignedTo: e.target.value })}
-                  />
+                  <Label htmlFor="assignedTo">Assigned Agent</Label>
+                  <Select
+                    value={updateForm.assignedTo || "none"}
+                    onValueChange={(value) => setUpdateForm({ ...updateForm, assignedTo: value === "none" ? "" : value })}
+                  >
+                    <SelectTrigger id="assignedTo">
+                      <SelectValue placeholder="Select agent..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Unassigned</SelectItem>
+                      {agents.map((agent) => (
+                        <SelectItem key={agent.id} value={agent.id}>
+                          {agent.name} ({agent.email})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div>

@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "./editor.css";
-import { ChatWidget } from "@/components/chat";
+import { ChatWidget, ChatProvider } from "@/components/chat";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { Header, Footer, MobileCTA } from "@/components/layout";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -171,11 +172,14 @@ export default function RootLayout({
         <meta name="theme-color" content="#0D9488" />
       </head>
       <body className={`${inter.variable} font-sans antialiased`}>
+        <GoogleAnalytics />
         <Header />
         <div className="min-h-screen pb-20 md:pb-0">{children}</div>
         <Footer />
         <MobileCTA />
-        <ChatWidget />
+        <ChatProvider>
+          <ChatWidget />
+        </ChatProvider>
       </body>
     </html>
   );

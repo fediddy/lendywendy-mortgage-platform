@@ -198,8 +198,10 @@ export function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 text-gray-600"
+            className="md:hidden p-2 text-gray-600 min-w-[44px] min-h-[44px] flex items-center justify-center"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? (
               <X className="h-6 w-6" />
@@ -228,7 +230,7 @@ export function Header() {
                     <Link
                       key={loan.href}
                       href={loan.href}
-                      className="block text-gray-500 hover:text-gray-900 text-sm py-1.5"
+                      className="block text-gray-500 hover:text-gray-900 text-sm py-2.5 min-h-[44px] flex items-center"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {loan.name}
@@ -252,7 +254,7 @@ export function Header() {
                     <Link
                       key={loan.href}
                       href={loan.href}
-                      className="block text-gray-500 hover:text-gray-900 text-sm py-1.5"
+                      className="block text-gray-500 hover:text-gray-900 text-sm py-2.5 min-h-[44px] flex items-center"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {loan.name}
@@ -276,7 +278,7 @@ export function Header() {
                     <Link
                       key={loan.href}
                       href={loan.href}
-                      className="block text-gray-500 hover:text-gray-900 text-sm py-1.5"
+                      className="block text-gray-500 hover:text-gray-900 text-sm py-2.5 min-h-[44px] flex items-center"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {loan.name}

@@ -187,7 +187,7 @@ export function Footer() {
             &copy; {new Date().getFullYear()} LendyWendy. All rights reserved.
           </p>
           <div className="flex flex-wrap gap-6 justify-center">
-            <Link href="/privacy" className="hover:text-teal-400 transition-colors">
+            <Link href="/privacy-policy" className="hover:text-teal-400 transition-colors">
               Privacy Policy
             </Link>
             <Link href="/terms" className="hover:text-teal-400 transition-colors">
